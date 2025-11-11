@@ -3,6 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 // Role
 import CreateRole from "./pages/Management/Admin/Role/CreatetRole";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import Role from "./pages/Management/Admin/Role/Role";
+>>>>>>> develop
 =======
 import Role from "./pages/Management/Admin/Role/Role";
 >>>>>>> develop
@@ -45,14 +49,20 @@ import MenuItemEdit from "./pages/Management/Admin/Menu/MenuItemEdit";
 import ProjectList from "./pages/Management/Backlog/Project/Index";
 import { ProjectCreate } from "./pages/Management/Backlog/Project/ProjectCreate";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { ProjectEdit } from "./pages/Management/Backlog/Project/ProjectEdit";
 =======
+=======
+>>>>>>> develop
 import { ProjectDetails } from "./pages/Management/Backlog/Project/ProjectDetails";
 import { ProjectEdit } from "./pages/Management/Backlog/Project/ProjectEdit";
 
 //Add Employee
 import { AddEmployee } from "./pages/Management/Backlog/Project/AddEmployee";
 import { RemoveEmployee } from "./pages/Management/Backlog/Project/RemoveEmployee";
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 
 // employee
@@ -74,8 +84,12 @@ import Profile from "./pages/Profile/Profile";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { RoleMenuTreeViewCreate } from "./pages/Management/Admin/role-menu-permission/Create";
+>>>>>>> develop
+=======
+import { RoleMenuTreeViewCreate } from "./pages/Management/Admin/Role-Menu-Permission/Create";
 >>>>>>> develop
 
 function App() {
@@ -102,11 +116,17 @@ function App() {
               }
             ></Route>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> develop
             <Route
               path="/management/admin/role-menu-permission"
               element={<RoleMenuTreeViewCreate />}
             ></Route>
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
             <Route path="/backlog" element={<Backlog />}></Route>
             <Route path="/backlog/:id" element={<BacklogDetail />} />
@@ -149,6 +169,7 @@ function App() {
             <Route path="/menuitem/create" element={<MenuItemCreate />} />
             <Route path="/menuitem/edit" element={<MenuItemEdit />} />
 <<<<<<< HEAD
+<<<<<<< HEAD
             <Route path="/employee" element={<EmployeeList />}></Route>
 =======
             <Route
@@ -157,6 +178,9 @@ function App() {
                 <EmployeeList onSort={undefined} sortConfig={undefined} />
               }
             ></Route>
+>>>>>>> develop
+=======
+            <Route path="/employee" element={<EmployeeList />}></Route>
 >>>>>>> develop
             <Route path="/employee/new" element={<EmployeeCreate />}></Route>
             <Route path="/employee/edit/:code" element={<EmployeeEdit />} />

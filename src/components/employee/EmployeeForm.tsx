@@ -142,17 +142,15 @@ export default function EmployeeForm({
       if (propsOnSubmit) return propsOnSubmit(values);
 
       if (code) {
-        console.log("Updating employee:", code);
         await fetchData({
-          url: `${API_BASE}/Employee/update/${code}`,
+          endPoint: `/Employee/update/${code}`,
           method: "POST",
           body: JSON.stringify(employeeData),
         });
         console.log("Employee updated successfully");
       } else {
-        console.log("Creating new employee:", values);
         await fetchData({
-          url: `${API_BASE}/Employee/create`,
+          endPoint: `/Employee/create`,
           method: "POST",
           body: JSON.stringify(employeeData),
         });

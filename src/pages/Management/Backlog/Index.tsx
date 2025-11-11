@@ -9,7 +9,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { capitalizeCamelCase } from "@/lib/utils";
 import {
   Edit,
   Trash2,
@@ -32,15 +31,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
-import { useDataStore } from "@/stores/useDataStore";
 import { SpinnerCustom } from "@/components/ui/spinner";
+import { backlogService } from "@/services/backlogService";
 
 export default function BacklogList() {
   const navigate = useNavigate();
-  const { data, loading, error, fetchData } = useDataStore();
-  const tasks = data?.data?.tasks ?? [];
-  const API_BASE = import.meta.env.VITE_API_URL;
-
+  
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -48,17 +46,18 @@ export default function BacklogList() {
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
       try {
-        await fetchData({
-          url: `${API_BASE}/Task/list?pageNo=${currentPage}&pageSize=${rowsPerPage}`,
-        });
+        const result = await backlogService.fetchTasks(currentPage, rowsPerPage);
+        setTasks(result.tasks ?? []);
       } catch (error) {
-        console.error(error);
+        console.error("Error loading tasks:", error);
+      } finally {
+        setLoading(false);
       }
     };
     loadData();
-  }, [fetchData, currentPage, rowsPerPage]);
-
+  }, [currentPage, rowsPerPage]);
 
   // Handle loading
   if (loading)
@@ -104,33 +103,25 @@ export default function BacklogList() {
   };
 
   const confirmDelete = async () => {
-  if (!taskToDelete) return;
+    if (!taskToDelete) return;
 
-  try {
-    const response = await fetch(`${API_BASE}/Task/delete?taskId=${taskToDelete}`, {
-      method: "POST",
-    });
+    try {
+      const result = await backlogService.deleteTask(taskToDelete);
 
-    if (!response.ok) throw new Error("Failed to delete task");
-
-    const result = await response.json();
-
-    if (result.isSuccess) {
-      // Refetch the latest list
-      await fetchData({
-        url: `${API_BASE}/Task/list?pageNo=${currentPage}&pageSize=${rowsPerPage}`,
-      });
-    } else {
-      console.error("Delete failed:", result);
+      if (result.isSuccess) {
+        // Refetch the latest list
+        const updatedData = await backlogService.fetchTasks(currentPage, rowsPerPage);
+        setTasks(updatedData.tasks ?? []);
+      } else {
+        console.error("Delete failed:", result);
+      }
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    } finally {
+      setDeleteDialogOpen(false);
+      setTaskToDelete(null);
     }
-  } catch (error) {
-    console.error("Error deleting task:", error);
-  } finally {
-    setDeleteDialogOpen(false);
-    setTaskToDelete(null);
-  }
-};
-
+  };
 
   const cancelDelete = () => {
     setDeleteDialogOpen(false);
@@ -164,7 +155,6 @@ export default function BacklogList() {
         </Link>
       </div>
 
-    
       {/* Table */}
       <Table className="w-full overflow-auto shadow-sm rounded-md">
         <TableHeader className="bg-primary-300">

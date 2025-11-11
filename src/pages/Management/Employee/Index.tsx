@@ -1,6 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+=======
+>>>>>>> develop
 =======
 >>>>>>> develop
 import {
@@ -12,9 +15,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Button } from "@/components/ui/button";
 =======
 import { useState } from "react";
+import { Link } from "react-router-dom";
+
+>>>>>>> develop
+=======
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 >>>>>>> develop
@@ -29,6 +39,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {
   Edit,
   Trash2,
@@ -43,6 +54,8 @@ import {
 =======
 import { Button } from "@/components/ui/button";
 >>>>>>> develop
+=======
+>>>>>>> develop
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -53,8 +66,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useDataStore } from "@/stores/useDataStore";
 =======
+=======
+import { useDataStore } from "@/stores/useDataStore";
+>>>>>>> develop
 import {
   ArrowUpDown,
   ChevronLeft,
@@ -67,6 +84,9 @@ import {
   Trash2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+>>>>>>> develop
+=======
 >>>>>>> develop
 
 export default function EmployeeList({ onSort, sortConfig }) {
@@ -83,7 +103,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
   useEffect(() => {
     const loadData = async () => {
       try {
-        await fetchData({ url: `${API_BASE}/Employee/list` });
+        await fetchData({ endPoint: `/Employee/list` });
       } catch (error) {
         console.error(error);
       }
@@ -99,8 +119,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
   const employees = data?.items || [];
   const totalRows = data?.totalCount || 0;
   const totalPages = Math.ceil(totalRows / rowsPerPage);
-  console.log(">>>>", data);
-  console.log("Employee Data:", employees);
+
   // ✅ Client-side pagination
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentData = employees.slice(startIndex, startIndex + rowsPerPage);
@@ -132,10 +151,9 @@ export default function EmployeeList({ onSort, sortConfig }) {
   const confirmDelete = async () => {
     // TODO: Add DELETE API call here
     await fetchData({
-      url: `${API_BASE}/Employee/delete/${employeeToDelete}`,
+      endPoint: `/Employee/delete/${employeeToDelete}`,
       method: "DELETE",
     });
-    console.log("Deleted:", employeeToDelete);
     setDeleteDialogOpen(false);
     setEmployeeToDelete(null);
   };
@@ -199,6 +217,9 @@ export default function EmployeeList({ onSort, sortConfig }) {
       <Table className="w-full overflow-auto shadow-sm rounded-md">
         <TableHeader className="bg-primary-400 text-center">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> develop
           {/* ✅ Wrap TableHead in TableRow */}
           <TableRow>
             <TableHead className="px-4 py-2 font-semibold">#</TableHead>
@@ -214,6 +235,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
               >
                 Name
                 <ArrowUpDown
+<<<<<<< HEAD
                   className={`h-4 w-4 transition-transform ${
                     sortConfig?.key === "name"
                       ? sortConfig.direction === "asc"
@@ -221,6 +243,14 @@ export default function EmployeeList({ onSort, sortConfig }) {
                         : ""
                       : "opacity-50"
                   }`}
+=======
+                  className={`h-4 w-4 transition-transform ${sortConfig?.key === "name"
+                    ? sortConfig.direction === "asc"
+                      ? "rotate-180"
+                      : ""
+                    : "opacity-50"
+                    }`}
+>>>>>>> develop
                 />
               </Button>
             </TableHead>
@@ -229,6 +259,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
             <TableHead className="px-4 py-2 font-semibold">Phone No.</TableHead>
             <TableHead className="px-4 py-2 font-semibold">Action</TableHead>
           </TableRow>
+<<<<<<< HEAD
 =======
           <TableHead className="px-4 py-2 font-semibold">No</TableHead>
           <TableHead className="px-4 py-2 font-semibold">
@@ -279,6 +310,8 @@ export default function EmployeeList({ onSort, sortConfig }) {
           <TableHead className="px-4 py-2 font-semibold">Email</TableHead>
           <TableHead className="px-4 py-2 font-semibold">Phone No.</TableHead>
           <TableHead className="px-4 py-2 font-semibold">Action</TableHead>
+>>>>>>> develop
+=======
 >>>>>>> develop
         </TableHeader>
 
@@ -332,6 +365,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
+<<<<<<< HEAD
               className={`px-3 py-1 rounded ${
                 page === currentPage
 <<<<<<< HEAD
@@ -342,6 +376,12 @@ export default function EmployeeList({ onSort, sortConfig }) {
                   : "bg-natural-50 text-black hover:bg-gray-200"
 >>>>>>> develop
               }`}
+=======
+              className={`px-3 py-1 rounded ${page === currentPage
+                ? "bg-primary-500 text-white"
+                : "bg-white hover:bg-gray-200"
+                }`}
+>>>>>>> develop
             >
               {page}
             </button>
