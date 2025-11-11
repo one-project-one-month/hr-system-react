@@ -25,17 +25,19 @@ import {
 } from "../../components/ui/popover";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { EmployeeService } from "@/services/employeeService";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 
 export default function EmployeeForm() {
+  const { code } = useParams();
   const navigate = useNavigate();
   const [roles, setRoles] = useState({});
-  const fetchRoles = roles?.items || [];
   const { onConfirm, openDialog } = useSuccessDialogStore();
+
+  const fetchRoles = roles?.items || [];
   const handleCancel = () => {
     navigate("/employee");
   };
@@ -49,10 +51,6 @@ export default function EmployeeForm() {
       .string()
       .min(3, "Username must be at least 3 characters")
       .max(30, "Username must be at most 30 characters"),
-    password: z
-      .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(30, "Password must be at most 30 characters"), // make password optional
     salary: z
       .number()
       .positive("Salary must be a positive number")
@@ -82,7 +80,7 @@ export default function EmployeeForm() {
   const form = useForm<z.infer<typeof employeeSchema>>({
     resolver: zodResolver(employeeSchema),
     defaultValues: {
-      // employeeCode: "",
+      employeeCode: "",
       username: "",
       password: "",
       salary: 0,
@@ -95,12 +93,40 @@ export default function EmployeeForm() {
     },
   });
 
+  const { reset } = form;
+
   useEffect(() => {
     (async () => {
       const fetchRoles = await EmployeeService.fetchRoles();
       setRoles(fetchRoles.data);
     })();
   }, []);
+
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      if (!code) return;
+
+      try {
+        const employee = await EmployeeService.fetchEmployee(code);
+        // Reset the form with fetched values
+        reset({
+          //   employeeCode: employee.employeeCode ?? "",
+          username: employee.username ?? "",
+          salary: employee.salary ?? 0,
+          name: employee.name ?? "",
+          roleCode: employee.roleCode ?? "",
+          email: employee.email ?? "",
+          phoneNo: employee.phoneNo ?? "",
+          startDate: employee.startDate ?? "",
+          resignDate: employee.resignDate ?? "",
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchEmployeeData();
+  }, [code, reset]);
 
   const handleFormSubmit = async (values: z.infer<typeof employeeSchema>) => {
     const employeeData = {
@@ -113,9 +139,11 @@ export default function EmployeeForm() {
         : null,
     };
     try {
-      await EmployeeService.createEmployee(employeeData);
-      openDialog("Create Employee Successful!", onConfirm);
-      navigate("/employee");
+      if (code) {
+        await EmployeeService.updateEmployee(code, employeeData);
+        openDialog("Update Employee Successful!", onConfirm);
+        navigate("/employee");
+      }
     } catch (error) {
       console.error("Error saving employee:", error);
     }
@@ -129,7 +157,7 @@ export default function EmployeeForm() {
   return (
     <div className="flex-1 p-6 bg-natural-100">
       <h2 className="text-2xl font-bold mb-6 text-center sm:text-left text-primary-500">
-        Employee Create
+        {code ? "Employee Edit" : "Employee Create"}
       </h2>
 
       <Form {...form}>
@@ -161,24 +189,6 @@ export default function EmployeeForm() {
                   <FormLabel>Username</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter username" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="Enter password"
-                      {...field}
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -362,7 +372,7 @@ export default function EmployeeForm() {
               Cancel
             </Button>
             <Button type="submit" className="outline-btn">
-              Create
+              Update
             </Button>
           </div>
         </form>

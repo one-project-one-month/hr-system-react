@@ -11,7 +11,7 @@ interface User {
     phoneNo: string,
     profileImage: string,
     roleName: string,
-    userName: string
+    username: string
 }
 interface AuthState {
     user: User | null;
@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>()(
             getUser: () => get().user,
             login: async (username, password) => {
                 try {
-                    const res = await fetch(`${API_BASE}/Auth/Login`, {
+                    const res = await fetch(`/api/Auth/Login`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ username, password }),

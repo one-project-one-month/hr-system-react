@@ -160,6 +160,10 @@
     @apply rounded-lg shadow-md;
   }
 
+  input::placeholder {
+  @apply text-natural-900!;
+}
+
   .checkin-circle {
     @apply rounded-full bg-gradient-to-b from-[#55CB9D] via-[#83D9B7] to-[#3B9E77] w-33 h-33
   }

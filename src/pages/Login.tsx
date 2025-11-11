@@ -34,8 +34,9 @@ export default function LoginForm() {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const authorized = await authStore.login(values.username, values.password);
+    // console.log(authStore)
     if (authorized && authStore.user) {
-      if (authStore.user.roleName.toLocaleLowerCase() === "admin" || authStore.user.roleName.toLocaleLowerCase() === "hr") {
+      if (authStore.user.username.toLocaleLowerCase() === "admin" || authStore.user.username.toLocaleLowerCase() === "hr") {
         navigate("/management/dashboard")
       }
       else
