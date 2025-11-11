@@ -29,10 +29,10 @@ const formSchema = z.object({
   taskDescription: z.string().nonempty("Task Description cannot be empty!"),
   assignee: z.string().nonempty("Assignee cannot be empty!"),
   projectName: z.string().nonempty("Project Name cannot be empty!"),
-  status: z.string().nonempty("Task Status cannot be empty!"),
+  taskStatus: z.string().nonempty("Task Status cannot be empty!"),
   startDate: z.date({ error: "Start Date cannot be empty!" }),
-  dueDate: z.date({ error: "Due Date cannot be empty!" }),
-  workingHours: z.string().nonempty("Working Hours cannot be empty!"),
+  endDate: z.date({ error: "Due Date cannot be empty!" }),
+  workingHour: z.string().nonempty("Working Hours cannot be empty!"),
 });
 
 const mockProjects = [
@@ -59,10 +59,10 @@ interface BacklogFormProps {
     taskDescription: string;
     assignee: string;
     projectName: string;
-    status: string;
+    taskStatus: string;
     startDate: string;
-    dueDate: string;
-    workingHours: number;
+    endDate: string;
+    workingHour: number;
   };
   onSubmit: (values: z.infer<typeof formSchema>) => void;
   onCancel: () => void;
@@ -82,10 +82,14 @@ export default function BacklogForm({
       taskDescription: initialData?.taskDescription || "",
       assignee: initialData?.assignee || "",
       projectName: initialData?.projectName || "",
-      status: initialData?.status || "",
-      startDate: initialData?.startDate ? new Date(initialData.startDate) : undefined,
-      dueDate: initialData?.dueDate ? new Date(initialData.dueDate) : undefined,
-      workingHours: initialData?.workingHours ? String(initialData.workingHours) : "",
+      taskStatus: initialData?.taskStatus || "",
+      startDate: initialData?.startDate
+        ? new Date(initialData.startDate)
+        : undefined,
+      endDate: initialData?.endDate ? new Date(initialData.endDate) : undefined,
+      workingHour: initialData?.workingHour
+        ? String(initialData.workingHour)
+        : "",
     },
   });
 
@@ -103,9 +107,15 @@ export default function BacklogForm({
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleFormSubmit)}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-50">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-10">
             {/* Left Column */}
-            <div className={mode === "create" ? "space-y-10" : "space-y-8"}>
+            <div
+              className={
+                mode === "create"
+                  ? "space-y-6 md:space-y-10"
+                  : "space-y-5 md:space-y-8"
+              }
+            >
               {mode !== "create" && (
                 <FormField
                   control={form.control}
@@ -238,9 +248,7 @@ export default function BacklogForm({
                                 className="w-full p-3 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-1 focus:ring-primary text-left flex items-center justify-between"
                               >
                                 <span
-                                  className={
-                                    field.value ? "" : "text-gray-400"
-                                  }
+                                  className={field.value ? "" : "text-gray-400"}
                                 >
                                   {field.value || "Select project name"}
                                 </span>
@@ -276,7 +284,7 @@ export default function BacklogForm({
               {mode === "create" && (
                 <FormField
                   control={form.control}
-                  name="status"
+                  name="taskStatus"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Task Status</FormLabel>
@@ -355,7 +363,7 @@ export default function BacklogForm({
               {mode !== "create" && (
                 <FormField
                   control={form.control}
-                  name="workingHours"
+                  name="workingHour"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Working Hours</FormLabel>
@@ -380,7 +388,13 @@ export default function BacklogForm({
             </div>
 
             {/* Right Column */}
-            <div className={mode === "create" ? "space-y-10 pr-5" : "space-y-8 pr-5"}>
+            <div
+              className={
+                mode === "create"
+                  ? "space-y-6 md:space-y-10 pr-5"
+                  : "space-y-5 md:space-y-8 pr-5"
+              }
+            >
               {mode === "create" && (
                 <FormField
                   control={form.control}
@@ -497,9 +511,7 @@ export default function BacklogForm({
                                 className="w-full p-3 border border-gray-300 rounded-md text-sm bg-white focus:outline-none focus:ring-1 focus:ring-primary text-left flex items-center justify-between"
                               >
                                 <span
-                                  className={
-                                    field.value ? "" : "text-gray-400"
-                                  }
+                                  className={field.value ? "" : "text-gray-400"}
                                 >
                                   {field.value || "Select assignee name"}
                                 </span>
@@ -535,7 +547,7 @@ export default function BacklogForm({
               {mode !== "create" && (
                 <FormField
                   control={form.control}
-                  name="status"
+                  name="taskStatus"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Task Status</FormLabel>
@@ -543,7 +555,7 @@ export default function BacklogForm({
                         <Input
                           {...field}
                           disabled={isDisabled}
-                          placeholder="Enter task status"
+                          placeholder="Enter task Status"
                           className={
                             isDisabled
                               ? "bg-natural-500"
@@ -603,7 +615,7 @@ export default function BacklogForm({
 
               <FormField
                 control={form.control}
-                name="dueDate"
+                name="endDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
@@ -663,7 +675,7 @@ export default function BacklogForm({
               {mode === "create" && (
                 <FormField
                   control={form.control}
-                  name="workingHours"
+                  name="workingHour"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Working Hours</FormLabel>
@@ -684,7 +696,11 @@ export default function BacklogForm({
           </div>
 
           {/* Action Buttons */}
-          <div className={`${mode === "create" ? "mt-10" : "mt-4"} mr-5 flex justify-end gap-3`}>
+          <div
+            className={`${
+              mode === "create" ? "mt-10" : "mt-4"
+            } mr-5 flex justify-end gap-3`}
+          >
             <Button type="button" className="outline-btn" onClick={onCancel}>
               {mode === "view" ? "Back" : "Cancel"}
             </Button>

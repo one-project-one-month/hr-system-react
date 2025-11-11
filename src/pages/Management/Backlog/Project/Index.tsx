@@ -1,5 +1,11 @@
-import { useMemo, useState, type SetStateAction } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Table,
   TableBody,
@@ -8,29 +14,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
 import {
   Calendar1Icon,
-  Search,
-  Plus,
-  Edit,
-  Eye,
-  Trash2,
-  MoreVertical,
-  ChevronsLeft,
   ChevronLeft,
   ChevronRight,
+  ChevronsLeft,
   ChevronsRight,
+  Edit,
+  Eye,
+  MoreVertical,
+  Plus,
+  Search,
+  Trash2,
 } from "lucide-react";
+import { useMemo, useState, type SetStateAction } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export type DemoProject = {
   id: number;
@@ -148,19 +148,22 @@ export default function ProjectListing() {
           />
         </div>
 
-
-        <Button className="outline-btn">
-
-          Export
-        </Button>
+        <Button className="outline-btn">Export</Button>
         <Link to="/projects/new">
           <Button className="outline-btn">
             <Plus className="mr-2 h-4 w-4" />
             Add new
           </Button>
         </Link>
-      </div>
 
+        {/**Add Employee */}
+        <Link to="/projects/add-employee">
+          <Button className="outline-btn">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Employee
+          </Button>
+        </Link>
+      </div>
 
       <Table className="w-full overflow-auto shadow-sm rounded-md">
         <TableHeader className="bg-primary-300">
@@ -264,10 +267,11 @@ export default function ProjectListing() {
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
-              className={`px-3 py-1 rounded ${page === currentPage
+              className={`px-3 py-1 rounded ${
+                page === currentPage
                   ? "bg-primary-500 text-natural-50"
                   : "bg-natural-50 text-black hover:bg-gray-200"
-                }`}
+              }`}
             >
               {page}
             </button>

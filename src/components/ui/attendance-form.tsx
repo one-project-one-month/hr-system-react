@@ -18,8 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@radix-ui/react-popover";
-import { Calendar } from "./calendar";
-import { ChevronDownIcon, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SuccessDialog } from "./SuccessDialog";
@@ -43,12 +41,12 @@ export default function AttendanceForm() {
   const { code } = useParams();
   const [open, setOpen] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      employeeCode: "Emp001",
-      employeeName: "Aung Min",
+      employeeCode: "",
+      employeeName: "",
       checkinLocation: "",
       checkoutLocation: "",
       checkinTime: "",
@@ -75,6 +73,10 @@ export default function AttendanceForm() {
     const toMinutes = (timeStr: string) => {
       const [hours, minutes] = timeStr.split(":").map(Number);
       return hours * 60 + minutes;
+    };
+
+    const handleBack = () => {
+      navigate("/AttendanceList");
     };
 
     // Reference points
@@ -140,167 +142,196 @@ export default function AttendanceForm() {
     }, 500);
   };
   return (
-    <div className="w-full">
+    <div className="p-6 md:p-8 w-full flex-1 bg-gray-50">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900">
+          {!code ? "Add New Attendance" : "Update Attendance"}
+        </h1>
+      </div>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col w-full p-2 mx-none md:mx-4"
+          className="flex flex-col gap-8"
         >
-          <div className="w-full flex flex-col gap-6 mb-6">
-            <p className="font-bold text-xl">{!code ? 'Add New Attendance' : 'Update Attendance'}</p>
-          </div>
-
-          <div className="w-full flex gap-6 flex-col md:flex-row">
-            <div className="w-full md:w-[30%] flex gap-4 flex-col">
+          {/* Two-column layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-48">
+            {/* Left Column */}
+            <div className="space-y-6">
+              {/* Employee Code */}
               <FormField
                 control={form.control}
                 name="employeeCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Employee Code</FormLabel>
+                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                      Employee Code
+                    </FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        className="bg-natural-50 border-natural-500 h-10 text-natural-800"
+                        placeholder="Enter employee code"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Check-in Location */}
               <FormField
                 control={form.control}
                 name="checkinLocation"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Checkin Location</FormLabel>
+                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                      Check-in Location
+                    </FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        className="bg-natural-50 border-natural-500 h-10 text-natural-800"
+                        placeholder="Enter location"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Check-out Location */}
               <FormField
                 control={form.control}
                 name="checkoutLocation"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Checkout Location</FormLabel>
+                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                      Check-out Location
+                    </FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        className="bg-natural-50 border-natural-500 h-10 text-natural-800"
+                        placeholder="Enter location"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Working Hour */}
               <FormField
                 control={form.control}
                 name="workingHour"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Working Hour</FormLabel>
+                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                      Working Hour
+                    </FormLabel>
                     <FormControl>
-                      <Input {...field} readOnly />
+                      <Input
+                        {...field}
+                        readOnly
+                        className="bg-natural-400 border-natural-500 text-gray-700 h-10"
+                        placeholder="Auto-calculated"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="w-full md:w-[30%] flex flex-col gap-4">
+
+            {/* Right Column */}
+            <div className="space-y-6">
+              {/* Employee Name */}
               <FormField
                 control={form.control}
                 name="employeeName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Employee Name</FormLabel>
+                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                      Employee Name
+                    </FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        className="bg-natural-400 border-natural-500 text-gray-700 h-10"
+                        placeholder="Enter name"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Date Picker */}
+              {/* <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                  Date
+                </FormLabel>
+                <Popover open={open} onOpenChange={setOpen}>
+                  <PopoverTrigger asChild>
+                    <div className="relative">
+                      <Input
+                        value={
+                          field.value
+                            ? field.value.toLocaleDateString()
+                            : ""
+                        }
+                        readOnly
+                        className="pr-8 cursor-pointer bg-natural-50 border-natural-500 h-10 text-natural-800"
+                        placeholder="Select date"
+                      />
+                      <ChevronDownIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    </div>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-white" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      captionLayout="dropdown"
+                      onSelect={field.onChange}
+                      className="bg-white"
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          /> */}
+
+              {/* Check-in Time */}
               <FormField
                 control={form.control}
-                name="date"
+                name="checkinTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date</FormLabel>
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          id="date"
-                          className="w-48 justify-between font-normal"
-                        >
-                          {field.value
-                            ? field.value.toLocaleDateString()
-                            : "Select date"}
-                          <ChevronDownIcon />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="start"
-                      >
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          captionLayout="dropdown"
-                          onSelect={field.onChange}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </FormItem>
-                )}
-              />
-              <div className="flex flex-col gap-3">
-                <FormField
-                  control={form.control}
-                  name="checkinTime"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>CheckinTime</FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            className="w-full justify-start font-normal"
-                          >
-                            <Clock className="mr-2 h-4 w-4" />
-                            {field.value ? field.value : "Select time"}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-4 bg-natural-50 justify-start">
-                          <input
-                            type="time"
-                            value={field.value || ""}
-                            onChange={(e) => field.onChange(e.target.value)}
-                            className="border rounded-md p-2"
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="checkoutTime"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>CheckoutTime</FormLabel>
+                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                      Check-in Time
+                    </FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="w-full justify-start font-normal"
-                        >
-                          <Clock className="mr-2 h-4 w-4" />
-                          {field.value ? field.value : "Select time"}
-                        </Button>
+                        <div className="relative">
+                          <Input
+                            value={field.value || ""}
+                            readOnly
+                            className="pr-8 cursor-pointer bg-natural-50 border-natural-500 h-10 text-natural-800"
+                            placeholder="Select time"
+                          />
+                          <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        </div>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-4 bg-natural-50 justify-start">
+                      <PopoverContent
+                        className="w-auto p-4 bg-white"
+                        align="start"
+                      >
                         <input
                           type="time"
                           value={field.value || ""}
@@ -313,31 +344,88 @@ export default function AttendanceForm() {
                   </FormItem>
                 )}
               />
+
+              {/* Check-out Time */}
+              <FormField
+                control={form.control}
+                name="checkoutTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                      Check-out Time
+                    </FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <div className="relative">
+                          <Input
+                            value={field.value || ""}
+                            readOnly
+                            className="pr-8 cursor-pointer bg-natural-50 border-natural-500 h-10 text-natural-800"
+                            placeholder="Select time"
+                          />
+                          <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        </div>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto p-4 bg-white"
+                        align="start"
+                      >
+                        <input
+                          type="time"
+                          value={field.value || ""}
+                          onChange={(e) => field.onChange(e.target.value)}
+                          className="border rounded-md p-2"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Status */}
               <FormField
                 control={form.control}
                 name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Status</FormLabel>
+                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                      Status
+                    </FormLabel>
                     <FormControl>
-                      <Input {...field} readOnly />
+                      <Input
+                        {...field}
+                        readOnly
+                        className="bg-natural-50 border-natural-500 h-10 text-natural-800"
+                        placeholder="Auto status"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="flex w-full gap-2 ">
-                <Button type="button" className="outline-btn">
-                  Back
-                </Button>
-                <Button type="submit" className="outline-btn">
-                  {code ? "Update" : "Create"}
-                </Button>
-              </div>
             </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-end gap-4 mt-8">
+            <Button
+              variant={"outline"}
+              type="button"
+              className="px-8 py-2 text-gray-700 bg-white border-gray-300 hover:bg-gray-50 h-10"
+            >
+              CANCEL
+            </Button>
+            <Button
+              type="submit"
+              className="px-8 py-2 bg-primary-500 hover:bg-primary-600 text-white h-10"
+            >
+              {code ? "UPDATE" : "CREATE"}
+            </Button>
           </div>
         </form>
       </Form>
+
       <SuccessDialog
         open={successDialogOpen}
         onOpenChange={setSuccessDialogOpen}

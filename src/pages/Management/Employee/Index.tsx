@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+=======
+>>>>>>> develop
 import {
   Table,
   TableBody,
@@ -8,7 +11,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+<<<<<<< HEAD
 import { Button } from "@/components/ui/button";
+=======
+import { useState } from "react";
+import { Link } from "react-router-dom";
+
+>>>>>>> develop
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +28,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+<<<<<<< HEAD
 import {
   Edit,
   Trash2,
@@ -30,6 +40,9 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+=======
+import { Button } from "@/components/ui/button";
+>>>>>>> develop
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -39,7 +52,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+<<<<<<< HEAD
 import { useDataStore } from "@/stores/useDataStore";
+=======
+import {
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  Edit,
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+>>>>>>> develop
 
 export default function EmployeeList({ onSort, sortConfig }) {
   const navigate = useNavigate();
@@ -170,6 +198,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
       {/* Table */}
       <Table className="w-full overflow-auto shadow-sm rounded-md">
         <TableHeader className="bg-primary-400 text-center">
+<<<<<<< HEAD
           {/* ✅ Wrap TableHead in TableRow */}
           <TableRow>
             <TableHead className="px-4 py-2 font-semibold">#</TableHead>
@@ -200,6 +229,57 @@ export default function EmployeeList({ onSort, sortConfig }) {
             <TableHead className="px-4 py-2 font-semibold">Phone No.</TableHead>
             <TableHead className="px-4 py-2 font-semibold">Action</TableHead>
           </TableRow>
+=======
+          <TableHead className="px-4 py-2 font-semibold">No</TableHead>
+          <TableHead className="px-4 py-2 font-semibold">
+            Employee Code
+          </TableHead>
+          <TableHead className="px-4 py-2 font-semibold">Username</TableHead>
+
+          {/* Sortable Name column */}
+          <TableHead className="px-4 py-2 font-semibold">
+            <Button
+              variant="ghost"
+              className=" hover:text-white hover:bg-primary-500 p-0 flex items-center gap-1"
+              onClick={() => handleSort("name")}
+            >
+              Name
+              <ArrowUpDown
+                className={`h-4 w-4 transition-transform ${
+                  sortConfig?.key === "name"
+                    ? sortConfig.direction === "asc"
+                      ? "rotate-180"
+                      : ""
+                    : "opacity-50"
+                }`}
+              />
+            </Button>
+          </TableHead>
+
+          {/* Sortable Role column */}
+          <TableHead className="px-4 py-2 font-semibold">
+            <Button
+              variant="ghost"
+              className=" hover:text-white hover:bg-primary-500 p-0 flex items-center gap-1"
+              onClick={() => handleSort("role")}
+            >
+              Role
+              <ArrowUpDown
+                className={`h-4 w-4 transition-transform ${
+                  sortConfig?.key === "role"
+                    ? sortConfig.direction === "asc"
+                      ? "rotate-180"
+                      : ""
+                    : "opacity-50"
+                }`}
+              />
+            </Button>
+          </TableHead>
+
+          <TableHead className="px-4 py-2 font-semibold">Email</TableHead>
+          <TableHead className="px-4 py-2 font-semibold">Phone No.</TableHead>
+          <TableHead className="px-4 py-2 font-semibold">Action</TableHead>
+>>>>>>> develop
         </TableHeader>
 
         <TableBody>
@@ -254,8 +334,13 @@ export default function EmployeeList({ onSort, sortConfig }) {
               onClick={() => setCurrentPage(page)}
               className={`px-3 py-1 rounded ${
                 page === currentPage
+<<<<<<< HEAD
                   ? "bg-primary-500 text-white"
                   : "bg-white hover:bg-gray-200"
+=======
+                  ? "bg-primary-500 text-natural-50"
+                  : "bg-natural-50 text-black hover:bg-gray-200"
+>>>>>>> develop
               }`}
             >
               {page}

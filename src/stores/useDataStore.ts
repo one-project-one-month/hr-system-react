@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 interface FetchConfig {
-  url: string;
+  endPoint: string;
   method?: string;
   body?: any;
   headers?: Record<string, string>;
@@ -20,7 +20,7 @@ export const useDataStore = create<DataStore>((set) => ({
 
   // Fetch data from API
   fetchData: async ({
-    url,
+    endPoint,
     method = "GET",
     body,
     headers = {},
@@ -38,13 +38,12 @@ export const useDataStore = create<DataStore>((set) => ({
         ...(body && { body: JSON.stringify(body) }),
       };
 
-      const response = await fetch(url, options);
+      const response = await fetch(`/api${endPoint}`, options);
+      const data = await response.json();
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`API Error ${response.status}: ${errorText}`);
       }
-      const data = await response.json();
-      console.log("API Response:", data);
       set({ data: data, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });

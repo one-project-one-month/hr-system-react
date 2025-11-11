@@ -41,8 +41,9 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           Menu
         </span>
         <ChevronUp
-          className={`mt-2 text-sm transition-transform duration-300 ${isSubMenuItemOpen ? "rotate-180" : "rotate-0"
-            }`}
+          className={`mt-2 text-sm transition-transform duration-300 ${
+            isSubMenuItemOpen ? "rotate-180" : "rotate-0"
+          }`}
           size={14}
         />
       </div>
@@ -53,9 +54,13 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           </Link>
         </>
       )}
-      <Link to="/role" onClick={onClose} className="sidebar-btn">
+      <Link
+        to="/management/admin/role-menu-permission"
+        onClick={onClose}
+        className="sidebar-btn"
+      >
         <UserRound />
-        Role & Permission
+        Role & Menu Permission
       </Link>
       <Link to="/employee" onClick={onClose} className="sidebar-btn">
         <UsersRound />
@@ -70,8 +75,9 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           Backlog Module
         </span>
         <ChevronUp
-          className={`mt-2 text-sm transition-transform duration-300 ${isBackLogMenuOpen ? "rotate-180" : "rotate-0"
-            }`}
+          className={`mt-2 text-sm transition-transform duration-300 ${
+            isBackLogMenuOpen ? "rotate-180" : "rotate-0"
+          }`}
           size={14}
         />
       </div>
@@ -96,8 +102,9 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           Attendance Module
         </span>
         <ChevronUp
-          className={`mt-2 text-sm transition-transform duration-300 ${isSubMenuOpen ? "rotate-180" : "rotate-0"
-            }`}
+          className={`mt-2 text-sm transition-transform duration-300 ${
+            isSubMenuOpen ? "rotate-180" : "rotate-0"
+          }`}
           size={14}
         />
       </div>
