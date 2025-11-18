@@ -1,3 +1,4 @@
+import { handleUnauthorized } from "@/lib/utils";
 import { create } from "zustand";
 
 interface FetchConfig {
@@ -38,17 +39,20 @@ export const useDataStore = create<DataStore>((set) => ({
         ...(body && { body: JSON.stringify(body) }),
       };
       const response = await fetch(`/api${endPoint}`, options);
-      const data = response.status === 204 ? null : await response.json();
+
+      const text = await response.text();
+      const data = text ? JSON.parse(text) : null;
+
       if (!response.ok) {
-        const msg =
-          (data && (data.message || data.error)) ||
-          `API Error ${response.status}`;
-        throw new Error(msg);
+        throw new Error(
+          data?.message || data?.error || `API Error ${response.status}`
+        );
       }
-      set({ data: data, loading: false });
+
+      set({ data, loading: false });
     } catch (err) {
       set({ error: err.message, loading: false });
-      throw err;
+      throw err; // optionally rethrow
     }
   },
 

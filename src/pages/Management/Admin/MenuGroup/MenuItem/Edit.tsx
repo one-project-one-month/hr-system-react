@@ -15,10 +15,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import { MenuItemService } from "@/services/menuItemService";
 import { useEffect, useState } from "react";
-import { de } from "date-fns/locale";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function MenuItemForm() {
   const navigate = useNavigate();
+  const token = useAuthStore((state) => state.token);
   const { onConfirm, openDialog } = useSuccessDialogStore();
   const { code } = useParams<{ code: string }>();
   const [errorMessage, setErrorMessage] = useState("");
@@ -49,17 +50,16 @@ export default function MenuItemForm() {
       if (!code) return;
 
       try {
-        const menuItem = await MenuItemService.fetchMenuItem(code);
+        const menuItem = await MenuItemService.fetchMenuItem(code, token);
         // Reset the form with fetched values
         form.reset({
           menuGroupCode: menuItem.data.menuGroupCode ?? "",
-          menuCode: menuItem.data.menuCode ?? "",
+          menuCode: code ?? "",
           menuName: menuItem.data.menuName ?? "",
           url: menuItem.data.url ?? "",
           icon: menuItem.data.icon ?? "",
           sortOrder: menuItem.data.sortOrder ?? 0,
         });
-        console.log("Menu Item Data:", menuItem);
       } catch (err) {
         console.error(err);
       }
@@ -72,7 +72,20 @@ export default function MenuItemForm() {
 
   const handleFormSubmit = async (values: z.infer<typeof menuItemSchema>) => {
     try {
-      await MenuItemService.updateMenuItem(values.menuCode, values);
+      if (!token || !code) return;
+
+      await MenuItemService.updateMenuItem({
+        menuCode: code,
+        token,
+        payload: {
+          menuGroupCode: values.menuGroupCode,
+          menuName: values.menuName,
+          icon: values.icon,
+          url: values.url,
+          sortOrder: values.sortOrder,
+        },
+      });
+
       openDialog("Menu Item updated successfully!", onConfirm);
       navigate("/management/admin/menu-item");
     } catch (error: any) {
@@ -101,25 +114,6 @@ export default function MenuItemForm() {
           className="space-y-3"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {/* MENU CODE */}
-            <FormField
-              control={form.control}
-              name="menuCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Menu Code</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="border-natural-500 rounded-sm py-5"
-                      placeholder="Enter menu code"
-                      {...field}
-                      value={field.value || ""}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             {/* MENU GROUP CODE */}
             <FormField
               control={form.control}

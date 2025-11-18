@@ -16,10 +16,11 @@ import {
   PanelTopOpen,
 } from "lucide-react";
 import { useState } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function Sidebar({ onClose }: { onClose: () => void }) {
   const location = useLocation();
-  console.log(location.pathname);
+  const authStore = useAuthStore();
   const [isBacklogSubMenuOpen, setIsBacklogSubMenuOpen] = useState(false);
   const toggleBacklogSubmenu = () =>
     setIsBacklogSubMenuOpen(!isBacklogSubMenuOpen);
@@ -29,6 +30,10 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
   const toglemenuItem = () => setIsSubMenuItemOpen(!isSubMenuItemOpen);
   const [isBackLogMenuOpen, setIsBackLogMenuOpen] = useState(false);
   const toggleBackLogMenu = () => setIsBackLogMenuOpen(!isBackLogMenuOpen);
+
+  const logOut = () => {
+    authStore.logout();
+  };
   return (
     <div className="flex flex-col items-center gap-2">
       <Link
@@ -233,9 +238,9 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
       >
         <DollarSign /> Payroll
       </Link>
-      <Link to="/logout" onClick={onClose} className="sidebar-btn">
+      <button onClick={logOut} className="sidebar-btn">
         <LogOut /> Logout
-      </Link>
+      </button>
     </div>
   );
 }

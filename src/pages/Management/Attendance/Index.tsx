@@ -55,6 +55,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 
+interface dateFilter {
+  from?: Date;
+  to?: Date;
+}
+
 export function AttendanceList() {
   const navigate = useNavigate()
   const [attendanceList, setAttendanceList] = useState([]);
@@ -63,15 +68,13 @@ export function AttendanceList() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
     const [debouncedFilters, setDebouncedFilters] = useState({
     name: "",
+    date: {},
     pageNo: 0,
     pageSize: 0,
   });
 
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-  const [date, setDate] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({ from: undefined, to: undefined });
+  const [date, setDate] = useState<dateFilter>({ from: undefined, to: undefined });
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [attendanceToDelete, setAttendanceToDelete] = useState("");
   const { open, description, onConfirm, closeDialog, openDialog } =
@@ -98,6 +101,7 @@ export function AttendanceList() {
         setLoading(true);
         const data = await attendanceService.fetchAttendanceRecords(
           searchName,
+          date,
           currentPage,
           rowsPerPage
         );
@@ -116,13 +120,14 @@ export function AttendanceList() {
     const handler = setTimeout(() => {
       setDebouncedFilters({
         name: searchName,
+        date: date,
         pageNo: currentPage,
         pageSize: rowsPerPage,
       });
     }, 400); // 700ms delay
 
     return () => clearTimeout(handler);
-  }, [searchName, currentPage, rowsPerPage]);
+  }, [searchName, date, currentPage, rowsPerPage]);
 
   if (loading) return;
 
@@ -159,7 +164,7 @@ export function AttendanceList() {
         setLoading(true);
         await attendanceService.deleteAttendanceRecord(attendanceToDelete);
         // Refresh list with current paging
-        const data = await attendanceService.fetchAttendanceRecords(currentPage, rowsPerPage);
+        const data = await attendanceService.fetchAttendanceRecords(searchName, date, currentPage, rowsPerPage);
         setAttendanceList(data);
         openDialog("Delete Attendance successful!", onConfirm);
       } catch (error) {

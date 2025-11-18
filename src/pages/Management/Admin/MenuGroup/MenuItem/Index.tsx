@@ -22,14 +22,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -43,14 +35,16 @@ import {
 import { MenuItemService } from "@/services/menuItemService";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function MenuItemList({ onSort, sortConfig }) {
   const navigate = useNavigate();
+  const token = useAuthStore((state) => state.token);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [data, setData] = useState({ totalCount: 0, pageNo: 1, pageSize: 10 });
+  const [data, setData] = useState({});
   const [searchName, setSearchName] = useState("");
 
   const [menuItems, setMenuItems] = useState([]);
@@ -69,7 +63,6 @@ export default function MenuItemList({ onSort, sortConfig }) {
     const handler = setTimeout(() => {
       setDebouncedFilters({
         name: searchName,
-
         pageNo: currentPage || 1,
         pageSize: rowsPerPage || 10,
       });
@@ -80,16 +73,11 @@ export default function MenuItemList({ onSort, sortConfig }) {
   // Fetch menu items
   useEffect(() => {
     const loadData = async () => {
+      if (!token) return;
       try {
         setLoading(true);
         setMenuItems([]);
-        const response = await MenuItemService.fetchMenuItems(
-          debouncedFilters.name || "",
-          debouncedFilters.pageNo || 1,
-          debouncedFilters.pageSize || 10
-        );
-        setData(response || {});
-        setMenuItems(response?.data || []);
+        fetchMenus();
       } catch (error) {
         console.error(error);
       } finally {
@@ -118,8 +106,19 @@ export default function MenuItemList({ onSort, sortConfig }) {
   //   onSort({ key: column, direction });
   // };
 
+  const fetchMenus = async () => {
+    const response = await MenuItemService.fetchMenuItems({
+      name: debouncedFilters.name || "",
+      pageNo: debouncedFilters.pageNo || 1,
+      pageSize: debouncedFilters.pageSize || 10,
+      token: token,
+    });
+    setData(response);
+    setMenuItems(response?.data || []);
+  };
+
   const handleEdit = async (menuCode: string) => {
-    const menuItem = await MenuItemService.fetchMenuItem(menuCode);
+    const menuItem = await MenuItemService.fetchMenuItem(menuCode, token);
     if (menuItem) {
       navigate(`/management/admin/menu-item/edit/${menuCode}`, {
         state: { menuItem },
@@ -135,7 +134,9 @@ export default function MenuItemList({ onSort, sortConfig }) {
 
   const confirmDelete = async () => {
     try {
-      await MenuItemService.deleteMenuItem(employeeToDelete);
+      if (!token) return;
+      await MenuItemService.deleteMenuItem(employeeToDelete, token);
+      await fetchMenus();
       openDialog("Delete Menu Item successful!", onConfirm);
     } catch (error) {
       console.error(error);

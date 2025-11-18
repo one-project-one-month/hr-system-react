@@ -101,11 +101,11 @@ export default function EmployeeList({ onSort, sortConfig }) {
   }, [debouncedFilters]);
 
   const fetchEmployees = async () => {
-    const fetchEmployees = await EmployeeService.fetchEmployees(
-      searchName,
-      currentPage,
-      rowsPerPage
-    );
+    const fetchEmployees = await EmployeeService.fetchEmployees({
+      name: searchName,
+      pageNo: currentPage,
+      pageSize: rowsPerPage,
+    });
     setRowsPerPage(fetchEmployees.pageSize);
     setCurrentPage(fetchEmployees.pageNo);
     setData(fetchEmployees);

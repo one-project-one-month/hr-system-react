@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 
 // Role
 import CreateRole from "./pages/Management/Admin/Role/CreatetRole";
@@ -74,7 +74,6 @@ import PasswordChanged from "./pages/Auth/PasswordChanged";
 import ResetPassword from "./pages/Auth/ResetPassword";
 import LoginPage from "./pages/Login";
 
-import { RoleGuard } from "./components/ui/RoleGuard";
 import Profile from "./pages/Profile/Profile";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
@@ -86,136 +85,134 @@ import EmployeeDashboard from "./pages/Management/Dashboard/EmployeeDashboard";
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          {/* Auth  */}
-          <Route element={<AuthLayout />}>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/verify-otp" element={<OtpVerification />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/password-changed" element={<PasswordChanged />} />
-          </Route>
+      <ScrollToTop />
+      <Routes>
+        {/* Auth  */}
+        <Route element={<AuthLayout />}>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verify-otp" element={<OtpVerification />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/password-changed" element={<PasswordChanged />} />
+        </Route>
 
-          {/* error handling */}
-          <Route>
-            <Route path="*" element={<NotFound />} />
-            <Route path="*" element={<Unauthorized />} />
-          </Route>
+        {/* error handling */}
+        <Route>
+          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<Unauthorized />} />
+        </Route>
 
-          {/*Main Layou */}
-          <Route element={<MainLayout />}>
-            {/* Admin Only */}
-            <Route
-              path="/management/admin/menu-group"
-              element={<MenuGroupList />}
-            ></Route>
-            <Route
-              path="/management/admin/menu-group/create"
-              element={<MenuGroupCreate />}
-            />
-            <Route
-              path="/management/admin/menu-group/edit/:id"
-              element={<MenuGroupEdit />}
-            />
+        {/*Main Layout */}
+        <Route element={<MainLayout />}>
+          {/* Admin Only */}
+          <Route
+            path="/management/admin/menu-group"
+            element={<MenuGroupList />}
+          ></Route>
+          <Route
+            path="/management/admin/menu-group/create"
+            element={<MenuGroupCreate />}
+          />
+          <Route
+            path="/management/admin/menu-group/edit/:id"
+            element={<MenuGroupEdit />}
+          />
 
-            <Route
-              path="/management/admin/menu-item"
-              element={<MenuItemList />}
-            ></Route>
-            <Route
-              path="/management/admin/menu-item/create"
-              element={<MenuItemCreate />}
-            />
-            <Route
-              path="/management/admin/menu-item/edit/:code"
-              element={<MenuItemEdit />}
-            />
+          <Route
+            path="/management/admin/menu-item"
+            element={<MenuItemList />}
+          ></Route>
+          <Route
+            path="/management/admin/menu-item/create"
+            element={<MenuItemCreate />}
+          />
+          <Route
+            path="/management/admin/menu-item/edit/:code"
+            element={<MenuItemEdit />}
+          />
 
-            <Route
-              path="/management/admin/menu-item/detail/:code"
-              element={<MenuItemDetail />}
-            />
-            <Route
-              path="/management/admin/company-rules"
-              element={<CompanyRulesList />}
-            ></Route>
+          <Route
+            path="/management/admin/menu-item/detail/:code"
+            element={<MenuItemDetail />}
+          />
+          <Route
+            path="/management/admin/company-rules"
+            element={<CompanyRulesList />}
+          ></Route>
 
-            <Route path="/management/admin/role" element={<Role />}></Route>
-            <Route
-              path="/management/admin/role/create"
-              element={<CreateRole />}
-            ></Route>
-            <Route
-              path="/management/admin/role/update"
-              element={<UpdateRole />}
-            ></Route>
-            <Route
-              path="/management/admin/role/view"
-              element={<ViewRole />}
-            ></Route>
+          <Route path="/management/admin/role" element={<Role />}></Route>
+          <Route
+            path="/management/admin/role/create"
+            element={<CreateRole />}
+          ></Route>
+          <Route
+            path="/management/admin/role/update"
+            element={<UpdateRole />}
+          ></Route>
+          <Route
+            path="/management/admin/role/view"
+            element={<ViewRole />}
+          ></Route>
 
-            <Route
-              path="/management/admin/role-menu-permission"
-              element={<RoleMenuTreeViewCreate />}
-            ></Route>
+          <Route
+            path="/management/admin/role-menu-permission"
+            element={<RoleMenuTreeViewCreate />}
+          ></Route>
 
             <Route
               path="/management/dashboard"
               element={<EmployeeDashboard />}
             ></Route>
 
-            <Route path="/backlog" element={<Backlog />}></Route>
-            <Route path="/backlog/:id" element={<BacklogDetail />} />
-            <Route path="/backlog/create" element={<BacklogCreate />}></Route>
-            <Route path="/backlog/edit/:id" element={<BacklogEdit />}></Route>
+          <Route path="/backlog" element={<Backlog />}></Route>
+          <Route path="/backlog/:id" element={<BacklogDetail />} />
+          <Route path="/backlog/create" element={<BacklogCreate />}></Route>
+          <Route path="/backlog/edit/:id" element={<BacklogEdit />}></Route>
 
-            <Route path="/project" element={<ProjectList />}></Route>
-            <Route path="/projects/new" element={<ProjectCreate />} />
-            <Route path="/projects/:id" element={<ProjectDetails />} />
-            <Route path="/projects/:id/edit" element={<ProjectEdit />} />
+          <Route path="/project" element={<ProjectList />}></Route>
+          <Route path="/projects/new" element={<ProjectCreate />} />
+          <Route path="/projects/:id" element={<ProjectDetails />} />
+          <Route path="/projects/:id/edit" element={<ProjectEdit />} />
 
-            <Route path="/projects/add-employee" element={<AddEmployee />} />
-            <Route
-              path="/projects/remove-employee"
-              element={<RemoveEmployee />}
-            />
+          <Route path="/projects/add-employee" element={<AddEmployee />} />
+          <Route
+            path="/projects/remove-employee"
+            element={<RemoveEmployee />}
+          />
 
-            <Route path="/location" element={<Location />}></Route>
+          <Route path="/location" element={<Location />}></Route>
 
-            <Route path="/location/create" element={<LocationCreate />}></Route>
-            <Route path="/location/edit/:id" element={<LocationEdit />} />
-            <Route path="/location/detail/:id" element={<LocationDetail />} />
-            <Route path="/attendance" element={<AttendanceList />}></Route>
+          <Route path="/location/create" element={<LocationCreate />}></Route>
+          <Route path="/location/edit/:id" element={<LocationEdit />} />
+          <Route path="/location/detail/:id" element={<LocationDetail />} />
+          <Route path="/attendance" element={<AttendanceList />}></Route>
 
-            <Route
-              path="/attendance/create"
-              element={<CreateAttendance />}
-            ></Route>
-            <Route
-              path="/attendance/:code/detail"
-              element={<DetailsAttendance />}
-            ></Route>
-            <Route
-              path="/attendance/:code/update"
-              element={<UpdateAttendance />}
-            ></Route>
+          <Route
+            path="/attendance/create"
+            element={<CreateAttendance />}
+          ></Route>
+          <Route
+            path="/attendance/:code/detail"
+            element={<DetailsAttendance />}
+          ></Route>
+          <Route
+            path="/attendance/:code/update"
+            element={<UpdateAttendance />}
+          ></Route>
 
-            <Route path="/payroll" element={<Payroll />}></Route>
-            <Route path="/payroll/create" element={<PayrollCreate />}></Route>
-            <Route path="/payroll/:id/edit" element={<PayrollEdit />}></Route>
-            <Route path="/payroll/:id" element={<PayrollDetail />}></Route>
+          <Route path="/payroll" element={<Payroll />}></Route>
+          <Route path="/payroll/create" element={<PayrollCreate />}></Route>
+          <Route path="/payroll/:id/edit" element={<PayrollEdit />}></Route>
+          <Route path="/payroll/:id" element={<PayrollDetail />}></Route>
 
-            <Route path="/employee" element={<EmployeeList />}></Route>
-            <Route path="/employee/new" element={<EmployeeCreate />}></Route>
-            <Route path="/employee/edit/:code" element={<EmployeeEdit />} />
-            <Route path="/employee/detail/:code" element={<EmployeeDetail />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+          <Route path="/employee/new" element={<EmployeeCreate />}></Route>
+          <Route path="/employee" element={<EmployeeList />} />
+          <Route path="/employee/edit/:code" element={<EmployeeEdit />} />
+          <Route path="/employee/detail/:code" element={<EmployeeDetail />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+        </Route>
+      </Routes>
     </>
   );
 }

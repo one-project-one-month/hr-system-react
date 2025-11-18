@@ -1,5 +1,8 @@
 import { menuGroupService } from "@/services/menuGroupService";
-import { MenuGroupForm, type MenuGroupFormValues } from "./MenuGroupForm";
+import {
+  MenuGroupForm,
+  type MenuGroupFormValues,
+} from "../../../../components/ui/MenuGroupForm";
 import { useNavigate } from "react-router-dom";
 import { useDataStore } from "@/stores/useDataStore";
 import { useState } from "react";

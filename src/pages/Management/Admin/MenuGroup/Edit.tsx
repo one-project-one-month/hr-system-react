@@ -1,4 +1,7 @@
-import { MenuGroupForm, type MenuGroupFormValues } from "./MenuGroupForm";
+import {
+  MenuGroupForm,
+  type MenuGroupFormValues,
+} from "../../../../components/ui/MenuGroupForm";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDataStore } from "@/stores/useDataStore";
 import { Button } from "@/components/ui/button";

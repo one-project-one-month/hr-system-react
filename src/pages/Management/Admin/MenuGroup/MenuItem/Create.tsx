@@ -15,11 +15,12 @@ import { useNavigate } from "react-router-dom";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import { MenuItemService } from "@/services/menuItemService";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function MenuItemForm() {
   const navigate = useNavigate();
   const { onConfirm, openDialog } = useSuccessDialogStore();
-
+  const token = useAuthStore((state) => state.token);
   const [menuGroups, setMenuItem] = useState([]);
   const fetchGroups = menuGroups || [];
 
@@ -56,7 +57,7 @@ export default function MenuItemForm() {
 
   const handleFormSubmit = async (values: z.infer<typeof menuItemSchema>) => {
     try {
-      await MenuItemService.createMenuItem(values);
+      await MenuItemService.createMenuItem({ token, payload: values });
       openDialog("Menu Item created successfully!", onConfirm);
       navigate("/management/admin/menu-item");
     } catch (error) {
