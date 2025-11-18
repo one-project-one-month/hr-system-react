@@ -39,8 +39,6 @@ export default function MenuGroupList() {
     () => (token ? { Authorization: `Bearer ${token}` } : undefined),
     [token]
   );
-  console.log(token)
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
