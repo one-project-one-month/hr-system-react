@@ -33,6 +33,7 @@ export default function LoginForm() {
     },
   });
   const authStore = useAuthStore();
+  console.log(authStore)
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {

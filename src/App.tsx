@@ -81,6 +81,7 @@ import NotFound from "./pages/NotFound";
 import { RoleMenuTreeViewCreate } from "./pages/Management/Admin/Role-Menu-Permission/Create";
 import { ScrollToTop } from "./pages/ScrollToTop";
 import AdminDashboard from "./pages/Management/Dashboard/AdminDashboard";
+import EmployeeDashboard from "./pages/Management/Dashboard/EmployeeDashboard";
 
 function App() {
   return (
@@ -162,7 +163,7 @@ function App() {
 
             <Route
               path="/management/dashboard"
-              element={<ManagementDashboard />}
+              element={<EmployeeDashboard />}
             ></Route>
 
             <Route path="/backlog" element={<Backlog />}></Route>
