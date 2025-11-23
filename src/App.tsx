@@ -161,7 +161,7 @@ function App() {
 
             <Route
               path="/management/dashboard"
-              element={<EmployeeDashboard />}
+              element={<AdminDashboard />}
             ></Route>
 
           <Route path="/backlog" element={<Backlog />}></Route>
