@@ -2,10 +2,52 @@ import { FullDonutChart } from '@/components/ui/donutchart';
 import PieChartWithPercentage from '@/components/ui/piechartwithpercentage';
 import { UsersRound } from 'lucide-react';
 import { useCurrentLocation } from '@/components/ui/current-location';
+import { attendanceService } from '@/services/attendanceService';
+import { hrAttendanceReportService } from '@/services/hrAttendanceReportService';
+import { useEffect, useState } from 'react';
 
 /* eslint-disable react-refresh/only-export-components */
 export default function () {
   const { position, error, loading, requestLocation } = useCurrentLocation();
+
+  const [empCount, setEmpCount] = useState<number>(0);
+  const [donutKeys, setDonutKeys] = useState<string[]>(['Present', 'Late', 'Absent']);
+  const [donutValues, setDonutValues] = useState<number[]>([40, 25, 15]);
+  const [donutColors, setDonutColors] = useState<string[]>(['#02B16C', '#FFDF20', '#E7000B']);
+  const [reportsLoading, setReportsLoading] = useState(false);
+  const svc = hrAttendanceReportService;
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      setReportsLoading(true);
+      try {
+        const res = await svc.fetchHRAttendanceReport(Date.now().toString(), 0 /* daily */);
+        if (!mounted) return;
+
+        setEmpCount(res.empCount ?? 0);
+
+
+            if ('present' in res || 'late' in res || 'absent' in res) {
+              setDonutKeys(['Present', 'Late', 'Absent']);
+              setDonutValues([
+                Number(res.present ?? 0),
+                Number(res.late ?? 0),
+                Number(res.absent ?? 0),
+              ]);
+              return;
+            }
+      } catch (err) {
+        console.error('fetchAttendanceReports failed', err);
+      } finally {
+        if (mounted) setReportsLoading(false);
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   return (
     <>
@@ -49,20 +91,21 @@ export default function () {
               <p>Today</p>
             </div>
           </div>
-          <div className='flex gap-3 w-full text-primary-700 flex-col md:flex-row'>
-            <div className='bg-primary-100 p-2 rounded w-60 flex flex-col w-full md:w-[40%] mt-2'>
-              <div className='flex justify-between w-full '>
-                <p className='font-bold '>Total Employee</p>
+          <div className="flex gap-3 w-full text-primary-700 flex-col md:flex-row">
+            <div className="bg-primary-100 p-2 rounded flex flex-col w-full md:w-[40%] mt-2">
+              <div className="flex justify-between w-full ">
+                <p className="font-bold ">Total Employee</p>
                 <UsersRound />
               </div>
               <div className='font-bold text-4xl pt-5'>
-                <p>250</p>
+                <p>{empCount}</p>
               </div>
             </div>
             <div className='w-full'>
               <FullDonutChart
-                values={[40, 25, 15]}
-                colors={['#02B16C', '#FFDF20', '#E7000B']}
+              keys={donutKeys}
+                values={donutValues}
+                colors={donutColors}
                 size={120}
                 strokeWidth={10}
               />
