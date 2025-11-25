@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useAuthStore } from "./useAuthStore";
 
 interface FetchConfig {
   endPoint: string;
@@ -27,8 +28,11 @@ export const useDataStore = create<DataStore>((set) => ({
     set({ loading: true, error: null });
 
     try {
+      const token = useAuthStore.getState().token;
+      
       const defaultHeaders = {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
         ...(headers || {}),
       };
 
