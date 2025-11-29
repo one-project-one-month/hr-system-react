@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,14 +13,15 @@ import { Input } from "@/components/ui/input";
 import Loader from '@/components/ui/Loader';
 import { useAuthStore } from "@/stores/useAuthStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
 
 const formSchema = z.object({
-  username: z.string().min(2, 'username must be at least 2 characters long'),
-  password: z.string().min(6, 'Password must be at least 6 characters long'),
+  username: z.string().min(2, "username must be at least 2 characters long"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
 });
 
 export default function LoginForm() {
@@ -29,8 +30,8 @@ export default function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     },
   });
   const authStore = useAuthStore();
@@ -63,20 +64,21 @@ export default function LoginForm() {
   };
 
   return (
-    <div className='w-full'>
+    <div className="w-full">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-4 py-6 px-8 rounded-xl shadow bg-natural-500'>
-          <p className='font-semibold text-2xl text-center'>Login</p>
+          className="space-y-4 py-6 px-8 rounded-xl shadow bg-natural-500"
+        >
+          <p className="font-semibold text-2xl text-center">Login</p>
 
           <FormField
             control={form.control}
-            name='username'
+            name="username"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Username</FormLabel>
-                <FormControl className="border-none placeholder:text-dark-50">
+                <FormControl className="border-none placeholder:text-dark-50 bg-white">
                   <Input
                     placeholder="you@example.com"
                     {...field}
@@ -90,11 +92,11 @@ export default function LoginForm() {
           />
           <FormField
             control={form.control}
-            name='password'
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
-                <FormControl className="border-none">
+                <FormControl className="border-none bg-white">
                   <Input
                     type="password"
                     placeholder="••••••••"
@@ -124,15 +126,6 @@ export default function LoginForm() {
             <p className="text-sm text-center">Privacy</p>
           </div>
         </form>
-        <Loader loading={Loading} />
-        {/* {showToast && (
-          <ToastMessage
-            message={toastMessage}
-            type={toastType}
-            duration={3000}
-            onClose={() => setShowToast(false)}
-          />
-        )} */}
       </Form>
     </div>
   );

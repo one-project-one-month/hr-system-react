@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import BacklogForm from "@/components/ui/backlogForm";
+import BacklogForm from "@/components/forms/backlogForm";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { backlogService } from "@/services/backlogService";
 
@@ -50,7 +50,7 @@ export function BacklogDetail() {
     <BacklogForm
       mode="view"
       initialData={task}
-      onSubmit={() => {}}
+      onSubmit={() => { }}
       onCancel={() => navigate("/backlog")}
     />
   );

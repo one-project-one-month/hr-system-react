@@ -23,19 +23,8 @@ import { useEffect, useState } from "react";
 import { EmployeeService } from "@/services/employeeService";
 import { useNavigate, useParams } from "react-router-dom";
 import { SuccessDialog } from "../ui/SuccessDialog";
+import { formSchema } from "@/schema/attendance";
 
-const formSchema = z.object({
-  employeeCode: z.string().nonempty("Employee Code cannot be empty!"),
-  employeeName: z.string().nonempty("Employee Name cannot be empty"),
-  checkinLocation: z.string().nonempty("Check In location cannot be empty!"),
-  checkoutLocation: z.string().nonempty("Check out location cannot be empty!"),
-  checkinTime: z.string().nonempty("Checkin Time cannot be empty!"),
-  checkoutTime: z.string().nonempty("Checkout Time cannot be empty!"),
-  workingHour: z.any(),
-  status: z.any(),
-  date: z.date(),
-  remark: z.string(),
-});
 type AttendanceFormValues = z.infer<typeof formSchema>;
 
 export default function AttendanceForm({

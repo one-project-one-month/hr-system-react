@@ -1,6 +1,5 @@
 "use client";
 
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -14,20 +13,11 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { formSchema } from "@/schema/companyrule";
+import type { CompanyRulesFormValues } from "@/types/companyRules";
+import z from "zod";
 import { SuccessDialog } from "../ui/SuccessDialog";
-
-type CompanyRulesFormValues = {
-  companyRuleCode: string;
-  description: string;
-  value: string;
-};
-
-const formSchema = z.object({
-  companyRuleCode: z.string().nonempty("Company Rule Code cannot be empty!"),
-  description: z.string().nonempty("Description cannot be empty!"),
-  value: z.string().nonempty("Value cannot be empty!"),
-});
 
 export default function CompanyRulesForm({
   mode,
@@ -55,7 +45,8 @@ export default function CompanyRulesForm({
     if (!initialValues) return;
 
     const vals: CompanyRulesFormValues = {
-      companyRuleCode: initialValues.companyRuleCode ?? initialValues.companyRuleCode ?? "",
+      companyRuleCode:
+        initialValues.companyRuleCode ?? initialValues.companyRuleCode ?? "",
       description: initialValues.description ?? initialValues.description ?? "",
       value: initialValues.value ?? initialValues.value ?? "",
     };
@@ -63,8 +54,8 @@ export default function CompanyRulesForm({
     form.reset(vals);
   }, [initialValues]);
 
-  const title = mode === "edit" ? "Company Rules Update" : "Company Rules Information";
-
+  const title =
+    mode === "edit" ? "Company Rules Update" : "Company Rules Information";
 
   const handleSuccessConfirm = () => {
     setSuccessDialogOpen(false);
@@ -91,9 +82,7 @@ export default function CompanyRulesForm({
   return (
     <div className="p-6 md:p-8 w-full flex-1 bg-gray-50">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
-          {title}
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
       </div>
 
       <Form {...form}>
@@ -145,7 +134,6 @@ export default function CompanyRulesForm({
                         className="bg-natural-400 border-natural-500 text-gray-700 h-10"
                         placeholder="Enter Value"
                         disabled={mode === "view"}
-
                       />
                     </FormControl>
                     <FormMessage />

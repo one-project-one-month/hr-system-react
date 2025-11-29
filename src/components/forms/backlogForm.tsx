@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -24,51 +23,9 @@ import { Calendar as CalendarIcon, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { backlogService } from "@/services/backlogService";
-
-interface EmployeeApiItem {
-  name?: string;
-  employeeCode?: string;
-}
-
-interface ProjectApiItem {
-  projectName?: string;
-  projectCode?: string;
-}
-
-type LookupOption = { name: string; code: string };
-
-const formSchema = z.object({
-  taskCode: z.string().optional(),
-  taskName: z.string().nonempty("Task Name cannot be empty!"),
-  taskDescription: z.string().nonempty("Task Description cannot be empty!"),
-  assignee: z.string().nonempty("Assignee cannot be empty!"),
-  employeeCode: z.string().optional(), // hidden
-  projectName: z.string().nonempty("Project Name cannot be empty!"),
-  projectCode: z.string().optional(), // hidden
-  taskStatus: z.string().nonempty("Task Status cannot be empty!"),
-  startDate: z.date({ error: "Start Date cannot be empty!" }),
-  endDate: z.date({ error: "Due Date cannot be empty!" }),
-  workingHour: z.string().nonempty("Working Hours cannot be empty!"),
-});
-
-interface BacklogFormProps {
-  mode: "create" | "edit" | "view";
-  initialData?: {
-    taskCode?: string;
-    taskName: string;
-    taskDescription: string;
-    employeeName: string;
-    employeeCode?: string;
-    projectName: string;
-    projectCode?: string;
-    taskStatus: string;
-    startDate: string;
-    endDate: string;
-    workingHour: number;
-  };
-  onSubmit: (values: z.infer<typeof formSchema>) => void;
-  onCancel: () => void;
-}
+import type { EmployeeApiItem, ProjectApiItem, LookupOption, BacklogFormProps } from "@/types/backlog"
+import type { formSchema } from "@/schema/backlog";
+import { z } from "zod";
 
 export default function BacklogForm({
   mode,
@@ -985,9 +942,8 @@ export default function BacklogForm({
 
           {/* Action Buttons */}
           <div
-            className={`${
-              mode === "create" ? "mt-10" : "mt-4"
-            } mr-5 flex justify-end gap-3`}
+            className={`${mode === "create" ? "mt-10" : "mt-4"
+              } mr-5 flex justify-end gap-3`}
           >
             <Button type="button" className="outline-btn" onClick={onCancel}>
               {mode === "view" ? "Back" : "Cancel"}

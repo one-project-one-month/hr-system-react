@@ -2,25 +2,8 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import type { MenuGroupItem } from "@/services/menuGroupService";
-
-export type MenuGroupFormValues = {
-  menuGroupCode: string;
-  menuGroupName: string;
-  url: string;
-  icon: string;
-  sortOrder: number | null | undefined;
-  hasMenuItem: boolean;
-};
-
-type MenuGroupFormProps = {
-  mode: "create" | "edit";
-  initialValues?: Partial<MenuGroupItem>;
-  submitting?: boolean;
-  serverError?: string;
-  onSubmit: (values: MenuGroupFormValues) => void | Promise<void>;
-  onCancel: () => void;
-};
+import type { MenuGroupFormValues } from "@/types/menuGroup";
+import type { MenuGroupFormProps } from "@/types/menuGroup";
 
 export function MenuGroupForm({
   mode,

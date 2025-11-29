@@ -14,8 +14,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import { MenuItemService } from "@/services/menuItemService";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { menuItemSchema } from "@/schema/menuItem";
 
 export default function MenuItemForm() {
   const navigate = useNavigate();
@@ -25,14 +26,6 @@ export default function MenuItemForm() {
   const fetchGroups = menuGroups || [];
 
   // ZOD SCHEMA
-  const menuItemSchema = z.object({
-    menuGroupCode: z.string().min(1, "Menu Group is required"),
-    menuCode: z.string().min(1, "Menu Code is required"),
-    menuName: z.string().min(2, "Menu Name is required"),
-    url: z.string().min(1, "URL is required"),
-    icon: z.string().min(1, "Icon is required"),
-    sortOrder: z.number().min(0, "Sort Order must be 0 or greater"),
-  });
 
   const form = useForm<z.infer<typeof menuItemSchema>>({
     resolver: zodResolver(menuItemSchema),
@@ -45,13 +38,6 @@ export default function MenuItemForm() {
       sortOrder: 0,
     },
   });
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const res = await MenuItemService.createMenuItem();
-  //     setMenuItem(res.data.itmes || []);
-  //   })();
-  // }, []);
 
   const handleCancel = () => navigate("/management/admin/menu-item");
 
