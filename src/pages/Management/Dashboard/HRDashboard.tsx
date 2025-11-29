@@ -27,15 +27,15 @@ export default function () {
         setEmpCount(res.empCount ?? 0);
 
 
-            if ('present' in res || 'late' in res || 'absent' in res) {
-              setDonutKeys(['Present', 'Late', 'Absent']);
-              setDonutValues([
-                Number(res.present ?? 0),
-                Number(res.late ?? 0),
-                Number(res.absent ?? 0),
-              ]);
-              return;
-            }
+        if ('present' in res || 'late' in res || 'absent' in res) {
+          setDonutKeys(['Present', 'Late', 'Absent']);
+          setDonutValues([
+            Number(res.present ?? 0),
+            Number(res.late ?? 0),
+            Number(res.absent ?? 0),
+          ]);
+          return;
+        }
       } catch (err) {
         console.error('fetchAttendanceReports failed', err);
       } finally {
@@ -85,29 +85,29 @@ export default function () {
         </div>
         <div className='bg-natural-50 rounded p-3'>
           <div className='flex justify-between items-center'>
-          <p className='text-xl font-medium'>Attendance Overview</p>
+            <p className='text-xl font-medium'>Attendance Overview</p>
 
-          <div className='relative me-4'>
-            <select
-              className="
+            <div className='relative me-4'>
+              <select
+                className="
                 p-2 pr-8 bg-primary-50 text-primary-600 rounded 
                 focus:outline-none focus:ring-2 focus:ring-primary-300
                 appearance-none cursor-pointer
               "
-              onChange={(e) => setDataView(Number(e.target.value))}
-            >
-              <option value="0">Today</option>
-              <option value="1">Weekly</option>
-              <option value="2">Monthly</option>
-              <option value="3">Yearly</option>
-            </select>
+                onChange={(e) => setDataView(Number(e.target.value))}
+              >
+                <option value="0">Today</option>
+                <option value="1">Weekly</option>
+                <option value="2">Monthly</option>
+                <option value="3">Yearly</option>
+              </select>
 
-            {/* Down arrow */}
-            <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-primary-600">
-              ▼
-            </span>
+              {/* Down arrow */}
+              <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-primary-600">
+                ▼
+              </span>
+            </div>
           </div>
-        </div>
 
           <div className="flex gap-3 w-full text-primary-700 flex-col md:flex-row">
             <div className="bg-primary-100 p-2 rounded flex flex-col w-full md:w-[40%] mt-2">
@@ -121,7 +121,7 @@ export default function () {
             </div>
             <div className='w-full'>
               <FullDonutChart
-              keys={donutKeys}
+                keys={donutKeys}
                 values={donutValues}
                 colors={donutColors}
                 size={120}

@@ -20,19 +20,8 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { useState } from "react";
-interface Employee {
-  Id: number;
-  EmployeeCode: string;
-  Username: string;
-  Name: string;
-  Role: string;
-  Email: string;
-  PhoneNo: string;
-  StartDate: string;
-  ResignDate: string;
-  Salary?: number;
-  Password?: string;
-}
+import type { Employee } from "@/types/employee";
+
 const EmployeeData = [
   {
     Id: 1,
@@ -670,8 +659,8 @@ export function RemoveEmployee() {
                       isAllSelected
                         ? true
                         : isSomeSelected
-                        ? "indeterminate"
-                        : false
+                          ? "indeterminate"
+                          : false
                     }
                     onCheckedChange={handleSelectAll}
                     className="w-5 h-5 border border-gray-400 rounded flex items-center justify-center"
@@ -749,11 +738,10 @@ export function RemoveEmployee() {
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
-              className={`px-3 py-1 rounded ${
-                page === currentPage
-                  ? "bg-primary-500 text-natural-50"
-                  : "bg-natural-50 text-black hover:bg-gray-200"
-              }`}
+              className={`px-3 py-1 rounded ${page === currentPage
+                ? "bg-primary-500 text-natural-50"
+                : "bg-natural-50 text-black hover:bg-gray-200"
+                }`}
             >
               {page}
             </button>

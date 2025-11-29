@@ -7,25 +7,10 @@ import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { ProfileService } from "@/services/profileService";
+import { profileSchema } from "@/schema/profile";
 
 // ✅ Zod validation schema
-const profileSchema = z.object({
-  profileImage: z.string().optional(),
-  employeeCode: z.string().nonempty("Employee code is required"),
-  username: z
-    .string()
-    .min(5, "Username must be at least 5 characters")
-    .max(20, "Username must be less than 20 characters"),
-  name: z
-    .string()
-    .min(2, "Name must be at least 2 characters")
-    .max(50, "Name must be less than 50 characters"),
-  roleName: z.string(),
-  email: z.string().email("Invalid email address"),
-  phoneNo: z
-    .string()
-    .regex(/^[0-9]{10,15}$/, "Phone number must be 10–15 digits"),
-});
+
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
@@ -151,9 +136,8 @@ export default function Profile() {
                 type="text"
                 disabled
                 readOnly
-                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${
-                  errors.employeeCode ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${errors.employeeCode ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               {errors.employeeCode && (
                 <p className="text-red-500 text-xs mt-1">
@@ -170,9 +154,8 @@ export default function Profile() {
               <Input
                 {...register("username")}
                 type="text"
-                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${
-                  errors.username ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${errors.username ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               {errors.username && (
                 <p className="text-red-500 text-xs mt-1">
@@ -191,9 +174,8 @@ export default function Profile() {
                 type="text"
                 disabled
                 readOnly
-                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${
-                  errors.roleName ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${errors.roleName ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               {errors.roleName && (
                 <p className="text-red-500 text-xs mt-1">
@@ -210,9 +192,8 @@ export default function Profile() {
               <Input
                 {...register("name")}
                 type="text"
-                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${
-                  errors.name ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${errors.name ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               {errors.name && (
                 <p className="text-red-500 text-xs mt-1">
@@ -229,9 +210,8 @@ export default function Profile() {
               <Input
                 {...register("email")}
                 type="email"
-                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${
-                  errors.email ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${errors.email ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               {errors.email && (
                 <p className="text-red-500 text-xs mt-1">
@@ -248,9 +228,8 @@ export default function Profile() {
               <Input
                 {...register("phoneNo")}
                 type="tel"
-                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${
-                  errors.phoneNo ? "border-red-500" : "border-gray-300"
-                }`}
+                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${errors.phoneNo ? "border-red-500" : "border-gray-300"
+                  }`}
               />
               {errors.phoneNo && (
                 <p className="text-red-500 text-xs mt-1">

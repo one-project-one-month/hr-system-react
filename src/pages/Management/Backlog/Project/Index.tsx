@@ -1,12 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Table,
@@ -16,10 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import {
-  Calendar1Icon,
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -45,12 +37,10 @@ import { projectService } from "@/services/projectService";
 import { useExcelExport, type ExcelColumn } from "@/hooks/useExcelExport";
 import type { ApiEnvelope, ListData, Row } from "@/types/project";
 
-/* ---------- types ---------- */
 
 const isApiEnvelope = <T,>(x: unknown): x is ApiEnvelope<T> =>
   typeof x === "object" && x !== null && "data" in x;
 
-/* ---------- helpers ---------- */
 const toIsoStart = (d: Date) => {
   const x = new Date(d);
   x.setHours(0, 0, 0, 0);
@@ -67,7 +57,6 @@ export default function ProjectListing() {
   const roleName = useAuthStore((s) => s.user?.roleName);
 
   // UI state
-  const [date, setDate] = useState<{ from?: Date; to?: Date }>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);

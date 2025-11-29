@@ -58,3 +58,12 @@ export type ApiProject = {
     endDate?: string | null;
     projectStatus: "Active" | "Completed" | "Cancelled" | "Planned";
 };
+
+export type Project = {
+    projectCode: string;
+    projectName: string;
+    projectStatus: "Planned" | "InProgress" | "DONE";
+    startDate?: string | null;
+    endDate?: string | null;
+};
+

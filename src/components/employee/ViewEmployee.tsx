@@ -1,4 +1,3 @@
-import React from "react";
 
 function ViewEmployee() {
   return <div>ViewEmployee</div>;

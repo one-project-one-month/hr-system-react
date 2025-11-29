@@ -13,14 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDataStore } from "@/stores/useDataStore";
 import { projectService } from "@/services/projectService";
 import { format } from "date-fns";
-
-type Project = {
-  projectCode: string;
-  projectName: string;
-  projectStatus: "Planned" | "InProgress" | "DONE";
-  startDate?: string | null;
-  endDate?: string | null;
-};
+import type { Project } from "@/types/project";
 
 const toDMY = (s?: string | null) => {
   if (!s) return null;
