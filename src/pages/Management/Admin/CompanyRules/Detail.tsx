@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import CompanyRulesForm from "@/components/ui/companyRules-form";
 
 export function CompanyRulesDetails() {
-  const { companyRuleId} = useParams();
+  const { companyRuleId } = useParams();
   const [searchParams] = useSearchParams();
 
   const [initialValues, setInitialValues] = useState<any>(null);
@@ -13,9 +13,6 @@ export function CompanyRulesDetails() {
     const load = async () => {
       const description = searchParams.get("description");
       const value = searchParams.get("value");
-      console.log("Loading company rule for ID:", companyRuleId);
-      console.log("Description from params:", description);
-        console.log("Value from params:", value);
       setInitialValues({
         companyRuleId,
         description,
@@ -27,7 +24,5 @@ export function CompanyRulesDetails() {
 
   if (!initialValues) return <div>Loading...</div>;
 
-  return (
-    <CompanyRulesForm mode="view" initialValues={initialValues} />
-  );
+  return <CompanyRulesForm mode="view" initialValues={initialValues} />;
 }

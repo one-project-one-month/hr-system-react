@@ -1,12 +1,10 @@
 import { menuGroupService } from "@/services/menuGroupService";
-import {
-  MenuGroupForm,
-  type MenuGroupFormValues,
-} from "../../../../components/ui/MenuGroupForm";
+import { MenuGroupForm } from "@/components/ui/MenuGroupForm";
 import { useNavigate } from "react-router-dom";
 import { useDataStore } from "@/stores/useDataStore";
 import { useState } from "react";
 import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import type { MenuGroupFormValues } from "@/types/menuGroup";
 
 const makeMenuGroupCode = (name: string): string => {
   const trimmed = name.trim();

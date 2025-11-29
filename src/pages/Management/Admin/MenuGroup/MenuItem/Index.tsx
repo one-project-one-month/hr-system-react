@@ -37,7 +37,7 @@ import { SpinnerCustom } from "@/components/ui/spinner";
 import { SuccessDialog } from "@/components/ui/SuccessDialog";
 import { useAuthStore } from "@/stores/useAuthStore";
 
-export default function MenuItemList({ onSort, sortConfig }) {
+export default function MenuItemList() {
   const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
