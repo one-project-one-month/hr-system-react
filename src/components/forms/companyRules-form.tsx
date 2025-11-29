@@ -10,23 +10,23 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./form";
-import { Input } from "./input";
-import { Button } from "./button";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { SuccessDialog } from "./SuccessDialog";
+import { SuccessDialog } from "../ui/SuccessDialog";
 
-    type CompanyRulesFormValues = {
-      companyRuleCode: string;
-      description: string;
-      value: string;
-    };
+type CompanyRulesFormValues = {
+  companyRuleCode: string;
+  description: string;
+  value: string;
+};
 
 const formSchema = z.object({
-    companyRuleCode: z.string().nonempty("Company Rule Code cannot be empty!"),
-    description: z.string().nonempty("Description cannot be empty!"),
-    value: z.string().nonempty("Value cannot be empty!"),
+  companyRuleCode: z.string().nonempty("Company Rule Code cannot be empty!"),
+  description: z.string().nonempty("Description cannot be empty!"),
+  value: z.string().nonempty("Value cannot be empty!"),
 });
 
 export default function CompanyRulesForm({
@@ -41,14 +41,14 @@ export default function CompanyRulesForm({
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        companyRuleCode: "",
-        description: "",
-        value: "",
-      },
-    });
-    // const { setValue } = form;
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      companyRuleCode: "",
+      description: "",
+      value: "",
+    },
+  });
+  // const { setValue } = form;
 
   // Normalize initial values coming from backend (datetime strings etc.)
   useEffect(() => {
@@ -63,7 +63,7 @@ export default function CompanyRulesForm({
     form.reset(vals);
   }, [initialValues]);
 
-  const title =  mode === "edit" ? "Company Rules Update" : "Company Rules Information";
+  const title = mode === "edit" ? "Company Rules Update" : "Company Rules Information";
 
 
   const handleSuccessConfirm = () => {
@@ -181,7 +181,7 @@ export default function CompanyRulesForm({
                 variant={"outline"}
                 type="button"
                 className="px-8 py-2 bg-primary-500 hover:bg-primary-600 text-white h-10"
-                onClick={()=>navigate("/management/admin/company-rules")}
+                onClick={() => navigate("/management/admin/company-rules")}
               >
                 BACK
               </Button>

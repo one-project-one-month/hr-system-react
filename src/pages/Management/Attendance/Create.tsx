@@ -1,4 +1,4 @@
-import AttendanceForm from "@/components/ui/attendance-form";
+import AttendanceForm from "@/components/forms/attendance-form";
 import { attendanceService } from "@/services/attendanceService";
 export function CreateAttendance() {
   const handleCreate = async (values: any) => {
@@ -31,20 +31,20 @@ export function CreateAttendance() {
       status: values.status,
       remark: values.remark,
     };
-      const payloadWithListKeys = {
-        ...payload,
-        name: values.employeeName,
-        attendanceDate: toDatePart(values.date),
-        checkInTime: combineDateTime(values.date, values.checkinTime),
-        checkOutTime: combineDateTime(values.date, values.checkoutTime),
-        workingHour: values.workingHour,
-      };
-      await attendanceService.createAttendanceRecord(payloadWithListKeys);
-      try {
-        await attendanceService.fetchAttendanceRecords();
-      } catch (err) {
-        console.log("Failed to refresh attendance list cache", err);
-      }
+    const payloadWithListKeys = {
+      ...payload,
+      name: values.employeeName,
+      attendanceDate: toDatePart(values.date),
+      checkInTime: combineDateTime(values.date, values.checkinTime),
+      checkOutTime: combineDateTime(values.date, values.checkoutTime),
+      workingHour: values.workingHour,
+    };
+    await attendanceService.createAttendanceRecord(payloadWithListKeys);
+    try {
+      await attendanceService.fetchAttendanceRecords();
+    } catch (err) {
+      console.log("Failed to refresh attendance list cache", err);
+    }
   };
 
   return <AttendanceForm mode="create" onSubmitExternal={handleCreate} />;

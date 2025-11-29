@@ -10,9 +10,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./form";
-import { Input } from "./input";
-import { Button } from "./button";
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { Clock } from "lucide-react";
 import {
   Popover,
@@ -22,7 +22,7 @@ import {
 import { useEffect, useState } from "react";
 import { EmployeeService } from "@/services/employeeService";
 import { useNavigate, useParams } from "react-router-dom";
-import { SuccessDialog } from "./SuccessDialog";
+import { SuccessDialog } from "../ui/SuccessDialog";
 
 const formSchema = z.object({
   employeeCode: z.string().nonempty("Employee Code cannot be empty!"),
@@ -302,30 +302,30 @@ export default function AttendanceForm({
               />
 
               {/* Working Hour */}
-              { (mode === 'view') ?
-              <FormField
-                control={form.control}
-                name="workingHour"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
-                      Working Hour
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        readOnly
-                        className="bg-natural-400 border-natural-500 text-gray-700 h-10"
-                        placeholder="Auto-calculated"
-                        disabled={mode === "view"}
+              {(mode === 'view') ?
+                <FormField
+                  control={form.control}
+                  name="workingHour"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                        Working Hour
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          readOnly
+                          className="bg-natural-400 border-natural-500 text-gray-700 h-10"
+                          placeholder="Auto-calculated"
+                          disabled={mode === "view"}
 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               : ''}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                : ''}
             </div>
 
             {/* Right Column */}
@@ -370,7 +370,7 @@ export default function AttendanceForm({
                             readOnly
                             className="pr-8 cursor-pointer bg-natural-50 border-natural-500 h-10 text-natural-800"
                             placeholder="Select time"
-                        disabled={mode === "view"}
+                            disabled={mode === "view"}
 
                           />
                           <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -410,7 +410,7 @@ export default function AttendanceForm({
                             readOnly
                             className="pr-8 cursor-pointer bg-natural-50 border-natural-500 h-10 text-natural-800"
                             placeholder="Select time"
-                        disabled={mode === "view"}
+                            disabled={mode === "view"}
 
                           />
                           <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -425,7 +425,7 @@ export default function AttendanceForm({
                           value={field.value || ""}
                           onChange={(e) => field.onChange(e.target.value)}
                           className="border rounded-md p-2"
-                        disabled={mode === "view"}
+                          disabled={mode === "view"}
 
                         />
                       </PopoverContent>
@@ -436,30 +436,30 @@ export default function AttendanceForm({
               />
 
               {/* Status */}
-              { (mode === 'view') ?
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
-                      Status
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        readOnly
-                        className="bg-natural-50 border-natural-500 h-10 text-natural-800"
-                        placeholder="Auto status"
-                        disabled={mode === "view"}
+              {(mode === 'view') ?
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
+                        Status
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          readOnly
+                          className="bg-natural-50 border-natural-500 h-10 text-natural-800"
+                          placeholder="Auto status"
+                          disabled={mode === "view"}
 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              : ''}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                : ''}
             </div>
           </div>
 
@@ -489,7 +489,7 @@ export default function AttendanceForm({
                 variant={"outline"}
                 type="button"
                 className="px-8 py-2 bg-primary-500 hover:bg-primary-600 text-white h-10"
-                onClick={()=>navigate("/attendance")}
+                onClick={() => navigate("/attendance")}
               >
                 BACK
               </Button>

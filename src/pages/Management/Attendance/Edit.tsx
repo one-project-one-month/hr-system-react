@@ -1,4 +1,4 @@
-import AttendanceForm from "@/components/ui/attendance-form";
+import AttendanceForm from "@/components/forms/attendance-form";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { attendanceService } from "@/services/attendanceService";

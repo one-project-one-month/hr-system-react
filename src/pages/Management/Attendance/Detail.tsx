@@ -1,11 +1,11 @@
-import AttendanceForm from "@/components/ui/attendance-form";
+import AttendanceForm from "@/components/forms/attendance-form";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { attendanceService } from "@/services/attendanceService";
 
 export function DetailsAttendance() {
   const { code } = useParams();
-  const [ searchParams ] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [initialValues, setInitialValues] = useState<any>(null);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export function DetailsAttendance() {
       try {
         const data = await attendanceService.editAttendanceRecord(code as string);
         const record = Array.isArray(data) ? data[0] : data;
-        record.attendance.status =  searchParams.get("status")
+        record.attendance.status = searchParams.get("status")
         setInitialValues(record.attendance);
       } catch (err) {
         console.error("Failed to load attendance record", err);
