@@ -168,7 +168,7 @@ export default function MenuGroupList() {
                 type="text"
                 placeholder="Search..."
                 className="pl-9 placeholder:text-primary-600 focus-visible:ring-1 focus-visible:ring-primary-500 focus-visible:ring-offset-0 focus-visible:border-primary-500 border-0 shadow-sm rounded-md"
-                // TODO: wire search to API or client filter
+              // TODO: wire search to API or client filter
               />
             </div>
 
@@ -318,11 +318,10 @@ export default function MenuGroupList() {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 rounded ${
-                  page === currentPage
+                className={`px-3 py-1 rounded ${page === currentPage
                     ? "bg-primary-500 text-natural-50"
                     : "bg-natural-50 text-black hover:bg-gray-200"
-                }`}
+                  }`}
               >
                 {page}
               </button>

@@ -54,11 +54,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
-
-interface dateFilter {
-  from?: Date;
-  to?: Date;
-}
+import type { dateFilter } from "@/schema/attendance";
 
 export function AttendanceList() {
   const navigate = useNavigate()
@@ -66,7 +62,7 @@ export function AttendanceList() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [debouncedFilters, setDebouncedFilters] = useState({
+  const [debouncedFilters, setDebouncedFilters] = useState({
     name: "",
     date: {},
     pageNo: 0,
@@ -78,9 +74,9 @@ export function AttendanceList() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [attendanceToDelete, setAttendanceToDelete] = useState("");
   const { open, description, onConfirm, closeDialog, openDialog } =
-      useSuccessDialogStore();
-  const formatDateTime = (datetime: string) => datetime ? format(new Date(datetime), "yyyy-MM-dd HH:mm"): "-";
-  const formatDate = (dateStr: string) => dateStr ? format(new Date(dateStr), "yyyy-MM-dd"): "-";
+    useSuccessDialogStore();
+  const formatDateTime = (datetime: string) => datetime ? format(new Date(datetime), "yyyy-MM-dd HH:mm") : "-";
+  const formatDate = (dateStr: string) => dateStr ? format(new Date(dateStr), "yyyy-MM-dd") : "-";
   const totalPages = attendanceList
     ? Math.ceil(attendanceList.length / rowsPerPage)
     : 0;
@@ -115,7 +111,7 @@ export function AttendanceList() {
     loadData();
   }, [debouncedFilters]);
 
-    // Debounce effect
+  // Debounce effect
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedFilters({
@@ -160,69 +156,69 @@ export function AttendanceList() {
     setDeleteDialogOpen(true);
   };
   const confirmDelete = async () => {
-      try {
-        setLoading(true);
-        await attendanceService.deleteAttendanceRecord(attendanceToDelete);
-        // Refresh list with current paging
-        const data = await attendanceService.fetchAttendanceRecords(searchName, date, currentPage, rowsPerPage);
-        setAttendanceList(data);
-        openDialog("Delete Attendance successful!", onConfirm);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-        setDeleteDialogOpen(false);
-        setAttendanceToDelete("");
-      }
-    };
-  
-    const cancelDelete = () => {
+    try {
+      setLoading(true);
+      await attendanceService.deleteAttendanceRecord(attendanceToDelete);
+      // Refresh list with current paging
+      const data = await attendanceService.fetchAttendanceRecords(searchName, date, currentPage, rowsPerPage);
+      setAttendanceList(data);
+      openDialog("Delete Attendance successful!", onConfirm);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
       setDeleteDialogOpen(false);
       setAttendanceToDelete("");
-    };
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteDialogOpen(false);
+    setAttendanceToDelete("");
+  };
   return (
     <div className="p-6 w-full flex-1">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-5">
         <p className="text-3xl font-semibold">Attendance</p>
         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 w-full md:w-auto">
-        {/* date picker */}
-        <div className="grid gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                className={cn(
-                  "justify-between text-left font-normal w-[250px] outline-btn font-semibold",
-                  !date && "text-muted-foreground"
-                )}
-              >
-                {date?.from ? (
-                  date.to ? (
-                    <>
-                      {format(date.from, "LLL dd, y")}/
-                      {format(date.to, "LLL dd, y")}
-                    </>
+          {/* date picker */}
+          <div className="grid gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  className={cn(
+                    "justify-between text-left font-normal w-[250px] outline-btn font-semibold",
+                    !date && "text-muted-foreground"
+                  )}
+                >
+                  {date?.from ? (
+                    date.to ? (
+                      <>
+                        {format(date.from, "LLL dd, y")}/
+                        {format(date.to, "LLL dd, y")}
+                      </>
+                    ) : (
+                      format(date.from, "LLL dd, y")
+                    )
                   ) : (
-                    format(date.from, "LLL dd, y")
-                  )
-                ) : (
-                  <span>Pick a date range</span>
-                )}
-                <Calendar1Icon className="mr-2 h-4 w-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0 bg-natural-50" align="start">
-              <Calendar
-                mode="range"
-                selected={date}
-                onSelect={(dateRange) =>
-                  setDate({ from: dateRange?.from, to: dateRange?.to })
-                }
-                numberOfMonths={2}
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className="relative w-full md:w-[200px] text-primary-800">
+                    <span>Pick a date range</span>
+                  )}
+                  <Calendar1Icon className="mr-2 h-4 w-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0 bg-natural-50" align="start">
+                <Calendar
+                  mode="range"
+                  selected={date}
+                  onSelect={(dateRange) =>
+                    setDate({ from: dateRange?.from, to: dateRange?.to })
+                  }
+                  numberOfMonths={2}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          <div className="relative w-full md:w-[200px] text-primary-800">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
             <Input
               type="text"
@@ -239,170 +235,169 @@ export function AttendanceList() {
             ) : (
               ""
             )}
+          </div>
+          {/* buttons */}
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-btn border border-primary-700 focus:outline-none py-1 px-2 rounded-md flex gap-2">
+              <FileUp />
+              Export
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="z-20 border border-primary-700 bg-natural-50 w-24 p-4 rounded-md">
+              <DropdownMenuSeparator />
+              <DropdownMenuItem> PDF</DropdownMenuItem>
+              <DropdownMenuItem>Excel</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Button className="outline-btn" onClick={goToCreatForm}>
+            <Plus />
+            Add
+          </Button>
         </div>
-        {/* buttons */}
-        <DropdownMenu>
-          <DropdownMenuTrigger className="outline-btn border border-primary-700 focus:outline-none py-1 px-2 rounded-md flex gap-2">
-            <FileUp />
-            Export
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="z-20 border border-primary-700 bg-natural-50 w-24 p-4 rounded-md">
-            <DropdownMenuSeparator />
-            <DropdownMenuItem> PDF</DropdownMenuItem>
-            <DropdownMenuItem>Excel</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <Button className="outline-btn" onClick={goToCreatForm}>
-          <Plus />
-          Add
-        </Button> 
-      </div>
       </div>
       <>
-        
-            <>
-              <Table className="w-full overflow-auto">
-                <TableHeader className="bg-primary-300">
-                  <TableRow className="border-none">
-                    <TableHead className="w-[60px]">No.</TableHead>
-                    <TableHead className="text-center">Name</TableHead>
-                    <TableHead className="text-center">Date</TableHead>
-                    <TableHead className="text-center">Check In Time</TableHead>
-                    <TableHead className="text-center">Check Out Time</TableHead>
-                    <TableHead className="text-center">Working Hour</TableHead>
-                    <TableHead className="text-center">Status</TableHead>
-                    <TableHead className="text-center">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {loading ? (
-                    <TableRow key="loading">
-                      <TableCell colSpan={8} className="h-24 text-center">
-                        <div className="flex items-center justify-center text-primary-500">
-                          <SpinnerCustom />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ) : attendanceList.length? (
-                     currentData?.map((user, index) => (
-                      <TableRow
-                        key={index}
-                        className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none py-3 text-center"
-                        onClick={() => handleRowClick(user.attendanceCode, user.status)}
-                      >
-                        <TableCell>{startIndex + index + 1}</TableCell>
-                        <TableCell>{user.employeeName}</TableCell>
-                        <TableCell>
-                          {formatDate(user.attendanceDate)}
-                        </TableCell>
-                        <TableCell>
-                          {formatDateTime(user.checkInTime)}
-                        </TableCell>
-                        <TableCell>
-                          {formatDateTime(user.checkOutTime)}
-                        </TableCell>
-                        <TableCell>{user.workingHour?.toFixed(2)}</TableCell>
-                        <TableCell>{user.status}</TableCell>
 
-                        <TableCell className="flex justify-center gap-2">
-                          <Edit
-                            className="text-primary-500 cursor-pointer"
-                            onClick={(e) => updateAttendance(e, user.attendanceCode)}
-                          />
-                          <Trash2
-                            className="text-error-400 cursor-pointer"
-                            onClick={(e) => handleDelete(e, user.attendanceCode)}
-                          />
-                        </TableCell>
-                      </TableRow>
-                  )) 
-                  ) : (
-                  <TableRow key="no-data">
-                    <TableCell colSpan={8} className="h-24 text-center">
-                      <div className="flex items-center justify-center text-primary-500">
-                        No Data Matched.
-                      </div>
+        <>
+          <Table className="w-full overflow-auto">
+            <TableHeader className="bg-primary-300">
+              <TableRow className="border-none">
+                <TableHead className="w-[60px]">No.</TableHead>
+                <TableHead className="text-center">Name</TableHead>
+                <TableHead className="text-center">Date</TableHead>
+                <TableHead className="text-center">Check In Time</TableHead>
+                <TableHead className="text-center">Check Out Time</TableHead>
+                <TableHead className="text-center">Working Hour</TableHead>
+                <TableHead className="text-center">Status</TableHead>
+                <TableHead className="text-center">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow key="loading">
+                  <TableCell colSpan={8} className="h-24 text-center">
+                    <div className="flex items-center justify-center text-primary-500">
+                      <SpinnerCustom />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : attendanceList.length ? (
+                currentData?.map((user, index) => (
+                  <TableRow
+                    key={index}
+                    className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none py-3 text-center"
+                    onClick={() => handleRowClick(user.attendanceCode, user.status)}
+                  >
+                    <TableCell>{startIndex + index + 1}</TableCell>
+                    <TableCell>{user.employeeName}</TableCell>
+                    <TableCell>
+                      {formatDate(user.attendanceDate)}
+                    </TableCell>
+                    <TableCell>
+                      {formatDateTime(user.checkInTime)}
+                    </TableCell>
+                    <TableCell>
+                      {formatDateTime(user.checkOutTime)}
+                    </TableCell>
+                    <TableCell>{user.workingHour?.toFixed(2)}</TableCell>
+                    <TableCell>{user.status}</TableCell>
+
+                    <TableCell className="flex justify-center gap-2">
+                      <Edit
+                        className="text-primary-500 cursor-pointer"
+                        onClick={(e) => updateAttendance(e, user.attendanceCode)}
+                      />
+                      <Trash2
+                        className="text-error-400 cursor-pointer"
+                        onClick={(e) => handleDelete(e, user.attendanceCode)}
+                      />
                     </TableCell>
                   </TableRow>
-                )}
-                </TableBody>
-              </Table>
-              <div className="flex flex-col md:flex-row items-center gap-2">
-                {/* Paginations */}
-                <div className="w-full flex items-center justify-center md:justify-around p-4 border-t flex-col md:flex-row gap-3 ">
-                  {/* Left: Showing rows */}
-                  <div className="text-sm text-muted-foreground">
-                    {startRow}–{endRow} of {totalRows}
-                  </div>
-                  {/* Middle: Page buttons */}
-                  <div className="flex space-x-1">
-                    <button
-                      onClick={goToFirst}
-                      disabled={currentPage === 1}
-                      className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
-                    >
-                      <ChevronsLeft />
-                    </button>
-                    <button
-                      onClick={goPrev}
-                      disabled={currentPage === 1}
-                      className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
-                    >
-                      <ChevronLeft />
-                    </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page)}
-                          className={`px-3 py-1 rounded ${
-                            page === currentPage
-                              ? "bg-primary-500 text-natural-50"
-                              : "bg-natural-50 text-black hover:bg-gray-200"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      )
-                    )}
-                    <button
-                      onClick={goNext}
-                      disabled={currentPage === totalPages}
-                      className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
-                    >
-                      <ChevronRight />
-                    </button>
-                    <button
-                      onClick={goToLast}
-                      disabled={currentPage === totalPages}
-                      className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
-                    >
-                      <ChevronsRight />
-                    </button>
-                  </div>
-                  {/* Right: Rows per page */}
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-muted-foreground">
-                      Rows/page:
-                    </span>
-                    <select
-                      value={rowsPerPage}
-                      onChange={(e) => {
-                        setRowsPerPage(Number(e.target.value));
-                        setCurrentPage(1); // reset page
-                      }}
-                      className="border rounded px-2 py-1 text-sm p-3"
-                    >
-                      {[10, 20, 30, 50].map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+                ))
+              ) : (
+                <TableRow key="no-data">
+                  <TableCell colSpan={8} className="h-24 text-center">
+                    <div className="flex items-center justify-center text-primary-500">
+                      No Data Matched.
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <div className="flex flex-col md:flex-row items-center gap-2">
+            {/* Paginations */}
+            <div className="w-full flex items-center justify-center md:justify-around p-4 border-t flex-col md:flex-row gap-3 ">
+              {/* Left: Showing rows */}
+              <div className="text-sm text-muted-foreground">
+                {startRow}–{endRow} of {totalRows}
               </div>
-            </>
+              {/* Middle: Page buttons */}
+              <div className="flex space-x-1">
+                <button
+                  onClick={goToFirst}
+                  disabled={currentPage === 1}
+                  className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
+                >
+                  <ChevronsLeft />
+                </button>
+                <button
+                  onClick={goPrev}
+                  disabled={currentPage === 1}
+                  className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
+                >
+                  <ChevronLeft />
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`px-3 py-1 rounded ${page === currentPage
+                        ? "bg-primary-500 text-natural-50"
+                        : "bg-natural-50 text-black hover:bg-gray-200"
+                        }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                )}
+                <button
+                  onClick={goNext}
+                  disabled={currentPage === totalPages}
+                  className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
+                >
+                  <ChevronRight />
+                </button>
+                <button
+                  onClick={goToLast}
+                  disabled={currentPage === totalPages}
+                  className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
+                >
+                  <ChevronsRight />
+                </button>
+              </div>
+              {/* Right: Rows per page */}
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground">
+                  Rows/page:
+                </span>
+                <select
+                  value={rowsPerPage}
+                  onChange={(e) => {
+                    setRowsPerPage(Number(e.target.value));
+                    setCurrentPage(1); // reset page
+                  }}
+                  className="border rounded px-2 py-1 text-sm p-3"
+                >
+                  {[10, 20, 30, 50].map((n) => (
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        </>
       </>
 
       {/* Delete Confirmation */}

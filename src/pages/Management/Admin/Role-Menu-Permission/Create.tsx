@@ -1,4 +1,4 @@
-import RoleMenuPermissionPanel from "@/components/ui/role-menu-treeview";
+import RoleMenuPermissionPanel from "@/components/forms/role-menu-treeview";
 
 export function RoleMenuTreeViewCreate() {
   return (

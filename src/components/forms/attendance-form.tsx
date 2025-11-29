@@ -54,13 +54,9 @@ export default function AttendanceForm({
       remark: "",
     },
   });
-  const { setValue } = form;
 
-  const checkinTime = form.watch("checkinTime");
-  const checkoutTime = form.watch("checkoutTime");
   const employeeCode = form.watch("employeeCode");
 
-  // Normalize initial values coming from backend (datetime strings etc.)
   useEffect(() => {
     if (!initialValues) return;
     const pad = (n: number) => n.toString().padStart(2, "0");
@@ -118,71 +114,7 @@ export default function AttendanceForm({
     return () => clearTimeout(t);
   }, [employeeCode]);
 
-  // useEffect(() => {
-  //   if (!checkinTime || !checkoutTime) return;
-  //   const status = calculateAttendanceStatus(checkinTime, checkoutTime);
-  //   setValue("status", status);
-  //   console.log(form.getValues("status"));
-  // }, [checkinTime, checkoutTime]);
-
   const title = mode === "create" ? "Add New Attendance" : mode === "edit" ? "Edit Attendance" : "Attendance Detail";
-  // const calculateAttendanceStatus = (checkIn: string, checkOut: string) => {
-  //   const toMinutes = (timeStr: string) => {
-  //     const [hours, minutes] = timeStr.split(":").map(Number);
-  //     return hours * 60 + minutes;
-  //   };
-
-  //   // Reference points
-  //   const START_TIME = toMinutes("09:00");
-  //   const LATE_THRESHOLD = toMinutes("10:00");
-  //   const EARLY_DEPARTURE_THRESHOLD = toMinutes("16:30");
-  //   const END_TIME = toMinutes("17:00");
-
-  //   // Validate inputs
-  //   if (!checkIn || !checkOut) return "absent";
-
-  //   const checkInMinutes = toMinutes(checkIn);
-  //   const checkOutMinutes = toMinutes(checkOut);
-  //   const hours = (checkOutMinutes - checkInMinutes) / 60;
-  //   form.setValue("workingHour", parseFloat(hours.toFixed(2)));
-
-  //   // Validation: Check-out must be after check-in
-  //   if (checkOutMinutes <= checkInMinutes) {
-  //     form?.setError?.("checkinTime", {
-  //       message: "Checkout time must be later than checkin time",
-  //     });
-  //     return "";
-  //   }
-
-  //   // --- Determine status ---
-  //   let status = "absent";
-
-  //   // Check-in based logic
-  //   if (checkInMinutes < START_TIME && checkOutMinutes > END_TIME) {
-  //     status = "present";
-  //   } else if (checkInMinutes <= LATE_THRESHOLD) {
-  //     status = "late";
-  //   } else if (checkInMinutes > LATE_THRESHOLD) {
-  //     status = "half-day";
-  //   }
-
-  //   if (
-  //     checkOutMinutes >= EARLY_DEPARTURE_THRESHOLD &&
-  //     checkOutMinutes < END_TIME &&
-  //     (status === "present" || status === "late")
-  //   ) {
-  //     status = "early-departure";
-  //   } else if (checkOutMinutes >= END_TIME && status === "present") {
-  //     status = "present";
-  //   } else if (checkOutMinutes >= END_TIME && status === "late") {
-  //     status = "late";
-  //   } else if (checkOutMinutes < EARLY_DEPARTURE_THRESHOLD) {
-  //     status = "absent";
-  //   }
-  //   form.setValue("status", status);
-  //   return status;
-  // };
-
   const handleSuccessConfirm = () => {
     setSuccessDialogOpen(false);
     navigate("/attendance");

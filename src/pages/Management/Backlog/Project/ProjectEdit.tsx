@@ -1,22 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ProjectForm, type ProjectFormValues } from "./ProjectForm";
+import { ProjectForm } from "@/components/forms/ProjectForm";
 import { useDataStore } from "@/stores/useDataStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { projectService } from "@/services/projectService";
 import { Button } from "@/components/ui/button";
 import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import type { ApiProject, ProjectFormValues } from "@/types/project";
 
 // ...imports
-type ApiProject = {
-  id?: string | number;
-  projectCode?: string;
-  projectName: string;
-  projectDescription?: string | null;
-  startDate?: string | null;
-  endDate?: string | null;
-  projectStatus: "Active" | "Completed" | "Cancelled" | "Planned";
-};
 
 export function ProjectEdit() {
   const { id } = useParams<{ id: string }>();

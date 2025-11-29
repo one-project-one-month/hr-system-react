@@ -12,3 +12,9 @@ export const formSchema = z.object({
     date: z.date(),
     remark: z.string(),
 });
+
+
+export interface dateFilter {
+    from?: Date;
+    to?: Date;
+}

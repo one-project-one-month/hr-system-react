@@ -18,24 +18,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-
-export type ProjectFormValues = {
-  code: string;
-  name: string;
-  description: string;
-  status: "Active" | "Completed" | "Cancelled" | "Planned" | "";
-  start: Date | null;
-  due: Date | null;
-};
-
-type ProjectFormProps = {
-  mode: "create" | "edit";
-  initialValues?: Partial<ProjectFormValues>;
-  submitting?: boolean;
-  serverError?: string;
-  onSubmit: (values: ProjectFormValues) => void | Promise<void>;
-  onCancel: () => void;
-};
+import type { ProjectFormProps, ProjectFormValues } from "@/types/project";
 
 export function ProjectForm({
   mode,

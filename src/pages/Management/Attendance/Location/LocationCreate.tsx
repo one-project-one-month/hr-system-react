@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { LocationForm } from "./LocationForm";
+import { LocationForm } from "../../../../components/forms/LocationForm";
 import { SuccessDialog } from "@/components/ui/SuccessDialog";
 import { useDataStore } from "@/stores/useDataStore";
 import { LocationService } from "@/services/LocationService ";

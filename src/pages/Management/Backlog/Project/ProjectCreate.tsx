@@ -1,10 +1,11 @@
 // pages/projects/ProjectCreate.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ProjectForm, type ProjectFormValues } from "./ProjectForm";
+import { ProjectForm } from "@/components/forms/ProjectForm";
 import { useDataStore } from "@/stores/useDataStore";
 import { projectService } from "@/services/projectService";
 import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import type { ProjectFormValues } from "@/types/project";
 
 export function ProjectCreate() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export function ProjectCreate() {
         serverError={error ?? undefined}
         onCancel={() => navigate(-1)}
         onSubmit={async (vals: ProjectFormValues) => {
-  
+
           const payload = {
             projectName: vals.name,
             projectDescription: vals.description || "",

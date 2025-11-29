@@ -24,19 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { DeleteDialog } from "@/components/ui/DeleteDialog";
 import { useDataStore } from "@/stores/useDataStore";
 import { LocationService } from "@/services/LocationService ";
-
-type Location = {
-  locationCode: string;
-  name: string;
-  latitude: string;
-  longitude: string;
-  radius: string;
-  createdAt: string;
-  createdBy: string;
-  modifiedBy: string | null;
-  modifiedAt: string | null;
-  deleteFlag: boolean;
-};
+import type { Location } from "@/types/location";
 
 export default function Location() {
   const navigate = useNavigate();
@@ -320,11 +308,10 @@ export default function Location() {
               key={page}
               onClick={() => setCurrentPage(page)}
               disabled={loading}
-              className={`px-3 py-1 rounded ${
-                page === currentPage
-                  ? "bg-primary-500 text-natural-50"
-                  : "bg-natural-50 text-black hover:bg-gray-200"
-              } disabled:opacity-50 disabled:cursor-not-allowed`}
+              className={`px-3 py-1 rounded ${page === currentPage
+                ? "bg-primary-500 text-natural-50"
+                : "bg-natural-50 text-black hover:bg-gray-200"
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               {page}
             </button>

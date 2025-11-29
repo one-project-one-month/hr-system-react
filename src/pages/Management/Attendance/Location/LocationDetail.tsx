@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { LocationForm } from "./LocationForm";
+import { LocationForm } from "../../../../components/forms/LocationForm";
 import { useState, useEffect } from "react";
 import { useDataStore } from "@/stores/useDataStore";
 import { LocationService } from "@/services/LocationService ";

@@ -43,32 +43,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { projectService } from "@/services/projectService";
 import { useExcelExport, type ExcelColumn } from "@/hooks/useExcelExport";
+import type { ApiEnvelope, ListData, Row } from "@/types/project";
 
 /* ---------- types ---------- */
-type ProjectItem = {
-  projectCode: string;
-  projectName: string;
-  projectDescription: string;
-  startDate: string | null;
-  endDate: string | null;
-  projectStatus: string;
-  createdAt?: string;
-  createdBy?: string;
-  modifiedAt?: string | null;
-  modifiedBy?: string | null;
-};
-type ListData = {
-  items: ProjectItem[];
-  totalCount: number;
-  pageNo: number;
-  pageSize: number;
-};
-type ApiEnvelope<T = unknown> = {
-  isSuccess?: boolean;
-  message?: string;
-  data?: T;
-  [k: string]: unknown;
-};
+
 const isApiEnvelope = <T,>(x: unknown): x is ApiEnvelope<T> =>
   typeof x === "object" && x !== null && "data" in x;
 
@@ -82,14 +60,6 @@ const toIsoEnd = (d: Date) => {
   const x = new Date(d);
   x.setHours(23, 59, 59, 999);
   return x.toISOString();
-};
-
-type Row = {
-  id: string; // projectCode
-  name: string;
-  status: string;
-  startDate: string;
-  endDate: string;
 };
 
 export default function ProjectListing() {
@@ -455,11 +425,10 @@ export default function ProjectListing() {
                   {showDots && <span className="px-2">…</span>}
                   <button
                     onClick={() => setCurrentPage(p)}
-                    className={`px-3 py-1 rounded ${
-                      p === currentPage
-                        ? "bg-primary-500 text-white"
-                        : "bg-white hover:bg-gray-200"
-                    }`}
+                    className={`px-3 py-1 rounded ${p === currentPage
+                      ? "bg-primary-500 text-white"
+                      : "bg-white hover:bg-gray-200"
+                      }`}
                   >
                     {p}
                   </button>
