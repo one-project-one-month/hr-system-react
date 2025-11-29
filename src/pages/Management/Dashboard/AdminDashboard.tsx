@@ -1,9 +1,14 @@
 // src/pages/AdminDashboard.tsx  (or wherever your route/page lives)
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Users, UserX, FolderKanban } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChartCard } from "@/components/ui/bar-chart";
+import {
+  dashboardService,
+  type AttendanceTypes,
+  type DashboardStats,
+} from "@/services/dashboardService";
 
 const attendanceWeekly = [
   { date: "Oct 2", checkIn: 35, checkOut: 10 },
@@ -25,13 +30,67 @@ export default function AdminDashboard() {
 
   const chartData = range === "weekly" ? attendanceWeekly : attendanceMonthly;
 
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [attendanceList, setAttendanceList] = useState<AttendanceTypes | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  console.log(attendanceList);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // setLoading(true);
+        // setError(null);
+
+        const resp = await dashboardService.fetchStatsCards();
+
+        if (!resp.isSuccess || !resp.data) {
+          setError(resp.message || "Failed to load dashboard stats");
+          return;
+        }
+
+        setStats(resp.data);
+      } catch (err) {
+        console.error(err);
+        setError("Something went wrong while fetching dashboard stats.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchAttendance = async () => {
+      try {
+        const resp = await dashboardService.fetchAttendanceLists();
+        setAttendanceList(resp.data);
+      } catch (err) {
+        console.error(err);
+        setError("Something went wrong while fetching dashboard stats.");
+      }
+    };
+
+    fetchStats();
+    fetchAttendance();
+  }, []);
+
   return (
     <div className="w-full space-y-6 h-auto p-6">
       {/* Metrics row */}
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard label="Total Employee" value="250" icon={Users} />
-        <StatCard label="Today Absence" value="30" icon={UserX} />
-        <StatCard label="Total Project" value="50" icon={FolderKanban} />
+        <StatCard
+          label="Total Employee"
+          value={stats?.totalEmployee}
+          icon={Users}
+        />
+        <StatCard
+          label="Today Absence"
+          value={stats?.todayAbsence}
+          icon={UserX}
+        />
+        <StatCard
+          label="Total Project"
+          value={stats?.totalProject}
+          icon={FolderKanban}
+        />
       </div>
 
       {/* Chart section */}
@@ -64,7 +123,7 @@ export default function AdminDashboard() {
 
 type StatCardProps = {
   label: string;
-  value: string;
+  value: number | undefined;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 };
 

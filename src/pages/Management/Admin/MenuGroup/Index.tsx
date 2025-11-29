@@ -27,11 +27,18 @@ import {
   type MenuGroupItem,
 } from "@/services/menuGroupService";
 import { useDataStore } from "@/stores/useDataStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function MenuGroupList() {
   const [data, setData] = useState<MenuGroupItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const token = useAuthStore((s) => s.token);
+  const authHeaders = useMemo(
+    () => (token ? { Authorization: `Bearer ${token}` } : undefined),
+    [token]
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -56,7 +63,7 @@ export default function MenuGroupList() {
         setLoading(true);
         setError(null);
 
-        const resp = await menuGroupService.fetchMenuGroups(listParams);
+        const resp = await menuGroupService.fetchMenuGroups(listParams, authHeaders);
 
         if (!resp?.isSuccess) {
           setError(resp?.message || "Failed to load menu groups");

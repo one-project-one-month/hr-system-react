@@ -80,6 +80,8 @@ import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 import { RoleMenuTreeViewCreate } from "./pages/Management/Admin/Role-Menu-Permission/Create";
 import { ScrollToTop } from "./pages/ScrollToTop";
+import AdminDashboard from "./pages/Management/Dashboard/AdminDashboard";
+import EmployeeDashboard from "./pages/Management/Dashboard/EmployeeDashboard";
 
 function App() {
   return (
