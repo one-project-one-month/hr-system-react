@@ -243,13 +243,12 @@ export default function EmployeeList({ onSort, sortConfig }) {
               >
                 Name
                 <ArrowUpDown
-                  className={`h-4 w-4 transition-transform ${
-                    sortConfig?.key === "name"
+                  className={`h-4 w-4 transition-transform ${sortConfig?.key === "name"
                       ? sortConfig.direction === "asc"
                         ? "rotate-180"
                         : ""
                       : "opacity-50"
-                  }`}
+                    }`}
                 />
               </Button>
             </TableHead>
@@ -404,11 +403,10 @@ export default function EmployeeList({ onSort, sortConfig }) {
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`px-3 py-1 rounded ${
-                  page === currentPage
+                className={`px-3 py-1 rounded ${page === currentPage
                     ? "bg-primary-500 text-natural-50"
                     : "bg-natural-50 text-black hover:bg-gray-200"
-                }`}
+                  }`}
               >
                 {page}
               </button>

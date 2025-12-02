@@ -1,4 +1,4 @@
-import EmployeeEditForm from "@/components/employee/EmployeeEditForm";
+import EmployeeEditForm from "@/components/forms/employee/EmployeeEditForm";
 
 export default function EmployeeEditPage() {
   return (
