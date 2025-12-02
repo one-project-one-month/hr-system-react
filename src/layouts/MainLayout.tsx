@@ -26,20 +26,18 @@ export default function MainLayout() {
         <aside
           className={`w-[300px] bg-natural-50 text-text shadow-lg z-30
                     transition-transform duration-300
-                    ${
-                      isSidebarOpen
-                        ? "fixed top-0 h-full overflow-y-auto overflow-x-hidden"
-                        : "hidden lg:block max-h-[100vh-60px] overflow-y-auto"
-                    }
+                    ${isSidebarOpen
+              ? "fixed top-0 h-full overflow-y-auto overflow-x-hidden"
+              : "hidden lg:block max-h-[100vh-60px] overflow-y-auto hide-scrollbar"
+            }
                     lg:translate-x-0
                 `}
         >
           <div
-            className={`${
-              isSidebarOpen
-                ? "sticky inset-0 flex justify-between p-2 items-center bg-natural-50"
-                : "hidden"
-            }`}
+            className={`${isSidebarOpen
+              ? "sticky inset-0 flex justify-between p-2 items-center bg-natural-50"
+              : "hidden"
+              }`}
           >
             <img src={Logo} alt="logo" className="w-30" />
             <X

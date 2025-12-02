@@ -21,46 +21,42 @@ import { useAuthStore } from "@/stores/useAuthStore";
 export default function Sidebar({ onClose }: { onClose: () => void }) {
   const location = useLocation();
   const authStore = useAuthStore();
-  const [isBacklogSubMenuOpen, setIsBacklogSubMenuOpen] = useState(false);
-  const toggleBacklogSubmenu = () =>
-    setIsBacklogSubMenuOpen(!isBacklogSubMenuOpen);
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
   const toggleSubmenu = () => setIsSubMenuOpen(!isSubMenuOpen);
   const [isSubMenuItemOpen, setIsSubMenuItemOpen] = useState(false);
   const toglemenuItem = () => setIsSubMenuItemOpen(!isSubMenuItemOpen);
   const [isBackLogMenuOpen, setIsBackLogMenuOpen] = useState(false);
   const toggleBackLogMenu = () => setIsBackLogMenuOpen(!isBackLogMenuOpen);
-
+  const menuPermissions = authStore.user?.menuTree?.menuTree;
+  console.log(menuPermissions)
   const logOut = () => {
     authStore.logout();
   };
   return (
     <div className="flex flex-col items-center gap-2">
-      <Link
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'DASHBOARD' && menu.isChecked) ? (< Link
         to="/management/dashboard"
         onClick={onClose}
-        className={`sidebar-btn ${
-          location.pathname === "/management/dashboard"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-        }`}
+        className={`sidebar-btn ${location.pathname === "/management/dashboard"
+          ? "bg-primary-500 text-natural-50"
+          : ""
+          }`}
       >
         <LayoutDashboardIcon />
         Dashboard
-      </Link>
-      <Link
+      </Link>) : <></>}
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'ROLE' && menu.isChecked) ? (<Link
         to="/management/admin/role"
         onClick={onClose}
-        className={`sidebar-btn ${
-          location.pathname === "/management/admin/role"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-        }`}
+        className={`sidebar-btn ${location.pathname === "/management/admin/role"
+          ? "bg-primary-500 text-natural-50"
+          : ""
+          }`}
       >
         <UserRound />
         Role
-      </Link>
-      <div
+      </Link>) : <></>}
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'MENU' && menu.isChecked) ? (<div
         className="sidebar-btn flex w-full justify-between"
         onClick={() => toglemenuItem()}
       >
@@ -69,76 +65,72 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           Menu
         </span>
         <ChevronUp
-          className={`mt-2 text-sm transition-transform duration-300 ${
-            isSubMenuItemOpen ? "rotate-180" : "rotate-0"
-          }`}
+          className={`mt-2 text-sm transition-transform duration-300 ${isSubMenuItemOpen ? "rotate-180" : "rotate-0"
+            }`}
           size={14}
         />
-      </div>
-      {isSubMenuItemOpen && (
-        <div className="ms-2 w-[90%]">
-          <Link
-            to="/management/admin/menu-group"
-            className={`sidebar-btn ${
-              location.pathname === "/management/admin/menu-group"
+      </div>) : <></>}
+      {
+        isSubMenuItemOpen && (
+          <div className="ms-2 w-[90%]">
+            <Link
+              to="/management/admin/menu-group"
+              className={`sidebar-btn ${location.pathname === "/management/admin/menu-group"
                 ? "bg-primary-500 text-natural-50"
                 : ""
-            }`}
-            onClick={onClose}
-          >
-            <Menu />
-            MenuGroup
-          </Link>
-          <Link
-            to="/management/admin/menu-item"
-            className={`sidebar-btn ${
-              location.pathname === "/management/admin/menu-item"
+                }`}
+              onClick={onClose}
+            >
+              <Menu />
+              MenuGroup
+            </Link>
+            <Link
+              to="/management/admin/menu-item"
+              className={`sidebar-btn ${location.pathname === "/management/admin/menu-item"
                 ? "bg-primary-500 text-natural-50"
                 : ""
-            }`}
-            onClick={onClose}
-          >
-            <PanelTopOpen />
-            Menu Item
-          </Link>
-        </div>
-      )}
-      <Link
+                }`}
+              onClick={onClose}
+            >
+              <PanelTopOpen />
+              Menu Item
+            </Link>
+          </div>
+        )
+      }
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'COMPANY_RULES' && menu.isChecked) ? (<Link
         to="/management/admin/role-menu-permission"
         onClick={onClose}
-        className={`sidebar-btn ${
-          location.pathname === "/management/admin/role-menu-permission"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-        }`}
+        className={`sidebar-btn ${location.pathname === "/management/admin/role-menu-permission"
+          ? "bg-primary-500 text-natural-50"
+          : ""
+          }`}
       >
         <UserRound />
         Role & Menu Permission
-      </Link>
-      <Link
+      </Link>) : <></>}
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'COMPANY_RULES' && menu.isChecked) ? (<Link
         to="/management/admin/company-rules"
         onClick={onClose}
-        className={`sidebar-btn ${
-          location.pathname === "/management/admin/company-rules"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-        }`}
+        className={`sidebar-btn ${location.pathname === "/management/admin/company-rules"
+          ? "bg-primary-500 text-natural-50"
+          : ""
+          }`}
       >
         <UserRound />
         Company Rules
-      </Link>
-      <Link
+      </Link>) : <></>}
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'EMPLOYEE' && menu.isChecked) ? (<Link
         to="/employee"
         onClick={onClose}
-        className={`sidebar-btn ${
-          location.pathname === "/employee"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-        }`}
+        className={`sidebar-btn ${location.pathname === "/employee"
+          ? "bg-primary-500 text-natural-50"
+          : ""
+          }`}
       >
         <UsersRound />
         Employee
-      </Link>
+      </Link>) : <></>}
       <div
         className="sidebar-btn w-full justify-between"
         onClick={toggleBackLogMenu}
@@ -148,40 +140,39 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           Backlog Module
         </span>
         <ChevronUp
-          className={`mt-2 text-sm transition-transform duration-300 ${
-            isBackLogMenuOpen ? "rotate-180" : "rotate-0"
-          }`}
+          className={`mt-2 text-sm transition-transform duration-300 ${isBackLogMenuOpen ? "rotate-180" : "rotate-0"
+            }`}
           size={14}
         />
       </div>
-      {isBackLogMenuOpen && (
-        <div className="ms-2 w-[90%]">
-          <Link
-            to="/backlog"
-            className={`sidebar-btn ${
-              location.pathname === "/backlog"
+      {
+        isBackLogMenuOpen && (
+          <div className="ms-2 w-[90%]">
+            <Link
+              to="/backlog"
+              className={`sidebar-btn ${location.pathname === "/backlog"
                 ? "bg-primary-500 text-natural-50"
                 : ""
-            }`}
-            onClick={onClose}
-          >
-            <ListCheck />
-            Backlog
-          </Link>
-          <Link
-            to="/project"
-            className={`sidebar-btn ${
-              location.pathname === "/project"
+                }`}
+              onClick={onClose}
+            >
+              <ListCheck />
+              Backlog
+            </Link>
+            <Link
+              to="/project"
+              className={`sidebar-btn ${location.pathname === "/project"
                 ? "bg-primary-500 text-natural-50"
                 : ""
-            }`}
-            onClick={onClose}
-          >
-            <Briefcase />
-            Project
-          </Link>
-        </div>
-      )}
+                }`}
+              onClick={onClose}
+            >
+              <Briefcase />
+              Project
+            </Link>
+          </div>
+        )
+      }
       <div
         className="sidebar-btn flex w-full justify-between"
         onClick={() => {
@@ -193,54 +184,52 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           Attendance Module
         </span>
         <ChevronUp
-          className={`mt-2 text-sm transition-transform duration-300 ${
-            isSubMenuOpen ? "rotate-180" : "rotate-0"
-          }`}
+          className={`mt-2 text-sm transition-transform duration-300 ${isSubMenuOpen ? "rotate-180" : "rotate-0"
+            }`}
           size={14}
         />
       </div>
-      {isSubMenuOpen && (
-        <div className="ms-2 w-[90%]">
-          <Link
-            to="/location"
-            onClick={onClose}
-            className={`sidebar-btn ${
-              location.pathname === "/location"
+      {
+        isSubMenuOpen && (
+          <div className="ms-2 w-[90%]">
+            <Link
+              to="/location"
+              onClick={onClose}
+              className={`sidebar-btn ${location.pathname === "/location"
                 ? "bg-primary-500 text-natural-50"
                 : ""
-            }`}
-          >
-            <Map />
-            Location
-          </Link>
-          <Link
-            to="/attendance"
-            onClick={onClose}
-            className={`sidebar-btn ${
-              location.pathname === "/attendance"
+                }`}
+            >
+              <Map />
+              Location
+            </Link>
+            <Link
+              to="/attendance"
+              onClick={onClose}
+              className={`sidebar-btn ${location.pathname === "/attendance"
                 ? "bg-primary-500 text-natural-50"
                 : ""
-            }`}
-          >
-            <Clock />
-            Attendance
-          </Link>
-        </div>
-      )}
-      <Link
+                }`}
+            >
+              <Clock />
+              Attendance
+            </Link>
+          </div>
+        )
+      }
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'PAYROLL' && menu.isChecked) ? (<Link
         to="/payroll"
         onClick={onClose}
-        className={`sidebar-btn ${
-          location.pathname === "/payroll"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-        }`}
+        className={`sidebar-btn ${location.pathname === "/payroll"
+          ? "bg-primary-500 text-natural-50"
+          : ""
+          }`}
       >
         <DollarSign /> Payroll
-      </Link>
+      </Link>) : <></>}
       <button onClick={logOut} className="sidebar-btn">
         <LogOut /> Logout
       </button>
-    </div>
+    </div >
   );
 }

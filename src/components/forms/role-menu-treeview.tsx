@@ -117,10 +117,10 @@ const ParentMenu = ({
   toggleMenuGroup,
   togglePermission,
 }: ParentMenuProps) => {
+  console.log(newPermissions.menuPermissions)
   const groupChecked = newPermissions.menuPermissions.some(
     (mp) =>
-      (mp.menuGroupCode === menuGroup.menuGroupCode && mp.isChecked) ||
-      menuGroup.isChecked
+      (mp.menuGroupCode === menuGroup.menuGroupCode && mp.isChecked)
   );
 
   const hasChildMenus = menuGroup.childMenus?.length > 0;
@@ -148,7 +148,9 @@ const ParentMenu = ({
     <div className="flex gap-2" key={menuGroup.menuGroupCode}>
       {/* Toggle Icon */}
       <div>
-        {menuGroup.menuGroupCode !== "DASHBOARD" ? (
+        {menuGroup.menuGroupCode !== "DASHBOARD"
+          && menuGroup.menuGroupCode !== "PAYROLL"
+          && menuGroup.menuGroupCode !== "ROLE_MENU_PERMISSION" ? (
           isOpen ? (
             <MinusCircle
               className="text-primary-700 mt-3 cursor-pointer"
@@ -239,6 +241,7 @@ export default function RoleMenuPermissionPanel() {
   const toggleMenuItem = (menuItemCode: string, value: boolean) => {
     setNewPermissions((prev) => ({
       ...prev,
+      roleCode: selectedRole,
       menuPermissions: prev.menuPermissions.map((mp) =>
         mp.menuItemCode === menuItemCode ? { ...mp, isChecked: value } : mp
       ),
@@ -248,6 +251,7 @@ export default function RoleMenuPermissionPanel() {
   const toggleMenuGroup = (menuGroupCode: string, value: boolean) => {
     setNewPermissions((prev) => ({
       ...prev,
+      roleCode: selectedRole,
       menuPermissions: prev.menuPermissions.map((mp) =>
         mp.menuGroupCode === menuGroupCode ? { ...mp, isChecked: value } : mp
       ),
@@ -263,6 +267,7 @@ export default function RoleMenuPermissionPanel() {
     console.log(menuGroupCode);
     setNewPermissions((prev) => ({
       ...prev,
+      roleCode: selectedRole,
       menuPermissions: prev.menuPermissions.map((mp) =>
         mp.menuGroupCode === menuGroupCode &&
           mp.menuItemCode === menuItemCode &&
