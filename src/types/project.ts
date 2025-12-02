@@ -67,3 +67,18 @@ export type Project = {
     endDate?: string | null;
 };
 
+export type ListParams = {
+    pageNo: number;
+    pageSize: number;
+    search?: string;
+    from?: string;
+    to?: string;
+};
+
+export type Payload = {
+    projectName: string;
+    projectDescription: string;
+    startDate: string;
+    endDate: string;
+    projectStatus: string;
+};

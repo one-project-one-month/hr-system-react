@@ -1,13 +1,7 @@
 // src/stores/useSuccessDialogStore.ts
+import type { SuccessDialogState } from "@/types/successDialogue";
 import { create } from "zustand";
 
-interface SuccessDialogState {
-  open: boolean;
-  description: string;
-  onConfirm?: () => void;
-  openDialog: (desc: string, onConfirm?: () => void) => void;
-  closeDialog: () => void;
-}
 
 export const useSuccessDialogStore = create<SuccessDialogState>((set) => ({
   open: false,

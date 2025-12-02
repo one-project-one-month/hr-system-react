@@ -17,7 +17,7 @@ export const backlogService = {
     return useDataStore.getState().data ?? {};
   },
 
-  
+
   deleteTask: async (taskId: number) => {
     await useDataStore.getState().fetchData({
       endPoint: `/Task/delete?taskId=${taskId}`,

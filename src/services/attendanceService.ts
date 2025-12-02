@@ -1,9 +1,6 @@
+import type { dateFilter } from "@/schema/attendance";
 import { useDataStore } from "@/stores/useDataStore";
 
-interface dateFilter {
-  from?: Date;
-  to?: Date;
-}
 
 export const attendanceService = {
 
@@ -47,7 +44,7 @@ export const attendanceService = {
       endPoint: `/Attendance/edit/${code}`,
       method: "GET",
     });
-     return useDataStore.getState().data?.data ?? [];
+    return useDataStore.getState().data?.data ?? [];
   },
 
   deleteAttendanceRecord: async (code: string) => {

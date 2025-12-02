@@ -1,33 +1,6 @@
 import { useDataStore } from "@/stores/useDataStore";
-interface fetchData {
-  token: string | null;
-  name: string;
-  pageNo: number;
-  pageSize: number;
-}
+import type { createMenu, fetchData, updateMenu } from "@/types/menuItem";
 
-interface updateMenu {
-  token: string | null;
-  menuCode: string;
-  payload: {
-    menuGroupCode: string;
-    menuName: string;
-    url: string;
-    icon: string;
-    sortOrder: number;
-  };
-}
-
-interface createMenu {
-  payload: {
-    menuGroupCode: string;
-    menuName: string;
-    url: string;
-    icon: string;
-    sortOrder: number;
-  };
-  token: string | null;
-}
 export const MenuItemService = {
   fetchMenuItems: async (data: fetchData) => {
     await useDataStore.getState().fetchData({

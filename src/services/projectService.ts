@@ -1,47 +1,7 @@
 import { useDataStore } from "@/stores/useDataStore";
+import type { ApiEnvelope, ListData, Payload, ProjectItem } from "@/types/project";
 
-type ApiEnvelope<T = unknown> = {
-  isSuccess?: boolean;
-  message?: string;
-  data?: T;
-  [k: string]: unknown;
-};
 
-type ListParams = {
-  pageNo: number;
-  pageSize: number;
-  search?: string;
-  from?: string;
-  to?: string;
-};
-
-type Payload = {
-  projectName: string;
-  projectDescription: string;
-  startDate: string;
-  endDate: string;
-  projectStatus: string;
-};
-
-type ProjectItem = {
-  projectCode: string;
-  projectName: string;
-  projectDescription: string;
-  startDate: string;
-  endDate: string;
-  projectStatus: string;
-  createdAt?: string;
-  createdBy?: string;
-  modifiedAt?: string | null;
-  modifiedBy?: string | null;
-};
-
-type ListData = {
-  items: ProjectItem[];
-  totalCount: number;
-  pageNo: number;
-  pageSize: number;
-};
 
 const asApi = <T = unknown>(x: unknown): ApiEnvelope<T> => x as ApiEnvelope<T>;
 

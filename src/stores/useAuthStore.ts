@@ -1,34 +1,8 @@
 // stores/useAuthStore.ts
+import type { AuthState } from "@/types/auth";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface User {
-  createAt: string;
-  email: string;
-  employeeCode: string;
-  name: string;
-  phoneNo: string;
-  profileImage: string;
-  roleName: string;
-  username: string;
-  menuTree: {};
-}
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  loading: boolean;
-  error: Object | null;
-  login: (username: string, password: string) => Promise<boolean>;
-  logout: () => Promise<void>;
-  checkAuth: () => Promise<boolean>;
-  setUser: (user: User) => void;
-  setError: (error: Object) => void;
-  getUser: () => User | null;
-  getToken: () => string | null;
-  setToken: (token: string) => void;
-  clearAuth: () => void;
-}
 
 export const useAuthStore = create<AuthState>()(
   persist(

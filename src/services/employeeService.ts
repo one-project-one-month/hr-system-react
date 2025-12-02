@@ -1,9 +1,6 @@
 import { useDataStore } from "@/stores/useDataStore";
-interface fetchData {
-  name: string;
-  pageNo: number;
-  pageSize: number;
-}
+import type { fetchData } from "@/types/employee";
+
 export const EmployeeService = {
   fetchEmployees: async (fetchData: fetchData) => {
     await useDataStore.getState().fetchData({

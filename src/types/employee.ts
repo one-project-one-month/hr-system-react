@@ -11,3 +11,9 @@ export interface Employee {
     Salary?: number;
     Password?: string;
 }
+
+export interface fetchData {
+    name: string;
+    pageNo: number;
+    pageSize: number;
+}

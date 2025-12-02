@@ -1,9 +1,4 @@
-// services/verificationService.ts
-type ApiResponse<T> = {
-  success: boolean;
-  message?: string;
-  data?: T;
-};
+import type { ApiResponse } from "@/types/verification";
 
 export async function sendVerificationMail(email: string) {
   const res = await fetch("/api/Verification/send-verification-mail", {
