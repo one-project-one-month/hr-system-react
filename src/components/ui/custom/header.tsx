@@ -1,6 +1,6 @@
 import { Bell } from "lucide-react";
 import { CircleUser, Menu } from "lucide-react";
-import logo from "../../assets/logo.png";
+import logo from "@/assets/logo.png";
 import { useNavigate } from "react-router-dom";
 interface HeaderProps {
   onToggleSidebar: () => void;

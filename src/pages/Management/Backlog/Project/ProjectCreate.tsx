@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ProjectForm } from "@/components/forms/ProjectForm";
 import { useDataStore } from "@/stores/useDataStore";
 import { projectService } from "@/services/projectService";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 import type { ProjectFormValues } from "@/types/project";
 
 export function ProjectCreate() {

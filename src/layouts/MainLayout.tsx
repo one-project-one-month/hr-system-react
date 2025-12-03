@@ -1,5 +1,5 @@
-import Header from "../components/ui/header";
-import Sidebar from "../components/ui/sidebar";
+import Header from "../components/ui/custom/header";
+import Sidebar from "../components/ui/custom/sidebar";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import "../styles/index.css";
 import { useContext, useState } from "react";

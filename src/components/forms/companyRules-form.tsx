@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { formSchema } from "@/schema/companyrule";
 import type { CompanyRulesFormValues } from "@/types/companyRules";
 import z from "zod";
-import { SuccessDialog } from "../ui/SuccessDialog";
+import { SuccessDialog } from "../ui/custom/SuccessDialog";
 
 export default function CompanyRulesForm({
   mode,

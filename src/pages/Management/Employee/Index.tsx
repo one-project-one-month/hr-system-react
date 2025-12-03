@@ -44,7 +44,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { EmployeeService } from "@/services/employeeService";
 import { SpinnerCustom } from "@/components/ui/spinner";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 
 export default function EmployeeList({ onSort, sortConfig }) {
   const navigate = useNavigate();
@@ -220,7 +220,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
             <Link to="/employee/new">
               <Button className="outline-btn">
                 <Plus className="h-4 w-4" />
-                Add
+                New
               </Button>
             </Link>
           </div>
@@ -244,10 +244,10 @@ export default function EmployeeList({ onSort, sortConfig }) {
                 Name
                 <ArrowUpDown
                   className={`h-4 w-4 transition-transform ${sortConfig?.key === "name"
-                      ? sortConfig.direction === "asc"
-                        ? "rotate-180"
-                        : ""
-                      : "opacity-50"
+                    ? sortConfig.direction === "asc"
+                      ? "rotate-180"
+                      : ""
+                    : "opacity-50"
                     }`}
                 />
               </Button>
@@ -404,8 +404,8 @@ export default function EmployeeList({ onSort, sortConfig }) {
                 key={page}
                 onClick={() => setCurrentPage(page)}
                 className={`px-3 py-1 rounded ${page === currentPage
-                    ? "bg-primary-500 text-natural-50"
-                    : "bg-natural-50 text-black hover:bg-gray-200"
+                  ? "bg-primary-500 text-natural-50"
+                  : "bg-natural-50 text-black hover:bg-gray-200"
                   }`}
               >
                 {page}

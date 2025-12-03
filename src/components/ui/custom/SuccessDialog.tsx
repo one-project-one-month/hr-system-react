@@ -8,7 +8,7 @@ import {
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
-} from "../../components/ui/alert-dialog";
+} from "../alert-dialog";
 import { Check } from "lucide-react";
 
 interface SuccessDialogProps {

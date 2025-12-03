@@ -15,7 +15,7 @@ import {
   ChevronsLeft,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { companyRulesService } from "@/services/companyRulesService";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
@@ -155,11 +155,10 @@ export function CompanyRulesList() {
                       <button
                         key={page}
                         onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 rounded ${
-                          page === currentPage
+                        className={`px-3 py-1 rounded ${page === currentPage
                             ? "bg-primary-500 text-natural-50"
                             : "bg-natural-50 text-black hover:bg-gray-200"
-                        }`}
+                          }`}
                       >
                         {page}
                       </button>

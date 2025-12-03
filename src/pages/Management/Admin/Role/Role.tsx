@@ -44,9 +44,8 @@ const generateMockRoles = (): RoleType[] => {
   for (let i = 1; i <= 300; i++) {
     data.push({
       no: i,
-      name: `${roles[Math.floor(Math.random() * roles.length)]} ${
-        i > 15 ? i : ""
-      }`.trim(),
+      name: `${roles[Math.floor(Math.random() * roles.length)]} ${i > 15 ? i : ""
+        }`.trim(),
     });
   }
   return data;
@@ -145,7 +144,7 @@ const Role: React.FC = () => {
             className="flex items-center gap-2 text-white bg-[rgba(2,177,108,1)] py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
           >
             <Plus size={20} />
-            Add
+            New
           </Link>
         </div>
 
@@ -227,11 +226,10 @@ const Role: React.FC = () => {
               <button
                 key={page}
                 onClick={() => handlePageClick(page)}
-                className={`w-8 h-8 rounded-md text-sm font-medium ${
-                  currentPage === page
+                className={`w-8 h-8 rounded-md text-sm font-medium ${currentPage === page
                     ? "bg-[rgba(2,177,108,1)] text-white"
                     : "bg-white text-gray-800 hover:bg-gray-100 border"
-                }`}
+                  }`}
               >
                 {page}
               </button>

@@ -190,7 +190,7 @@ export default function BacklogList() {
         </Button>
         <Link to="/backlog/create">
           <Button className="outline-btn">
-            <Plus /> Add
+            <Plus /> New
           </Button>
         </Link>
       </div>
@@ -284,8 +284,8 @@ export default function BacklogList() {
               key={page}
               onClick={() => setCurrentPage(page)}
               className={`px-3 py-1 rounded ${page === currentPage
-                  ? "bg-primary-500 text-natural-50"
-                  : "bg-natural-50 text-black hover:bg-gray-200"
+                ? "bg-primary-500 text-natural-50"
+                : "bg-natural-50 text-black hover:bg-gray-200"
                 }`}
             >
               {page}

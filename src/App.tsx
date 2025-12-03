@@ -63,8 +63,6 @@ import EmployeeList from "./pages/Management/Employee/Index";
 
 // company rules
 import { CompanyRulesList } from "./pages/Management/Admin/CompanyRules";
-import { CompanyRulesEdit } from "./pages/Management/Admin/CompanyRules/Edit";
-
 //auth
 import AuthLayout from "./layouts/AuthLayout";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
@@ -81,7 +79,25 @@ import { ScrollToTop } from "./pages/ScrollToTop";
 import AdminDashboard from "./pages/Management/Dashboard/AdminDashboard";
 import EmployeeDashboard from "./pages/Management/Dashboard/EmployeeDashboard";
 
+import { ProtectedRoute } from "./components/ui/custom/protected-route";
+import type { MenuPermission } from "./types/role-menu-permission";
+import { useAuthStore } from "./stores/useAuthStore";
+interface permissions {
+  menuCode: string;
+  permissionCode: string
+
+}
 function App() {
+  const authStore = useAuthStore();
+  const menuPermissions: MenuPermission[] = authStore.user?.menuTree?.menuTree;
+  console.log(menuPermissions)
+  const hasMenuPermission = (menuPermissions: MenuPermission[], permissions: permissions) =>
+    menuPermissions?.some(m => m.isChecked
+      && ((m.childMenus.length
+        && m.childMenus.menuItemCode === permissions.menuCode
+        && m.childMenus.permissions.some(pc => pc === permissions.permissionCode))
+        || !m.childMenus.length));
+
   return (
     <>
       <ScrollToTop />
@@ -103,14 +119,21 @@ function App() {
 
         {/*Main Layout */}
         <Route element={<MainLayout />}>
-          {/* Admin Only */}
           <Route
             path="/management/admin/menu-group"
-            element={<MenuGroupList />}
+            element={
+              <ProtectedRoute isAllowed={hasMenuPermission(menuPermissions, { menuCode: 'MENU_GROUP', permissionCode: "LIST" })}>
+                <MenuGroupList />
+              </ProtectedRoute>
+            }
           ></Route>
           <Route
             path="/management/admin/menu-group/create"
-            element={<MenuGroupCreate />}
+            element={
+              <ProtectedRoute isAllowed={hasMenuPermission(menuPermissions, { menuCode: 'MENU_GROUP', permissionCode: "CREATE" })}>
+                <MenuGroupCreate />
+              </ProtectedRoute>
+            }
           />
           <Route
             path="/management/admin/menu-group/edit/:id"
@@ -135,7 +158,7 @@ function App() {
             element={<MenuItemDetail />}
           />
           <Route
-            path="/management/admin/company-rules"
+            path="/management/company-rules"
             element={<CompanyRulesList />}
           ></Route>
 
@@ -159,17 +182,17 @@ function App() {
           ></Route>
 
           <Route
-            path="/management/hr-dashboard"
+            path="/hr/dashboard"
             element={<HRDashboard />}
           ></Route>
 
           <Route
-            path="/management/admin-dashboard"
+            path="/management/dashboard"
             element={<AdminDashboard />}
           ></Route>
 
           <Route
-            path="/management/employee-dashboard"
+            path="/employee/dashboard"
             element={<EmployeeDashboard />}
           ></Route>
 
@@ -220,8 +243,8 @@ function App() {
           <Route path="/employee/detail/:code" element={<EmployeeDetail />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
-        </Route>
-      </Routes>
+        </Route >
+      </Routes >
     </>
   );
 }

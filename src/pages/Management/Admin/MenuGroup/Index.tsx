@@ -174,7 +174,7 @@ export default function MenuGroupList() {
 
             <Button asChild className="bg-primary-500 text-white">
               <Link to="/management/admin/menu-group/create">
-                <Plus /> Create
+                <Plus /> New
               </Link>
             </Button>
           </div>
@@ -319,8 +319,8 @@ export default function MenuGroupList() {
                 key={page}
                 onClick={() => setCurrentPage(page)}
                 className={`px-3 py-1 rounded ${page === currentPage
-                    ? "bg-primary-500 text-natural-50"
-                    : "bg-natural-50 text-black hover:bg-gray-200"
+                  ? "bg-primary-500 text-natural-50"
+                  : "bg-natural-50 text-black hover:bg-gray-200"
                   }`}
               >
                 {page}

@@ -30,22 +30,23 @@ export default function LoginForm() {
     },
   });
   const authStore = useAuthStore();
-  const [Loading, setLoading] = useState<boolean>(false);
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const authorized = await authStore.login(
+      const user = await authStore.login(
         values.username,
         values.password
       );
-      if (authorized && authStore.user) {
-        switch (authStore.user.roleName.toLocaleLowerCase()) {
+      if (user) {
+        switch (user.roleName.toLocaleLowerCase()) {
           case "administrator":
-            navigate("/management/admin-dashboard");
+            navigate("/management/dashboard");
+            break;
           case "hr specialist":
-            navigate("/management/hr-dashboard");
+            navigate("/hr/dashboard");
+            break;
           default:
-            navigate("/employee");
+            navigate("/employee/dashboard");
+            break;
         }
       }
     } catch (error) {

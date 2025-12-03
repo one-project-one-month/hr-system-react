@@ -10,7 +10,7 @@ import {
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Calendar, ChevronDown } from "lucide-react";
 import { format, parse } from "date-fns";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 
 type PayrollRow = {
     id?: number;
@@ -56,7 +56,7 @@ export default function PayrollEdit() {
     const statusOptions = ["Pending", "Complete"];
     const taxOptions = ["10%", "15%", "20%"];
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    
+
     // Calculate values based on passed row data
     const calculatedGrossPay = typeof row?.grossPay === 'number' ? row.grossPay : (typeof row?.grossPay === 'string' ? parseFloat(row.grossPay) : 0);
     const calculatedNetPay = typeof row?.netPay === 'number' ? row.netPay : (typeof row?.netPay === 'string' ? parseFloat(row.netPay) : 0);
@@ -65,7 +65,7 @@ export default function PayrollEdit() {
     const calculatedBonus = calculatedGrossPay * 0.05; // Estimated
     const calculatedDeduction = calculatedGrossPay - calculatedNetPay - (calculatedGrossPay * 0.1); // Estimated
     const calculatedTaxRate = "10%";
-    
+
     const [formData, setFormData] = useState({
         employeeCode: row?.employeeCode ?? `EMP${String(row?.id ?? 0).padStart(5, '0')}`,
         employeeName: row?.name ?? "",

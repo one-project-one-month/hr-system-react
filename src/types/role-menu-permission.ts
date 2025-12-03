@@ -5,6 +5,23 @@ export interface MenuPermissionItem {
     isChecked: boolean;
 }
 
+export interface MenuPermission {
+    isChecked: boolean;
+    menuGroupUrl: string;
+    menuGroupName: string;
+    menuGroupIcon: string;
+    menuGroupCode: string;
+    childMenus: childMenus;
+}
+
+export interface childMenus {
+    menuItemCode: string;
+    menuItemName: string;
+    menuItemIcon: string;
+    menuItemUrl: string;
+    permissions: string[];
+}
+
 export interface SavePermission {
     roleCode: string | null;
     menuPermissions: MenuPermissionItem[];

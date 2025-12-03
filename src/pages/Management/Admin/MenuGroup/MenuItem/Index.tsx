@@ -34,7 +34,7 @@ import {
 } from "lucide-react";
 import { MenuItemService } from "@/services/menuItemService";
 import { SpinnerCustom } from "@/components/ui/spinner";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function MenuItemList() {
@@ -189,7 +189,7 @@ export default function MenuItemList() {
             <Link to="/management/admin/menu-item/create">
               <Button className="outline-btn">
                 <Plus className="h-4 w-4" />
-                Create
+                New
               </Button>
             </Link>
           </div>
@@ -287,11 +287,10 @@ export default function MenuItemList() {
                 setCurrentPage(page);
                 setMenuItems([]);
               }}
-              className={`px-3 py-1 rounded ${
-                page === safeCurrentPage
-                  ? "bg-primary-500 text-white"
-                  : "bg-white hover:bg-gray-200"
-              }`}
+              className={`px-3 py-1 rounded ${page === safeCurrentPage
+                ? "bg-primary-500 text-white"
+                : "bg-white hover:bg-gray-200"
+                }`}
             >
               {page}
             </button>

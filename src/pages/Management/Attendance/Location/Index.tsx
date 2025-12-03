@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { DeleteDialog } from "@/components/ui/DeleteDialog";
+import { DeleteDialog } from "@/components/ui/custom/DeleteDialog";
 import { useDataStore } from "@/stores/useDataStore";
 import { LocationService } from "@/services/LocationService ";
 import type { Location } from "@/types/location";
@@ -193,7 +193,7 @@ export default function Location() {
           </Button>
           <Button className="outline-btn" onClick={goToCreateForm}>
             <Plus />
-            Add
+            New
           </Button>
         </div>
       </div>

@@ -5,7 +5,7 @@ import { useDataStore } from "@/stores/useDataStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { projectService } from "@/services/projectService";
 import { Button } from "@/components/ui/button";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 import type { ApiProject, ProjectFormValues } from "@/types/project";
 
 // ...imports

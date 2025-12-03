@@ -1,6 +1,6 @@
 import {
   MenuGroupForm,
-} from "@/components/ui/MenuGroupForm";
+} from "@/components/forms/MenuGroupForm";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDataStore } from "@/stores/useDataStore";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import {
   menuGroupService,
   type MenuGroupItem,
 } from "@/services/menuGroupService";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 import type { MenuGroupFormValues } from "@/types/menuGroup";
 
 export default function MenuGroupEditPage() {

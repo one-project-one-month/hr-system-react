@@ -9,9 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { ProfileService } from "@/services/profileService";
 import { profileSchema } from "@/schema/profile";
 
-// ✅ Zod validation schema
-
-
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function Profile() {

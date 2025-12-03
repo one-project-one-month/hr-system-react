@@ -40,7 +40,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { attendanceService } from "@/services/attendanceService";
 import {
@@ -250,7 +250,7 @@ export function AttendanceList() {
           </DropdownMenu>
           <Button className="outline-btn" onClick={goToCreatForm}>
             <Plus />
-            Add
+            New
           </Button>
         </div>
       </div>

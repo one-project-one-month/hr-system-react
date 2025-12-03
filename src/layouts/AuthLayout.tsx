@@ -15,7 +15,19 @@ export default function AuthLayout() {
           navigate("/", { replace: true });
           return;
         }
-        if (from === "/") navigate("/employee", { replace: true });
+        if (from === "/" && authStore.user) {
+          switch (authStore.user.roleName.toLocaleLowerCase()) {
+            case "administrator":
+              navigate("/management/dashboard");
+              break;
+            case "hr specialist":
+              navigate("/hr/dashboard");
+              break;
+            default:
+              navigate("/employee/dashboard");
+              break;
+          }
+        };
       } catch (error) {
         navigate("/", { replace: true });
       }

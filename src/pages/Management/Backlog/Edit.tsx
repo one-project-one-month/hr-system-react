@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import BacklogForm from "@/components/forms/backlogForm";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { backlogService } from "@/services/backlogService";
 

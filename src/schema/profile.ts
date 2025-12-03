@@ -5,7 +5,7 @@ export const profileSchema = z.object({
     employeeCode: z.string().nonempty("Employee code is required"),
     username: z
         .string()
-        .min(5, "Username must be at least 5 characters")
+        .min(2, "Username must be at least 2 characters")
         .max(20, "Username must be less than 20 characters"),
     name: z
         .string()

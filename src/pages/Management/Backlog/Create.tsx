@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BacklogForm from "@/components/forms/backlogForm";
-import { SuccessDialog } from "@/components/ui/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
 import { backlogService } from "@/services/backlogService";
 
 export function BacklogCreate() {
