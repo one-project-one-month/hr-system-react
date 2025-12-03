@@ -98,7 +98,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           </div>
         )
       }
-      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'COMPANY_RULES' && menu.isChecked) ? (<Link
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'ROLE_MENU_PERMISSION' && menu.isChecked) ? (<Link
         to="/management/admin/role-menu-permission"
         onClick={onClose}
         className={`sidebar-btn ${location.pathname === "/management/admin/role-menu-permission"
@@ -131,7 +131,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
         <UsersRound />
         Employee
       </Link>) : <></>}
-      <div
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'BACKLOG' && menu.isChecked) ? (<div
         className="sidebar-btn w-full justify-between"
         onClick={toggleBackLogMenu}
       >
@@ -144,7 +144,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
             }`}
           size={14}
         />
-      </div>
+      </div>) : <></>}
       {
         isBackLogMenuOpen && (
           <div className="ms-2 w-[90%]">
@@ -173,7 +173,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           </div>
         )
       }
-      <div
+      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'ATTENDANCE' && menu.isChecked) ? (<div
         className="sidebar-btn flex w-full justify-between"
         onClick={() => {
           toggleSubmenu();
@@ -188,7 +188,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
             }`}
           size={14}
         />
-      </div>
+      </div>) : <></>}
       {
         isSubMenuOpen && (
           <div className="ms-2 w-[90%]">
