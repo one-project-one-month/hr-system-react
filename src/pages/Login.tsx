@@ -39,7 +39,7 @@ export default function LoginForm() {
       if (user) {
         switch (user.roleName.toLocaleLowerCase()) {
           case "administrator":
-            navigate("/management/dashboard");
+            navigate("/admin/dashboard");
             break;
           case "hr specialist":
             navigate("/hr/dashboard");

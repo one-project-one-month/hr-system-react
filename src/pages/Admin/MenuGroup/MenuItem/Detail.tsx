@@ -44,7 +44,7 @@ export default function MenuItemForm() {
     );
   }
 
-  const handleBack = () => navigate("/management/admin/menu-item");
+  const handleBack = () => navigate("/menu-item");
 
   return (
     <div className="flex-1 p-6">

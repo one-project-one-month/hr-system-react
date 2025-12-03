@@ -62,7 +62,7 @@ export default function MenuGroupCreatePage() {
         description="Your menu has been created successfully."
         onConfirm={() => {
           setSuccessOpen(false);
-          navigate("/management/admin/menu-group");
+          navigate("/menu-group");
         }}
       />
     </>

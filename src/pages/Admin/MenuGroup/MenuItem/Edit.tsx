@@ -11,27 +11,25 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import { MenuItemService } from "@/services/menuItemService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { menuItemSchema } from "@/schema/menuItem";
 
 export default function MenuItemForm() {
   const navigate = useNavigate();
-  const { onConfirm, openDialog } = useSuccessDialogStore();
   const token = useAuthStore((state) => state.token);
-  const [menuGroups, setMenuItem] = useState([]);
-  const fetchGroups = menuGroups || [];
-
-  // ZOD SCHEMA
+  const { onConfirm, openDialog } = useSuccessDialogStore();
+  const { code } = useParams<{ code: string }>();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const form = useForm<z.infer<typeof menuItemSchema>>({
     resolver: zodResolver(menuItemSchema),
     defaultValues: {
-      menuGroupCode: "",
       menuCode: "",
+      menuGroupCode: "",
       menuName: "",
       url: "",
       icon: "",
@@ -39,15 +37,54 @@ export default function MenuItemForm() {
     },
   });
 
-  const handleCancel = () => navigate("/management/admin/menu-item");
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      if (!code) return;
+
+      try {
+        const menuItem = await MenuItemService.fetchMenuItem(code, token);
+        // Reset the form with fetched values
+        form.reset({
+          menuGroupCode: menuItem.data.menuGroupCode ?? "",
+          menuCode: code ?? "",
+          menuName: menuItem.data.menuName ?? "",
+          url: menuItem.data.url ?? "",
+          icon: menuItem.data.icon ?? "",
+          sortOrder: menuItem.data.sortOrder ?? 0,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchEmployeeData();
+  }, [code, form]);
+
+  const handleCancel = () => navigate("/menu-item");
 
   const handleFormSubmit = async (values: z.infer<typeof menuItemSchema>) => {
     try {
-      await MenuItemService.createMenuItem({ token, payload: values });
-      openDialog("Menu Item created successfully!", onConfirm);
-      navigate("/management/admin/menu-item");
-    } catch (error) {
-      console.error("Error creating menu item:", error);
+      if (!token || !code) return;
+
+      await MenuItemService.updateMenuItem({
+        menuCode: code,
+        token,
+        payload: {
+          menuGroupCode: values.menuGroupCode,
+          menuName: values.menuName,
+          icon: values.icon,
+          url: values.url,
+          sortOrder: values.sortOrder,
+        },
+      });
+
+      openDialog("Menu Item updated successfully!", onConfirm);
+      navigate("/menu-item");
+    } catch (error: any) {
+      console.error("Error updating menu item:", error.message);
+      setErrorMessage(
+        error?.response?.data?.message || error.message || "Update failed"
+      );
     }
   };
 
@@ -59,7 +96,7 @@ export default function MenuItemForm() {
   return (
     <div className="flex-1 p-6 bg-natural-100">
       <h2 className="text-2xl font-bold mb-6 text-center sm:text-left text-primary-500">
-        Menu Item Create
+        Menu Item Edit
       </h2>
 
       <Form {...form}>
@@ -81,25 +118,7 @@ export default function MenuItemForm() {
                       className="border-natural-500 rounded-sm py-5"
                       placeholder="Enter menu group code"
                       {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* MENU CODE */}
-            <FormField
-              control={form.control}
-              name="menuCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Menu Code</FormLabel>
-                  <FormControl>
-                    <Input
-                      className="border-natural-500 rounded-sm py-5"
-                      placeholder="Enter menu code"
-                      {...field}
+                      value={field.value || ""}
                     />
                   </FormControl>
                   <FormMessage />
@@ -186,6 +205,9 @@ export default function MenuItemForm() {
               )}
             />
           </div>
+          {errorMessage && (
+            <p className="text-red-500 mb-4 text-center">{errorMessage}</p>
+          )}
 
           {/* BUTTONS */}
           <div className="flex flex-col sm:flex-row justify-end gap-4 pt-4">
@@ -199,7 +221,7 @@ export default function MenuItemForm() {
             </Button>
 
             <Button type="submit" className="outline-btn">
-              Create
+              Update
             </Button>
           </div>
         </form>

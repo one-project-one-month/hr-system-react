@@ -75,12 +75,12 @@ export function CompanyRulesList() {
   };
 
   const handleRowClick = (item: CompanyRule) => {
-    navigate(`/management/admin/company-rules/${item.companyRuleCode}/detail?description=${item.description}&value=${item.value}`);
+    navigate(`/company-rules/${item.companyRuleCode}/detail?description=${item.description}&value=${item.value}`);
   };
 
   const handleEditClick = (event: React.MouseEvent, item: CompanyRule) => {
     event.stopPropagation();
-    navigate(`/management/admin/company-rules/${item.companyRuleCode}/edit?description=${item.description}&value=${item.value}`);
+    navigate(`/company-rules/${item.companyRuleCode}/edit?description=${item.description}&value=${item.value}`);
   }
 
   if (loading) {
@@ -156,8 +156,8 @@ export function CompanyRulesList() {
                         key={page}
                         onClick={() => setCurrentPage(page)}
                         className={`px-3 py-1 rounded ${page === currentPage
-                            ? "bg-primary-500 text-natural-50"
-                            : "bg-natural-50 text-black hover:bg-gray-200"
+                          ? "bg-primary-500 text-natural-50"
+                          : "bg-natural-50 text-black hover:bg-gray-200"
                           }`}
                       >
                         {page}

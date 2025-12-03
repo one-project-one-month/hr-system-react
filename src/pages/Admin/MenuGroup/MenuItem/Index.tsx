@@ -120,7 +120,7 @@ export default function MenuItemList() {
   const handleEdit = async (menuCode: string) => {
     const menuItem = await MenuItemService.fetchMenuItem(menuCode, token);
     if (menuItem) {
-      navigate(`/management/admin/menu-item/edit/${menuCode}`, {
+      navigate(`/menu-item/edit/${menuCode}`, {
         state: { menuItem },
       });
     }
@@ -186,7 +186,7 @@ export default function MenuItemList() {
           </div>
 
           <div className="flex gap-2 text-primary-700 bg-natural-50">
-            <Link to="/management/admin/menu-item/create">
+            <Link to="/menu-item/create">
               <Button className="outline-btn">
                 <Plus className="h-4 w-4" />
                 New
@@ -224,7 +224,7 @@ export default function MenuItemList() {
                 className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none"
                 onClick={() =>
                   navigate(
-                    `/management/admin/menu-item/detail/${item.menuCode}`,
+                    `/menu-item/detail/${item.menuCode}`,
                     {
                       state: { menuItem: item },
                     }

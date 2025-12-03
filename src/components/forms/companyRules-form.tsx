@@ -59,7 +59,7 @@ export default function CompanyRulesForm({
 
   const handleSuccessConfirm = () => {
     setSuccessDialogOpen(false);
-    navigate("/management/admin/company-rules");
+    navigate("/admin/company-rules");
   };
 
   const onSubmit = async (values: CompanyRulesFormValues) => {
@@ -150,7 +150,7 @@ export default function CompanyRulesForm({
                 variant={"outline"}
                 type="button"
                 className="px-8 py-2 text-gray-700 bg-white border-gray-300 hover:bg-gray-50 h-10"
-                onClick={() => navigate("/management/admin/company-rules")}
+                onClick={() => navigate("/company-rules")}
               >
                 CANCEL
               </Button>
@@ -169,7 +169,7 @@ export default function CompanyRulesForm({
                 variant={"outline"}
                 type="button"
                 className="px-8 py-2 bg-primary-500 hover:bg-primary-600 text-white h-10"
-                onClick={() => navigate("/management/admin/company-rules")}
+                onClick={() => navigate("/company-rules")}
               >
                 BACK
               </Button>

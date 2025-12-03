@@ -140,7 +140,7 @@ const Role: React.FC = () => {
             Role
           </h1>
           <Link
-            to="/management/admin/role/create"
+            to="/role/create"
             className="flex items-center gap-2 text-white bg-[rgba(2,177,108,1)] py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
           >
             <Plus size={20} />
@@ -172,7 +172,7 @@ const Role: React.FC = () => {
                   <td className="py-4 px-6">
                     <div className="flex justify-end items-center gap-3 sm:gap-4">
                       <Link
-                        to="/management/admin/role/update"
+                        to="/role/update"
                         className="text-gray-500 hover:text-blue-500"
                       >
                         <Pencil size={18} />
@@ -184,7 +184,7 @@ const Role: React.FC = () => {
                         <Trash2 size={18} />
                       </button>
                       <Link
-                        to="/management/admin/role/view"
+                        to="/role/view"
                         className="text-gray-500 hover:text-green-500"
                       >
                         <Eye size={18} />
@@ -227,8 +227,8 @@ const Role: React.FC = () => {
                 key={page}
                 onClick={() => handlePageClick(page)}
                 className={`w-8 h-8 rounded-md text-sm font-medium ${currentPage === page
-                    ? "bg-[rgba(2,177,108,1)] text-white"
-                    : "bg-white text-gray-800 hover:bg-gray-100 border"
+                  ? "bg-[rgba(2,177,108,1)] text-white"
+                  : "bg-white text-gray-800 hover:bg-gray-100 border"
                   }`}
               >
                 {page}

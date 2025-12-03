@@ -173,7 +173,7 @@ export default function MenuGroupList() {
             </div>
 
             <Button asChild className="bg-primary-500 text-white">
-              <Link to="/management/admin/menu-group/create">
+              <Link to="/menu-group/create">
                 <Plus /> New
               </Link>
             </Button>
@@ -271,7 +271,7 @@ export default function MenuGroupList() {
                         className="text-primary-500 cursor-pointer"
                       >
                         <Link
-                          to={`/management/admin/menu-group/edit/${item.menuGroupCode}`}
+                          to={`/menu-group/edit/${item.menuGroupCode}`}
                           state={{ item }}
                         >
                           <Edit className="h-4 w-4" />

@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   UsersRound,
   UserRound,
@@ -17,253 +16,125 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
+import type { MenuConfig } from "@/types/role-menu-permission";
 
 export default function Sidebar({ onClose }: { onClose: () => void }) {
   const location = useLocation();
   const authStore = useAuthStore();
-  const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
-  const toggleSubmenu = () => setIsSubMenuOpen(!isSubMenuOpen);
-  const [isSubMenuItemOpen, setIsSubMenuItemOpen] = useState(false);
-  const toglemenuItem = () => setIsSubMenuItemOpen(!isSubMenuItemOpen);
-  const [isBackLogMenuOpen, setIsBackLogMenuOpen] = useState(false);
-  const toggleBackLogMenu = () => setIsBackLogMenuOpen(!isBackLogMenuOpen);
   const menuPermissions = authStore.user?.menuTree?.menuTree;
-  const logOut = () => {
-    authStore.logout();
-  };
 
   const dashboardRoutes = {
-    Administrator: "/management/dashboard",
+    Administrator: "/admin/dashboard",
     "HR Specialist": "/hr/dashboard",
-    Employee: "/employee/dashboard"
+    Employee: "/employee/dashboard",
   } as const;
 
-  type Role = keyof typeof dashboardRoutes; // "Administrator" | "HR Specialist" | "Employee"
-
-  const fallbackRoute = "/employee/dashboard"; // for all other roles
-
   const rawRole = authStore.user?.roleName;
-
   const dashboardRoute =
-    rawRole && rawRole in dashboardRoutes
-      ? dashboardRoutes[rawRole as Role]
-      : fallbackRoute;
+    rawRole && dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
+      ? dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
+      : "/employee/dashboard";
+
+  const logOut = () => authStore.logout();
+
+  // Track open/close state of all submenus
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+
+  const toggleMenu = (key: string) => {
+    setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const menuConfig: MenuConfig[] = [
+    { label: "Dashboard", icon: <LayoutDashboardIcon />, menuGroupCode: "DASHBOARD", path: dashboardRoute },
+    { label: "Role", icon: <UserRound />, menuGroupCode: "ROLE", path: "/role" },
+    {
+      label: "Menu",
+      icon: <LayoutDashboardIcon />,
+      menuGroupCode: "MENU",
+      children: [
+        { label: "Menu Group", icon: <Menu />, path: "/menu-group", menuGroupCode: "MENU" },
+        { label: "Menu Item", icon: <PanelTopOpen />, path: "/menu-item", menuGroupCode: "MENU" },
+      ],
+    },
+    { label: "Role & Menu Permission", icon: <UserRound />, menuGroupCode: "ROLE_MENU_PERMISSION", path: "/role-menu-permission" },
+    { label: "Company Rules", icon: <UserRound />, menuGroupCode: "COMPANY_RULES", path: "/company-rules" },
+    { label: "Employee", icon: <UsersRound />, menuGroupCode: "EMPLOYEE", path: "/employee" },
+    {
+      label: "Backlog Module",
+      icon: <LayoutTemplate />,
+      menuGroupCode: "BACKLOG",
+      children: [
+        { label: "Backlog", icon: <ListCheck />, path: "/backlog", menuGroupCode: "BACKLOG" },
+        { label: "Project", icon: <Briefcase />, path: "/project", menuGroupCode: "BACKLOG" },
+      ],
+    },
+    {
+      label: "Attendance Module",
+      icon: <Clock />,
+      menuGroupCode: "ATTENDANCE",
+      children: [
+        { label: "Location", icon: <Map />, path: "/location", menuGroupCode: "ATTENDANCE" },
+        { label: "Attendance", icon: <Clock />, path: "/attendance", menuGroupCode: "ATTENDANCE" },
+      ],
+    },
+    { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: "/payroll" },
+  ];
+
+  // Recursive MenuItem component
+  const MenuItem = ({ item }: { item: MenuConfig }) => {
+    const hasPermission =
+      !item.menuGroupCode ||
+      menuPermissions?.some((m) => m.menuGroupCode === item.menuGroupCode && m.isChecked);
+
+    if (!hasPermission) return null;
+
+    if (item.children) {
+      return (
+        <div key={item.label} className="w-full">
+          <div
+            className="sidebar-btn flex w-full justify-between"
+            onClick={() => toggleMenu(item.label)}
+          >
+            <span className="flex gap-1">
+              {item.icon} {item.label}
+            </span>
+            <ChevronUp
+              className={`mt-2 text-sm transition-transform ${openMenus[item.label] ? "rotate-180" : "rotate-0"
+                }`}
+              size={14}
+            />
+          </div>
+          {openMenus[item.label] && (
+            <div className="w-full ms-2 p-1!">
+              {item.children.map((child) => (
+                <MenuItem key={child.label} item={child} />
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <Link
+        key={item.label}
+        to={item.path!}
+        onClick={onClose}
+        className={`sidebar-btn ${location.pathname === item.path ? "bg-primary-500 text-natural-50" : ""}`}
+      >
+        {item.icon} {item.label}
+      </Link>
+    );
+  };
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'DASHBOARD' && menu.isChecked) ? (< Link
-        to={dashboardRoute}
-        onClick={onClose}
-        className={`sidebar-btn ${location.pathname === "/management/dashboard"
-          ? "bg-primary-500 text-natural-50"
-          : ""
-          }`}
-      >
-        <LayoutDashboardIcon />
-        Dashboard
-      </Link>) : <></>
-      }
-      {
-        menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'ROLE' && menu.isChecked) ? (<Link
-          to="/management/admin/role"
-          onClick={onClose}
-          className={`sidebar-btn ${location.pathname === "/management/admin/role"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-            }`}
-        >
-          <UserRound />
-          Role
-        </Link>) : <></>
-      }
-      {
-        menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'MENU' && menu.isChecked) ? (<div
-          className="sidebar-btn flex w-full justify-between"
-          onClick={() => toglemenuItem()}
-        >
-          <span className="cursor-pointer flex gap-1">
-            <LayoutDashboardIcon />
-            Menu
-          </span>
-          <ChevronUp
-            className={`mt-2 text-sm transition-transform duration-300 ${isSubMenuItemOpen ? "rotate-180" : "rotate-0"
-              }`}
-            size={14}
-          />
-        </div>) : <></>
-      }
-      {
-        isSubMenuItemOpen && (
-          <div className="ms-2 w-[90%]">
-            <Link
-              to="/management/admin/menu-group"
-              className={`sidebar-btn ${location.pathname === "/management/admin/menu-group"
-                ? "bg-primary-500 text-natural-50"
-                : ""
-                }`}
-              onClick={onClose}
-            >
-              <Menu />
-              MenuGroup
-            </Link>
-            <Link
-              to="/management/admin/menu-item"
-              className={`sidebar-btn ${location.pathname === "/management/admin/menu-item"
-                ? "bg-primary-500 text-natural-50"
-                : ""
-                }`}
-              onClick={onClose}
-            >
-              <PanelTopOpen />
-              Menu Item
-            </Link>
-          </div>
-        )
-      }
-      {
-        menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'ROLE_MENU_PERMISSION' && menu.isChecked) ? (<Link
-          to="/management/admin/role-menu-permission"
-          onClick={onClose}
-          className={`sidebar-btn ${location.pathname === "/management/admin/role-menu-permission"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-            }`}
-        >
-          <UserRound />
-          Role & Menu Permission
-        </Link>) : <></>
-      }
-      {
-        menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'COMPANY_RULES' && menu.isChecked) ? (<Link
-          to="/management/admin/company-rules"
-          onClick={onClose}
-          className={`sidebar-btn ${location.pathname === "/management/admin/company-rules"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-            }`}
-        >
-          <UserRound />
-          Company Rules
-        </Link>) : <></>
-      }
-      {
-        menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'EMPLOYEE' && menu.isChecked) ? (<Link
-          to="/employee"
-          onClick={onClose}
-          className={`sidebar-btn ${location.pathname === "/employee"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-            }`}
-        >
-          <UsersRound />
-          Employee
-        </Link>) : <></>
-      }
-      {
-        menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'BACKLOG' && menu.isChecked) ? (<div
-          className="sidebar-btn w-full justify-between"
-          onClick={toggleBackLogMenu}
-        >
-          <span className="cursor-pointer flex gap-1">
-            <LayoutTemplate />
-            Backlog Module
-          </span>
-          <ChevronUp
-            className={`mt-2 text-sm transition-transform duration-300 ${isBackLogMenuOpen ? "rotate-180" : "rotate-0"
-              }`}
-            size={14}
-          />
-        </div>) : <></>
-      }
-      {
-        isBackLogMenuOpen && (
-          <div className="ms-2 w-[90%]">
-            <Link
-              to="/backlog"
-              className={`sidebar-btn ${location.pathname === "/backlog"
-                ? "bg-primary-500 text-natural-50"
-                : ""
-                }`}
-              onClick={onClose}
-            >
-              <ListCheck />
-              Backlog
-            </Link>
-            <Link
-              to="/project"
-              className={`sidebar-btn ${location.pathname === "/project"
-                ? "bg-primary-500 text-natural-50"
-                : ""
-                }`}
-              onClick={onClose}
-            >
-              <Briefcase />
-              Project
-            </Link>
-          </div>
-        )
-      }
-      {
-        menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'ATTENDANCE' && menu.isChecked) ? (<div
-          className="sidebar-btn flex w-full justify-between"
-          onClick={() => {
-            toggleSubmenu();
-          }}
-        >
-          <span className="cursor-pointer flex gap-1">
-            <Clock />
-            Attendance Module
-          </span>
-          <ChevronUp
-            className={`mt-2 text-sm transition-transform duration-300 ${isSubMenuOpen ? "rotate-180" : "rotate-0"
-              }`}
-            size={14}
-          />
-        </div>) : <></>
-      }
-      {
-        isSubMenuOpen && (
-          <div className="ms-2 w-[90%]">
-            <Link
-              to="/location"
-              onClick={onClose}
-              className={`sidebar-btn ${location.pathname === "/location"
-                ? "bg-primary-500 text-natural-50"
-                : ""
-                }`}
-            >
-              <Map />
-              Location
-            </Link>
-            <Link
-              to="/attendance"
-              onClick={onClose}
-              className={`sidebar-btn ${location.pathname === "/attendance"
-                ? "bg-primary-500 text-natural-50"
-                : ""
-                }`}
-            >
-              <Clock />
-              Attendance
-            </Link>
-          </div>
-        )
-      }
-      {
-        menuPermissions && menuPermissions.some(menu => menu.menuGroupCode === 'PAYROLL' && menu.isChecked) ? (<Link
-          to="/payroll"
-          onClick={onClose}
-          className={`sidebar-btn ${location.pathname === "/payroll"
-            ? "bg-primary-500 text-natural-50"
-            : ""
-            }`}
-        >
-          <DollarSign /> Payroll
-        </Link>) : <></>
-      }
+      {menuConfig.map((item) => (
+        <MenuItem key={item.label} item={item} />
+      ))}
       <button onClick={logOut} className="sidebar-btn">
         <LogOut /> Logout
       </button>
-    </div >
+    </div>
   );
 }

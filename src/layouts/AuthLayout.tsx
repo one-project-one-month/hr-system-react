@@ -18,7 +18,7 @@ export default function AuthLayout() {
         if (from === "/" && authStore.user) {
           switch (authStore.user.roleName.toLocaleLowerCase()) {
             case "administrator":
-              navigate("/management/dashboard");
+              navigate("/admin/dashboard");
               break;
             case "hr specialist":
               navigate("/hr/dashboard");

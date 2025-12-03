@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 export interface MenuPermissionItem {
     menuGroupCode: string;
     menuItemCode: string | null;
@@ -58,3 +60,11 @@ export interface PermissionCheckboxProps {
         value: boolean
     ) => void;
 }
+
+export interface MenuConfig {
+    label: string;
+    icon: ReactNode;
+    path?: string;
+    menuGroupCode?: string; // for permissions
+    children?: MenuConfig[];  // nested menus
+};

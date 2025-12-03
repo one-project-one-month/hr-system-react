@@ -107,7 +107,7 @@ export default function MenuGroupEditPage() {
         description="Your menu has been updated successfully."
         onConfirm={() => {
           setSuccessOpen(false);
-          navigate("/management/admin/menu-group");
+          navigate("/menu-group");
         }}
       />
     </>
