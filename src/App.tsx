@@ -23,12 +23,12 @@ function App() {
   const authStore = useAuthStore();
   const menuPermissions: MenuPermission[] = authStore.user?.menuTree?.menuTree;
   const hasMenuPermission = (menuPermissions: MenuPermission[], permissions: permissions) =>
-    menuPermissions?.some(m => m.isChecked
+    menuPermissions?.some(m => m.isChecked && m.menuGroupCode == permissions.menuCode
       && ((m.childMenus?.length
         && m.childMenus.some(item =>
-          item.menuItemCode === permissions.menuCode
+          (item.menuItemCode === permissions.menuCode || !item.menuItemCode)
           && item.isChecked
-          && item.permissions.some(pcode => pcode === permissions.permissionCode))
+          && ((item.permissions.length && item.permissions.some(pcode => pcode === permissions.permissionCode)) || !!item.permissions.length))
       )
         || (!m.childMenus.length && m.menuGroupCode === permissions.menuCode)));
 

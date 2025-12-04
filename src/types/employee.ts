@@ -16,4 +16,5 @@ export interface fetchData {
     name: string;
     pageNo: number;
     pageSize: number;
+    roleName: string;
 }

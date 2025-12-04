@@ -105,6 +105,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
       name: searchName,
       pageNo: currentPage,
       pageSize: rowsPerPage,
+      roleName: searchRole
     });
     setRowsPerPage(fetchEmployees.pageSize);
     setCurrentPage(fetchEmployees.pageNo);
@@ -199,7 +200,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
           </div>
 
           <div className="flex gap-2 text-primary-700 bg-natural-50">
-            <Select>
+            <Select onValueChange={(value) => setSearchRole(value)}>
               <SelectTrigger className="text-primary-400">
                 <SelectValue placeholder="Role" className="font-semibold" />
               </SelectTrigger>

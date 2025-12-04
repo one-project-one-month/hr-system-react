@@ -4,7 +4,11 @@ import type { fetchData } from "@/types/employee";
 export const EmployeeService = {
   fetchEmployees: async (fetchData: fetchData) => {
     await useDataStore.getState().fetchData({
-      endPoint: `/Employee/list?EmployeeName=${fetchData.name}&PageNo=${fetchData.pageNo}&PageSize=${fetchData.pageSize}`,
+      endPoint: `/Employee/list?
+      EmployeeName=${fetchData.name}
+      &PageNo=${fetchData.pageNo}
+      &PageSize=${fetchData.pageSize}
+      &RoleName=${fetchData.roleName}`,
     });
     return useDataStore.getState().data ?? {};
   },

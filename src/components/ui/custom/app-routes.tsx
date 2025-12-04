@@ -11,7 +11,6 @@ import { BacklogEdit } from "@/pages/Backlog/Edit";
 import Backlog from "@/pages/Backlog/Index";
 
 // layout and dashboard
-import MainLayout from "@/layouts/MainLayout";
 import HRDashboard from "@/pages/Dashboard/HRDashboard";
 
 // location
@@ -67,6 +66,7 @@ import AdminDashboard from "@/pages/Dashboard/AdminDashboard";
 import EmployeeDashboard from "@/pages/Dashboard/EmployeeDashboard";
 import type { AppRoute } from "@/types/appRoutes";
 import Unauthorized from "@/pages/Unauthorized";
+import { CompanyRulesEdit } from "@/pages/Admin/CompanyRules/Edit";
 
 export const routes: AppRoute[] = [
     // Menu Group 
@@ -112,7 +112,13 @@ export const routes: AppRoute[] = [
     {
         path: "/company-rules",
         element: <CompanyRulesList />,
-        permission: { menuCode: "COMPANY_RULES", permissionCode: "" },
+        permission: { menuCode: "COMPANY_RULES", permissionCode: "LIST" },
+
+    },
+    {
+        path: "/company-rules/update",
+        element: <CompanyRulesEdit />,
+        permission: { menuCode: "COMPANY_RULES", permissionCode: "UPDATE" },
 
     },
 
