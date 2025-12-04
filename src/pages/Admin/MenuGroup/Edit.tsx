@@ -9,7 +9,7 @@ import {
   menuGroupService,
   type MenuGroupItem,
 } from "@/services/menuGroupService";
-import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import type { MenuGroupFormValues } from "@/types/menuGroup";
 
 export default function MenuGroupEditPage() {

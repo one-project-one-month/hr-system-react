@@ -15,7 +15,7 @@ import {
   ChevronsLeft,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { companyRulesService } from "@/services/companyRulesService";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";

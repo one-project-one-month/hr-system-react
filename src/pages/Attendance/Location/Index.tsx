@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { DeleteDialog } from "@/components/ui/custom/DeleteDialog";
+import { DeleteDialog } from "@/components/ui/custom/delete-dialogue";
 import { useDataStore } from "@/stores/useDataStore";
 import { LocationService } from "@/services/LocationService ";
 import type { Location } from "@/types/location";

@@ -3,7 +3,7 @@ import { MenuGroupForm } from "@/components/forms/MenuGroupForm";
 import { useNavigate } from "react-router-dom";
 import { useDataStore } from "@/stores/useDataStore";
 import { useState } from "react";
-import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import type { MenuGroupFormValues } from "@/types/menuGroup";
 
 const makeMenuGroupCode = (name: string): string => {

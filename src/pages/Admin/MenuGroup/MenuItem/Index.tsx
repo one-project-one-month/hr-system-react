@@ -34,7 +34,7 @@ import {
 } from "lucide-react";
 import { MenuItemService } from "@/services/menuItemService";
 import { SpinnerCustom } from "@/components/ui/spinner";
-import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function MenuItemList() {

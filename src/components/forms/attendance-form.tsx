@@ -22,7 +22,7 @@ import {
 import { useEffect, useState } from "react";
 import { EmployeeService } from "@/services/employeeService";
 import { useNavigate, useParams } from "react-router-dom";
-import { SuccessDialog } from "../ui/custom/SuccessDialog";
+import { SuccessDialog } from "../ui/custom/success-dialogue";
 import { formSchema } from "@/schema/attendance";
 
 type AttendanceFormValues = z.infer<typeof formSchema>;

@@ -44,7 +44,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { EmployeeService } from "@/services/employeeService";
 import { SpinnerCustom } from "@/components/ui/spinner";
-import { SuccessDialog } from "@/components/ui/custom/SuccessDialog";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 
 export default function EmployeeList({ onSort, sortConfig }) {
   const navigate = useNavigate();

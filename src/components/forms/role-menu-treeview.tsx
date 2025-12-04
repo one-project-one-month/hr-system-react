@@ -117,7 +117,6 @@ const ParentMenu = ({
   toggleMenuGroup,
   togglePermission,
 }: ParentMenuProps) => {
-  console.log(newPermissions.menuPermissions)
   const groupChecked = newPermissions.menuPermissions.some(
     (mp) =>
       (mp.menuGroupCode === menuGroup.menuGroupCode && mp.isChecked)
@@ -324,7 +323,8 @@ export default function RoleMenuPermissionPanel() {
         // DASHBOARD
         if (
           group.menuGroupCode === "DASHBOARD" ||
-          group.menuGroupCode === "PAYROLL"
+          group.menuGroupCode === "PAYROLL" ||
+          group.menuGroupCode === "ROLE_MENU_PERMISSION"
         ) {
           flatPermissions.push({
             menuGroupCode: group.menuGroupCode,
@@ -358,7 +358,7 @@ export default function RoleMenuPermissionPanel() {
           });
         });
       });
-
+      console.log(fetchRMP)
       setNewPermissions({
         roleCode: selectedRole ?? "",
         menuPermissions: flatPermissions,
