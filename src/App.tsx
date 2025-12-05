@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 //auth
 import ForgotPassword from "@/pages/Auth/ForgotPassword";
@@ -21,17 +21,41 @@ import { routes } from "./components/ui/custom/app-routes";
 
 function App() {
   const authStore = useAuthStore();
-  const menuPermissions: MenuPermission[] = authStore.user?.menuTree?.menuTree;
-  const hasMenuPermission = (menuPermissions: MenuPermission[], permissions: permissions) =>
-    menuPermissions?.some(m => m.isChecked && m.menuGroupCode == permissions.menuCode
-      && ((m.childMenus?.length
-        && m.childMenus.some(item =>
-          (item.menuItemCode === permissions.menuCode || !item.menuItemCode)
-          && item.isChecked
-          && ((item.permissions.length && item.permissions.some(pcode => pcode === permissions.permissionCode)) || !!item.permissions.length))
-      )
-        || (!m.childMenus.length && m.menuGroupCode === permissions.menuCode)));
+  const menuPermissions: MenuPermission[] = authStore.user?.menuTree?.menuTree ?? [];
+  const location = useLocation();
+  const role = authStore.user?.roleName ?? "";
+  const rolePathMap: Record<string, string> = {
+    Administrator: "/admin",
+    "HR Specialist": "/hr",
+    Employee: "/employee",
+  };
+  const defaultPath = "/employee";
+  const hasMenuPermission = (
+    menuPermissions: MenuPermission[],
+    permissions: permissions
+  ) => {
 
+    const groupLevel = menuPermissions.find(m => m.isChecked && m.menuGroupCode === permissions.menuGroupCode)
+    console.log('grouplevel', !!groupLevel)
+    console.log('grouplevel_child', !!groupLevel?.childMenus.length)
+    // guard by roles for dashboards
+    if (groupLevel?.menuGroupCode === "DASHBOARD") {
+      const requiredPath = rolePathMap[role] ?? defaultPath;
+      if (!location.pathname.startsWith(requiredPath)) {
+        return false;
+      }
+    }
+
+    if (!!groupLevel) return true;
+
+    // no child menus
+    if (!!groupLevel.childMenus?.length) return true;
+
+    //with child menus
+    return groupLevel.childMenus.some(child =>
+      child.isChecked
+      && (child.menuCode === permissions.menuCode || child.menuCode === "") && permissions.permissionCode)
+  }
   return (
     <>
       <ScrollToTop />

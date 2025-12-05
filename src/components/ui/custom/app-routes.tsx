@@ -73,52 +73,52 @@ export const routes: AppRoute[] = [
     {
         path: "/menu-group",
         element: <MenuGroupList />,
-        permission: { menuCode: "MENU_GROUP", permissionCode: "LIST" },
+        permission: { menuGroupCode: "MENU", menuCode: "MENU_GROUP", permissionCode: "LIST" },
     },
     {
         path: "/menu-group/create",
         element: <MenuGroupCreate />,
-        permission: { menuCode: "MENU_GROUP", permissionCode: "CREATE" },
+        permission: { menuGroupCode: "MENU", menuCode: "MENU_GROUP", permissionCode: "CREATE" },
     },
     {
         path: "/menu-group/edit/:id",
         element: <MenuGroupEdit />,
-        permission: { menuCode: "MENU_GROUP", permissionCode: "UPDATE" },
+        permission: { menuGroupCode: "MENU", menuCode: "MENU_GROUP", permissionCode: "UPDATE" },
     },
 
     // Menu Item
     {
         path: "/menu-item",
         element: <MenuItemList />,
-        permission: { menuCode: "MENU_ITEM", permissionCode: "LIST" },
+        permission: { menuGroupCode: "MENU", menuCode: "MENU_ITEM", permissionCode: "LIST" },
     },
     {
         path: "/menu-item/create",
         element: <MenuItemCreate />,
-        permission: { menuCode: "MENU_ITEM", permissionCode: "CREATE" },
+        permission: { menuGroupCode: "MENU", menuCode: "MENU_ITEM", permissionCode: "CREATE" },
     },
     {
         path: "/menu-item/edit/:code",
         element: <MenuItemEdit />,
-        permission: { menuCode: "MENU_ITEM", permissionCode: "UPDATE" },
+        permission: { menuGroupCode: "MENU", menuCode: "MENU_ITEM", permissionCode: "UPDATE" },
     },
     {
         path: "/menu-item/detail/:code",
         element: <MenuItemDetail />,
-        permission: { menuCode: "MENU_ITEM", permissionCode: "DETAIL" },
+        permission: { menuGroupCode: "MENU", menuCode: "MENU_ITEM", permissionCode: "DETAIL" },
     },
 
     // Company Rules
     {
         path: "/company-rules",
         element: <CompanyRulesList />,
-        permission: { menuCode: "COMPANY_RULES", permissionCode: "LIST" },
+        permission: { menuGroupCode: "COMPANY_RULES", menuCode: "", permissionCode: "LIST" },
 
     },
     {
         path: "/company-rules/update",
         element: <CompanyRulesEdit />,
-        permission: { menuCode: "COMPANY_RULES", permissionCode: "UPDATE" },
+        permission: { menuGroupCode: "COMPANY_RULES", menuCode: "", permissionCode: "UPDATE" },
 
     },
 
@@ -126,125 +126,125 @@ export const routes: AppRoute[] = [
     {
         path: "/role",
         element: <Role />,
-        permission: { menuCode: "ROLE", permissionCode: "LIST" },
+        permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "LIST" },
     },
     {
         path: "/role/create",
         element: <CreateRole />,
-        permission: { menuCode: "ROLE", permissionCode: "CREATE" },
+        permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "CREATE" },
     },
     {
         path: "/role/update",
         element: <UpdateRole />,
-        permission: { menuCode: "ROLE", permissionCode: "UPDATE" },
+        permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "UPDATE" },
     },
     {
         path: "/role/view",
         element: <ViewRole />,
-        permission: { menuCode: "ROLE", permissionCode: "DETAIL" },
+        permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "DETAIL" },
     },
     {
         path: "/role-menu-permission",
         element: <RoleMenuTreeViewCreate />,
-        permission: { menuCode: "ROLE", permissionCode: "PERMISSION" },
+        permission: { menuGroupCode: "ROLE_MENU_PERMISSION", menuCode: "", permissionCode: "PERMISSION" },
     },
 
     // Dashboards
     {
         path: "/hr/dashboard",
         element: <HRDashboard />,
-        permission: { menuCode: "DASHBOARD", permissionCode: "" },
+        permission: { menuGroupCode: "DASHBOARD", menuCode: "", permissionCode: "" },
     },
     {
         path: "/admin/dashboard",
         element: <AdminDashboard />,
-        permission: { menuCode: "DASHBOARD", permissionCode: "" },
+        permission: { menuGroupCode: "DASHBOARD", menuCode: "DASHBOARD", permissionCode: "" },
     },
     {
         path: "/employee/dashboard",
         element: <EmployeeDashboard />,
-        permission: { menuCode: "DASHBOARD", permissionCode: "" },
+        permission: { menuGroupCode: "DASHBOARD", menuCode: "DASHBOARD", permissionCode: "" },
     },
 
     // Backlog
     {
         path: "/backlog",
         element: <Backlog />,
-        permission: { menuCode: "BACKLOG", permissionCode: "LIST" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "BACKLOG", permissionCode: "LIST" },
 
     },
     {
         path: "/backlog/:id",
         element: <BacklogDetail />,
-        permission: { menuCode: "BACKLOG", permissionCode: "DETAILS" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "BACKLOG", permissionCode: "DETAILS" },
 
     },
     {
         path: "/backlog/create",
         element: <BacklogCreate />,
-        permission: { menuCode: "BACKLOG", permissionCode: "CREATE" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "BACKLOG", permissionCode: "CREATE" },
 
     },
     {
         path: "/backlog/edit/:id",
         element: <BacklogEdit />,
-        permission: { menuCode: "BACKLOG", permissionCode: "EDIT" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "BACKLOG", permissionCode: "EDIT" },
     },
 
     // Projects
     {
         path: "/project",
         element: <ProjectList />,
-        permission: { menuCode: "PROJECT", permissionCode: "LIST" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "LIST" },
     },
     {
         path: "/projects/new",
         element: <ProjectCreate />,
-        permission: { menuCode: "PROJECT", permissionCode: "CREATE" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "CREATE" },
     },
     {
         path: "/projects/:id",
         element: <ProjectDetails />,
-        permission: { menuCode: "PROJECT", permissionCode: "DETAILS" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "DETAILS" },
     },
     {
         path: "/projects/:id/edit",
         element: <ProjectEdit />,
-        permission: { menuCode: "PROJECT", permissionCode: "EDIT" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "EDIT" },
     },
     {
         path: "/projects/add-employee",
         element: <AddEmployee />,
-        permission: { menuCode: "PROJECT", permissionCode: "EDIT" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "EDIT" },
     },
     {
         path: "/projects/remove-employee",
         element: <RemoveEmployee />,
-        permission: { menuCode: "PROJECT", permissionCode: "EDIT" },
+        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "EDIT" },
     },
 
     // Location
     {
         path: "/location",
         element: <Location />,
-        permission: { menuCode: "LOCATION", permissionCode: "LIST" },
+        permission: { menuGroupCode: "ATTENDANCE", menuCode: "LOCATION", permissionCode: "LIST" },
 
     },
     {
         path: "/location/create",
         element: <LocationCreate />,
-        permission: { menuCode: "LOCATION", permissionCode: "CREATE" },
+        permission: { menuGroupCode: "ATTENDANCE", menuCode: "LOCATION", permissionCode: "CREATE" },
     },
     {
         path: "/location/edit/:id",
         element: <LocationEdit />,
-        permission: { menuCode: "LOCATION", permissionCode: "EDIT" },
+        permission: { menuGroupCode: "ATTENDANCE", menuCode: "LOCATION", permissionCode: "EDIT" },
 
     },
     {
         path: "/location/detail/:id",
         element: <LocationDetail />,
-        permission: { menuCode: "LOCATION", permissionCode: "DETAILS" },
+        permission: { menuGroupCode: "ATTENDANCE", menuCode: "LOCATION", permissionCode: "DETAILS" },
 
     },
 
@@ -252,57 +252,58 @@ export const routes: AppRoute[] = [
     {
         path: "/attendance",
         element: <AttendanceList />,
-        permission: { menuCode: "ATTENDANCE", permissionCode: "LIST" },
+        permission: { menuGroupCode: "ATTENDANCE", menuCode: "ATTENDANCE", permissionCode: "LIST" },
 
     },
 
     {
         path: "/attendance/create",
         element: <CreateAttendance />,
-        permission: { menuCode: "ATTENDANCE", permissionCode: "CREATE" }
+        permission: { menuGroupCode: "ATTENDANCE", menuCode: "ATTENDANCE", permissionCode: "CREATE" }
     },
     {
         path: "/attendance/:code/detail",
         element: <DetailsAttendance />,
-        permission: { menuCode: "ATTENDANCE", permissionCode: "DETAILS" }
+        permission: { menuGroupCode: "ATTENDANCE", menuCode: "ATTENDANCE", permissionCode: "DETAILS" }
     },
     {
         path: "/attendance/:code/update",
         element: <UpdateAttendance />,
-        permission: { menuCode: "ATTENDANCE", permissionCode: "UPDATE" }
+        permission: { menuGroupCode: "ATTENDANCE", menuCode: "ATTENDANCE", permissionCode: "UPDATE" }
     },
 
     // Payroll
     {
         path: "/payroll",
         element: <Payroll />,
-        permission: { menuCode: "PAYROLL", permissionCode: "" }
+        permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
     },
     {
         path: "/payroll/:id",
-        element: <PayrollDetail />
+        element: <PayrollDetail />,
+        permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
     },
 
     // Employee
     {
         path: "/employee/new",
         element: <EmployeeCreate />,
-        permission: { menuCode: "EMPLOYEE", permissionCode: "CREATE" }
+        permission: { menuGroupCode: "EMPLOYEE", menuCode: "", permissionCode: "CREATE" }
     },
     {
         path: "/employee",
         element: <EmployeeList />,
-        permission: { menuCode: "EMPLOYEE", permissionCode: "LIST" }
+        permission: { menuGroupCode: "EMPLOYEE", menuCode: "", permissionCode: "LIST" }
     },
     {
         path: "/employee/edit/:code",
         element: <EmployeeEdit />,
-        permission: { menuCode: "EMPLOYEE", permissionCode: "EDIT" }
+        permission: { menuGroupCode: "EMPLOYEE", menuCode: "", permissionCode: "EDIT" }
     },
     {
         path: "/employee/detail/:code",
         element: <EmployeeDetail />,
-        permission: { menuCode: "EMPLOYEE", permissionCode: "DETAIL" }
+        permission: { menuGroupCode: "EMPLOYEE", menuCode: "", permissionCode: "DETAIL" }
     },
 
     // Profile / Unauthorized
