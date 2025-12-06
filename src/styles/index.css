@@ -212,7 +212,7 @@
   }
 
   input {
-    @apply bg-gray-50 text-gray-700 border-gray-200 focus: !ring-0 focus: outline-none
+    @apply bg-gray-50 text-gray-700 border-gray-200 focus:ring-0 focus:outline-none
   }
 
   .recharts-legend-item-text {
