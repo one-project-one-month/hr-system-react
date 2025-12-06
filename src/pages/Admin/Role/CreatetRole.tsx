@@ -1,9 +1,30 @@
 // src/pages/CreateRole.tsx
 
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { roleSchema } from '@/schema/role';
+import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import type z from 'zod';
+
 
 const CreateRole: React.FC = () => {
+  const form = useForm<z.infer<typeof roleSchema>>({
+    resolver: zodResolver(roleSchema),
+    defaultValues: {
+      roleName: ""
+    }
+  })
+
+  function onReset() {
+    form.reset();
+    form.clearErrors();
+  }
+  const handleFormSubmit = async (values: z.infer<typeof roleSchema>) => {
+    console.log(values)
+  }
   return (
     <div className="w-full p-8">
       {/* Main content wrapper */}
@@ -11,53 +32,49 @@ const CreateRole: React.FC = () => {
 
         {/* Header Section */}
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8">
-          Create Role
+          Add New Role
         </h1>
 
         {/* Form Section */}
-        <form>
-          {/* Form fields grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                placeholder="Full Name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="adminCode" className="block text-sm font-medium text-gray-700 mb-2">
-                Admin Code
-              </label>
-              <input
-                type="text"
-                id="adminCode"
-                placeholder="Admin Code"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500"
-              />
-            </div>
-          </div>
+        <Form {...form}>
+          <form className='flex flex-col'
+            onSubmit={form.handleSubmit(handleFormSubmit)}
+            onReset={onReset}>
+            {/* Form fields grid */}
+            <FormField
+              control={form.control}
+              name="roleName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Role Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="border-natural-500 rounded-sm py-5 md:w-[50%]"
+                      placeholder="Enter role name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Action Buttons */}
-          <div className="flex justify-end gap-4">
-            <Link
-              to="/role"
-              className="bg-gray-200 text-[rgba(2,177,108,1)] py-2 px-6 rounded-lg hover:bg-gray-300 transition-colors"
-            >
-              Cancel
-            </Link>
-            <button
-              type="submit"
-              className="bg-[rgba(2,177,108,1)] text-white py-2 px-6 rounded-lg hover:bg-green-700 transition-colors"
-            >
-              Create
-            </button>
-          </div>
-        </form>
+            {/* Action Buttons */}
+            <div className="flex w-full justify-end mt-2 gap-4">
+              <Button
+                className="outline-btn"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                className="outline-btn"
+              >
+                Create
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );

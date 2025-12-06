@@ -55,7 +55,6 @@ const toIsoEnd = (d: Date) => {
 export default function ProjectListing() {
   const navigate = useNavigate();
   const roleName = useAuthStore((s) => s.user?.roleName);
-
   // UI state
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);

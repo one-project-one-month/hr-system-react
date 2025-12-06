@@ -1,5 +1,8 @@
 // src/pages/Role.tsx
 
+import { RoleService } from "@/services/roleService";
+import type { Role } from "@/types/auth";
+import type { RoleItems } from "@/types/role";
 import {
   ChevronDown,
   ChevronLeft,
@@ -11,66 +14,29 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-// Define a type for a single role object
-type RoleType = {
-  no: number;
-  name: string;
-};
-
-// --- START MOCK DATA ---
-// Create a mock dataset of 300 roles to make pagination functional
-const generateMockRoles = (): RoleType[] => {
-  const roles = [
-    "Manager",
-    "Executive",
-    "HR",
-    "Designer",
-    "Developer",
-    "Software Engineer",
-    "Digital Marketer",
-    "Sales Director",
-    "Receptionist",
-    "Security Guard",
-    "Accountant",
-    "QA Tester",
-    "Project Manager",
-    "Data Analyst",
-    "Systems Admin",
-  ];
-  const data: RoleType[] = [];
-  for (let i = 1; i <= 300; i++) {
-    data.push({
-      no: i,
-      name: `${roles[Math.floor(Math.random() * roles.length)]} ${i > 15 ? i : ""
-        }`.trim(),
-    });
-  }
-  return data;
-};
-// --- END MOCK DATA ---
 
 // Define the component using React.FC (Functional Component)
 const Role: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [roleToDelete, setRoleToDelete] = useState<RoleType | null>(null);
+  const [roleToDelete, setRoleToDelete] = useState<RoleItems | null>(null);
 
   // --- PAGINATION STATE ---
-  const [allRolesData] = useState<RoleType[]>(generateMockRoles());
+  const [roleData, setRoleData] = useState<RoleItems[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10); // As requested, 10 items per page
 
   // --- PAGINATION CALCULATIONS ---
-  const totalItems = allRolesData.length;
+  const totalItems = roleData?.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   // Calculate data for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentRoles = allRolesData.slice(startIndex, endIndex);
-
+  const currentRoles = roleData.slice(startIndex, endIndex);
+  const [loading, setLoading] = useState(false);
+  const [searchRole, setSearchRole] = useState("")
   // Calculate items for the "1-10 of 300" text
   const startItem = startIndex + 1;
   const endItem = Math.min(endIndex, totalItems);
@@ -110,7 +76,7 @@ const Role: React.FC = () => {
   const pageNumbers = getPageNumbers();
 
   // --- MODAL HANDLERS (Unchanged) ---
-  const handelOpenModal = (role: RoleType) => {
+  const handelOpenModal = (role: RoleItems) => {
     setRoleToDelete(role);
     setIsModalOpen(true);
   };
@@ -129,6 +95,27 @@ const Role: React.FC = () => {
     }
     handelCloseModal();
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setLoading(false)
+        fetchRoles()
+      } catch (error) {
+
+      }
+
+    })()
+  }, [])
+
+  const fetchRoles = async () => {
+    const roles = await RoleService.fetchRoles({
+      roleName: searchRole,
+      pageNo: currentPage,
+      pageSize: totalItems,
+    })
+    setRoleData(roles.data.items)
+  }
 
   return (
     <div className="p-3 sm:p-6 md:p-8 w-full">
@@ -160,14 +147,14 @@ const Role: React.FC = () => {
             </thead>
             <tbody>
               {/* Render only the roles for the current page */}
-              {currentRoles.map((role: RoleType) => (
+              {currentRoles.map((role: RoleItems, index) => (
                 <tr
-                  key={role.no}
+                  key={role.roleCode}
                   className="border-b odd:bg-[#E6F7F0] even:bg-[#B1E7D1] hover:bg-accent transition-colors"
                 >
-                  <td className="py-4 px-6 text-center">{role.no}</td>
+                  <td className="py-4 px-6 text-center">{index}</td>
                   <td className="py-4 px-6 text-gray-800 font-medium text-center">
-                    {role.name}
+                    {role.roleName}
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex justify-end items-center gap-3 sm:gap-4">

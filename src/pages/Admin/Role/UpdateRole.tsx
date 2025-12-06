@@ -49,7 +49,7 @@ const UpdateRole: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name
+                Role Name
               </label>
               <input
                 type="text"
@@ -58,19 +58,6 @@ const UpdateRole: React.FC = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="adminCode" className="block text-sm font-medium text-gray-700 mb-2">
-                Admin Code
-              </label>
-              <input
-                type="text"
-                id="adminCode"
-                placeholder="Admin Code"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500"
-                value={adminCode}
-                onChange={(e) => setAdminCode(e.target.value)}
               />
             </div>
           </div>

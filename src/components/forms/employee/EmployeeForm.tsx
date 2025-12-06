@@ -199,7 +199,6 @@ export default function EmployeeForm() {
                   <FormLabel>Role</FormLabel>
                   <FormControl>
                     <Select
-                      className="border-natural-500 rounded-sm py-5"
                       value={field.value ?? ""}
                       onValueChange={field.onChange}
                     >

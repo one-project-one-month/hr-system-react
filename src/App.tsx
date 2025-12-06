@@ -36,8 +36,6 @@ function App() {
   ) => {
 
     const groupLevel = menuPermissions.find(m => m.isChecked && m.menuGroupCode === permissions.menuGroupCode)
-    console.log('grouplevel', !!groupLevel)
-    console.log('grouplevel_child', !!groupLevel?.childMenus.length)
     // guard by roles for dashboards
     if (groupLevel?.menuGroupCode === "DASHBOARD") {
       const requiredPath = rolePathMap[role] ?? defaultPath;
@@ -49,10 +47,10 @@ function App() {
     if (!!groupLevel) return true;
 
     // no child menus
-    if (!!groupLevel.childMenus?.length) return true;
+    if (!!groupLevel?.childMenus?.length) return true;
 
     //with child menus
-    return groupLevel.childMenus.some(child =>
+    return groupLevel?.childMenus.some(child =>
       child.isChecked
       && (child.menuCode === permissions.menuCode || child.menuCode === "") && permissions.permissionCode)
   }

@@ -30,18 +30,6 @@ const UpdateRole: React.FC = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500"
               />
             </div>
-            <div>
-              <label htmlFor="adminCode" className="block text-sm font-medium text-gray-700 mb-2">
-                Admin Code
-              </label>
-              <input
-                readOnly
-                type="text"
-                id="adminCode"
-                placeholder="Admin Code"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500"
-              />
-            </div>
           </div>
 
           {/* Action Buttons */}

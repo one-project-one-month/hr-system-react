@@ -83,7 +83,7 @@ export function MenuGroupForm({
             onChange={(e) => update("url", e.target.value)}
             placeholder="Enter URL"
             disabled={submitting}
-            className="bg-gray-50 text-gray-700 border-gray-200 focus:ring-1"
+
           />
         </div>
       </div>
