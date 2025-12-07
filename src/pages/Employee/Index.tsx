@@ -136,7 +136,6 @@ export default function EmployeeList({ onSort, sortConfig }) {
     if (employee) {
       navigate(`/employee/edit/${employeeCode}`, { state: { employee } });
     }
-    console.log(employee);
   };
 
   const handleDelete = (e: React.MouseEvent, employeeCode: string) => {
@@ -176,7 +175,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
     <div className="p-6 w-full flex-1">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-5">
-        <p className="font-bold text-primary-400">Employee</p>
+        <p className="font-bold text-black">Employee</p>
 
         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 w-full md:w-auto">
           {/* Search */}
@@ -219,7 +218,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
               </SelectContent>
             </Select>
             <Link to="/employee/new">
-              <Button className="outline-btn">
+              <Button className="primary-btn">
                 <Plus className="h-4 w-4" />
                 New
               </Button>

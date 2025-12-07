@@ -1,6 +1,6 @@
 
 function ViewEmployee() {
-  return <div>ViewEmployee</div>;
+  return <div>View Employee Detail Information</div>;
 }
 
 export default ViewEmployee;

@@ -66,8 +66,8 @@ export default function EmployeeDetail() {
 
   return (
     <div className="flex-1 p-6">
-      <h2 className="text-2xl font-bold mb-6 text-center sm:text-left text-primary-500">
-        Employee Detail
+      <h2 className="text-2xl font-bold mb-6 text-center sm:text-left text-primary-700">
+        Employee's Details info
       </h2>
 
       <form className="space-y-6">

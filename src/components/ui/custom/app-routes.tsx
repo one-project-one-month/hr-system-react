@@ -1,6 +1,5 @@
-import type { JSX } from "react";
 import CreateRole from "@/pages/Admin/Role/CreatetRole";
-import Role from "@/pages/Admin/Role/Role";
+import Role from "@/pages/Admin/Role/Index";
 import UpdateRole from "@/pages/Admin/Role/UpdateRole";
 import ViewRole from "@/pages/Admin/Role/ViewRole";
 
@@ -134,7 +133,7 @@ export const routes: AppRoute[] = [
         permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "CREATE" },
     },
     {
-        path: "/role/update",
+        path: "/role/edit/:code",
         element: <UpdateRole />,
         permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "UPDATE" },
     },

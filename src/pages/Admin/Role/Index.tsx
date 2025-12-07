@@ -1,6 +1,8 @@
 // src/pages/Role.tsx
 
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { RoleService } from "@/services/roleService";
+import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import type { Role } from "@/types/auth";
 import type { RoleItems } from "@/types/role";
 import {
@@ -9,13 +11,12 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Eye,
-  Pencil,
+  Edit,
   Plus,
   Trash2,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Define the component using React.FC (Functional Component)
 const Role: React.FC = () => {
@@ -35,12 +36,14 @@ const Role: React.FC = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentRoles = roleData.slice(startIndex, endIndex);
+  const { open, description, onConfirm, closeDialog, openDialog } =
+    useSuccessDialogStore();
   const [loading, setLoading] = useState(false);
   const [searchRole, setSearchRole] = useState("")
   // Calculate items for the "1-10 of 300" text
   const startItem = startIndex + 1;
   const endItem = Math.min(endIndex, totalItems);
-
+  const navigate = useNavigate()
   // --- PAGINATION HANDLERS ---
   const handleFirstPage = () => setCurrentPage(1);
   const handleLastPage = () => setCurrentPage(totalPages);
@@ -86,6 +89,26 @@ const Role: React.FC = () => {
     setRoleToDelete(null);
   };
 
+  const handleEdit = async (roleCode: string) => {
+    event?.stopPropagation();
+    const role = await RoleService.fetchRole(roleCode);
+    if (role) {
+      navigate(`/role/edit/${roleCode}`, { state: { role } });
+    }
+  }
+
+  const handleDelete = async (roleCode: string) => {
+    const role = await RoleService.fetchRole(roleCode);
+    if (role) {
+      await RoleService.deleteRole(roleCode)
+    }
+
+  }
+  const handleSuccessConfirm = () => {
+    if (onConfirm) onConfirm();
+    closeDialog();
+  };
+
   const handelDeleteRole = () => {
     if (roleToDelete) {
       console.log(
@@ -123,7 +146,7 @@ const Role: React.FC = () => {
       <div className="p-6 md:p-8 bg-white rounded-lg shadow-md">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-Black-800">
+          <h1 className="text-xl sm:text-2xl md:text-xl font-bold text-primary-700">
             Role
           </h1>
           <Link
@@ -152,30 +175,20 @@ const Role: React.FC = () => {
                   key={role.roleCode}
                   className="border-b odd:bg-[#E6F7F0] even:bg-[#B1E7D1] hover:bg-accent transition-colors"
                 >
-                  <td className="py-4 px-6 text-center">{index}</td>
+                  <td className="py-4 px-6 text-center">{index + 1}</td>
                   <td className="py-4 px-6 text-gray-800 font-medium text-center">
                     {role.roleName}
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex justify-end items-center gap-3 sm:gap-4">
-                      <Link
-                        to="/role/update"
-                        className="text-gray-500 hover:text-blue-500"
-                      >
-                        <Pencil size={18} />
-                      </Link>
-                      <button
-                        onClick={() => handelOpenModal(role)}
-                        className="p-1 sm:p-2 text-black-500 hover:text-red-500"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                      <Link
-                        to="/role/view"
-                        className="text-gray-500 hover:text-green-500"
-                      >
-                        <Eye size={18} />
-                      </Link>
+                      <Edit
+                        className="h-4 w-4 text-primary-500 cursor-pointer hover:text-primary-500"
+                        onClick={() => handleEdit(role.roleCode)}
+                      />
+                      <Trash2
+                        className="h-4 w-4 text-error-400 cursor-pointer hover:text-red-500"
+                        onClick={() => handleDelete(role.roleCode)}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -299,6 +312,13 @@ const Role: React.FC = () => {
           </div>
         </div>
       )}
+
+      <SuccessDialog
+        open={open}
+        onOpenChange={closeDialog}
+        onConfirm={handleSuccessConfirm}
+        description={description}
+      />
     </div>
   );
 };

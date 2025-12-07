@@ -191,12 +191,20 @@
     @apply bg-primary-500 text-natural-50 hover:bg-primary-700 hover:text-natural-50;
   }
 
-  .outline-btn {
-    @apply border !border-natural-500 !text-primary-700 bg-natural-50 hover:bg-primary-500 hover:text-natural-50 hover:border-none
+  .primary-btn {
+    @apply !text-natural-100 bg-primary-500 hover:bg-primary-700
+  }
+
+  .cancel-btn {
+    @apply bg-natural-100 border border-natural-600 !text-primary-700 hover:bg-natural-200
   }
 
   [data-slot="table-container"] {
     @apply rounded-lg shadow-md;
+  }
+
+  .edit-btn {
+    @apply h-4 w-4 text-primary-500 cursor-pointer hover:text-primary-500s
   }
 
   input::placeholder {
