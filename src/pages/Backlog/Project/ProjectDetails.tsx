@@ -157,7 +157,7 @@ export function ProjectDetails() {
         <Button
           variant="secondary"
           onClick={() => navigate(-1)}
-          className="px-8 py-2 outline-btn cursor-pointer"
+          className="px-8 py-2 primary-btn cursor-pointer"
         >
           Back
         </Button>

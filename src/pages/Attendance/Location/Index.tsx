@@ -187,11 +187,11 @@ export default function Location() {
           </div>
 
           {/* buttons */}
-          <Button className="outline-btn">
+          <Button className="primary-btn">
             <FolderUp />
             Export
           </Button>
-          <Button className="outline-btn" onClick={goToCreateForm}>
+          <Button className="primary-btn" onClick={goToCreateForm}>
             <Plus />
             New
           </Button>

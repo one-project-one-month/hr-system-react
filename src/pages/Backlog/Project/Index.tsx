@@ -251,7 +251,7 @@ export default function ProjectListing() {
         </div>
 
         <Button
-          className="outline-btn cursor-pointer"
+          className="primary-btn cursor-pointer"
           onClick={() =>
             exportToExcel({
               columns: excelColumns,
@@ -266,7 +266,7 @@ export default function ProjectListing() {
 
         <Link to="/projects/new">
           <Button
-            className="outline-btn cursor-pointer"
+            className="primary-btn cursor-pointer"
             disabled={roleName?.toLowerCase() === "employee"}
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -276,7 +276,7 @@ export default function ProjectListing() {
 
         {/**Add Employee */}
         <Link to="/projects/add-employee">
-          <Button className="outline-btn">
+          <Button className="primary-btn">
             <Plus className="mr-2 h-4 w-4" />
             Add Employee
           </Button>
@@ -479,7 +479,7 @@ export default function ProjectListing() {
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleting}
-              className="outline-btn"
+              className="primary-btn"
             >
               {deleting ? "Deleting..." : "Delete"}
             </AlertDialogAction>

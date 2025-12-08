@@ -187,7 +187,7 @@ export function AttendanceList() {
               <PopoverTrigger asChild>
                 <Button
                   className={cn(
-                    "justify-between text-left font-normal w-[250px] outline-btn font-semibold",
+                    "justify-between text-left font-normal w-[250px] primary-btn font-semibold",
                     !date && "text-muted-foreground"
                   )}
                 >
@@ -238,7 +238,7 @@ export function AttendanceList() {
           </div>
           {/* buttons */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="outline-btn border border-primary-700 focus:outline-none py-1 px-2 rounded-md flex gap-2">
+            <DropdownMenuTrigger className="primary-btn border border-primary-700 focus:outline-none py-1 px-2 rounded-md flex gap-2">
               <FileUp />
               Export
             </DropdownMenuTrigger>
@@ -248,7 +248,7 @@ export function AttendanceList() {
               <DropdownMenuItem>Excel</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button className="outline-btn" onClick={goToCreatForm}>
+          <Button className="primary-btn" onClick={goToCreatForm}>
             <Plus />
             New
           </Button>

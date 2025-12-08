@@ -195,12 +195,12 @@ export function LocationForm({
               <div className="flex justify-end gap-3 mt-6">
                 <Button
                   type="button"
-                  className="outline-btn"
+                  className="cancel-btn"
                   onClick={onCancel}
                 >
                   CANCEL
                 </Button>
-                <Button type="submit" className="outline-btn">
+                <Button type="submit" className="primary-btn">
                   {mode === "add" ? "CREATE" : "UPDATE"}
                 </Button>
               </div>
@@ -211,7 +211,7 @@ export function LocationForm({
         {/* Back button for detail view */}
         {isReadOnly && (
           <div className="flex justify-end mt-6">
-            <Button type="button" className="outline-btn" onClick={onBack}>
+            <Button type="button" className="primary-btn" onClick={onBack}>
               BACK
             </Button>
           </div>

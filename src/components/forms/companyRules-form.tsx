@@ -147,16 +147,15 @@ export default function CompanyRulesForm({
           {mode !== "view" && (
             <div className="flex justify-end gap-4 mt-8">
               <Button
-                variant={"outline"}
                 type="button"
-                className="px-8 py-2 text-gray-700 bg-white border-gray-300 hover:bg-gray-50 h-10"
+                className="cancel-btn"
                 onClick={() => navigate("/company-rules")}
               >
                 CANCEL
               </Button>
               <Button
                 type="submit"
-                className="px-8 py-2 bg-primary-500 hover:bg-primary-600 text-white h-10"
+                className="primary-btn"
               >
                 UPDATE
               </Button>

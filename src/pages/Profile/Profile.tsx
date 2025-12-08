@@ -241,13 +241,13 @@ export default function Profile() {
             <button
               type="button"
               onClick={handleCancel}
-              className="outline-btn px-6 py-2 rounded-lg border-none"
+              className="cancel-btn"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 pagination-btn rounded-lg"
+              className="primary-btn"
             >
               Save changes
             </button>

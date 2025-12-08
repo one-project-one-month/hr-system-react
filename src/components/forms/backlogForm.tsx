@@ -945,11 +945,11 @@ export default function BacklogForm({
             className={`${mode === "create" ? "mt-10" : "mt-4"
               } mr-5 flex justify-end gap-3`}
           >
-            <Button type="button" className="outline-btn" onClick={onCancel}>
+            <Button type="button" className="cancel-btn" onClick={onCancel}>
               {mode === "view" ? "Back" : "Cancel"}
             </Button>
             {mode !== "view" && (
-              <Button type="submit" className="outline-btn">
+              <Button type="submit" className="primary-btn">
                 {mode === "edit" ? "Update" : "Create"}
               </Button>
             )}

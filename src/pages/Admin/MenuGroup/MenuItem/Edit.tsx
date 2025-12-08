@@ -214,13 +214,13 @@ export default function MenuItemForm() {
             <Button
               type="reset"
               variant="outline"
-              className="w-full sm:w-auto text-primary-500"
+              className="cancel-btn"
               onClick={handleCancel}
             >
               Cancel
             </Button>
 
-            <Button type="submit" className="outline-btn">
+            <Button type="submit" className="primary-btn">
               Update
             </Button>
           </div>

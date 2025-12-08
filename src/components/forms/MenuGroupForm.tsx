@@ -136,17 +136,16 @@ export function MenuGroupForm({
       <div className="flex justify-end gap-4 pt-10">
         <Button
           type="button"
-          variant="secondary"
           onClick={onCancel}
           disabled={submitting}
-          className="outline-btn"
+          className="cancel-btn"
         >
           Cancel
         </Button>
 
         <Button
           type="submit"
-          className="bg-primary-500 text-white"
+          className="primary-btn"
           disabled={submitting}
         >
           {submitting ? "Saving..." : submitLabel}

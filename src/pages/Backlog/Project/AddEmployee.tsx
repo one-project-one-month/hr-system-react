@@ -811,11 +811,10 @@ export function AddEmployee() {
             <button
               key={page}
               onClick={() => setCurrentPage(page)}
-              className={`px-3 py-1 rounded ${
-                page === currentPage
-                  ? "bg-primary-500 text-natural-50"
-                  : "bg-natural-50 text-black hover:bg-gray-200"
-              }`}
+              className={`px-3 py-1 rounded ${page === currentPage
+                ? "bg-primary-500 text-natural-50"
+                : "bg-natural-50 text-black hover:bg-gray-200"
+                }`}
             >
               {page}
             </button>
@@ -858,11 +857,11 @@ export function AddEmployee() {
 
       {/* Footer buttons */}
       <div className="flex justify-end mt-6 gap-3">
-        <Button asChild variant="secondary" className="outline-btn">
+        <Button asChild className="cancel-btn">
           <Link to="/project">Cancel</Link>
         </Button>
 
-        <Button onClick={handleAddEmployees} className="outline-btn">
+        <Button onClick={handleAddEmployees} className="primary-btn">
           Add {selectedEmployees.length > 0 && `(${selectedEmployees.length})`}
         </Button>
       </div>

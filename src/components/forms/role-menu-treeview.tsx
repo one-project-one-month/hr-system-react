@@ -419,11 +419,11 @@ export default function RoleMenuPermissionPanel() {
 
             {/* Action Buttons */}
             <div className="flex gap-4 mt-4">
-              <Button className="outline-btn">Cancel</Button>
+              <Button className="cancel-btn">Cancel</Button>
               <Button
                 onClick={handleSave}
                 disabled={saving}
-                className="outline-btn"
+                className="primary-btn"
               >
                 {saving ? "Saving..." : "Save"}
               </Button>

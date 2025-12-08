@@ -785,14 +785,13 @@ export function RemoveEmployee() {
       {/* Footer buttons */}
       <div className="flex justify-end mt-6 gap-3">
         <Button
-          variant="secondary"
-          className="bg-gray-100 text-black border border-gray-300"
+          className="cancel-btn"
           onClick={() => navigate(-1)}
         >
           Cancel
         </Button>
         <Button
-          className="bg-primary-500 text-white hover:bg-primary-600"
+          className="primary-btn"
           disabled={selectedEmployees.length === 0}
           onClick={handleRemoveSelected}
         >

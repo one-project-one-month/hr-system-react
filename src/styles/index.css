@@ -204,7 +204,7 @@
   }
 
   .edit-btn {
-    @apply h-4 w-4 text-primary-500 cursor-pointer hover:text-primary-500s
+    @apply h-4 w-4 text-primary-500 cursor-pointer hover:text-primary-500
   }
 
   input::placeholder {

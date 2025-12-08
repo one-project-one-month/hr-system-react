@@ -1,5 +1,6 @@
 // src/pages/Role.tsx
 
+import { DeleteDialog } from "@/components/ui/custom/delete-dialogue";
 import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { RoleService } from "@/services/roleService";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
@@ -21,7 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 // Define the component using React.FC (Functional Component)
 const Role: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [roleToDelete, setRoleToDelete] = useState<RoleItems | null>(null);
+  const [roleToDelete, setRoleToDelete] = useState<string>("");
 
   // --- PAGINATION STATE ---
   const [roleData, setRoleData] = useState<RoleItems[]>([]);
@@ -86,7 +87,7 @@ const Role: React.FC = () => {
 
   const handelCloseModal = () => {
     setIsModalOpen(false);
-    setRoleToDelete(null);
+    setRoleToDelete("");
   };
 
   const handleEdit = async (roleCode: string) => {
@@ -98,10 +99,16 @@ const Role: React.FC = () => {
   }
 
   const handleDelete = async (roleCode: string) => {
-    const role = await RoleService.fetchRole(roleCode);
-    if (role) {
-      await RoleService.deleteRole(roleCode)
+    try {
+      const role = await RoleService.fetchRole(roleCode);
+      if (role) {
+        await RoleService.deleteRole(roleCode)
+      }
+      setIsModalOpen(false)
+    } catch (error) {
+      console.log(error)
     }
+
 
   }
   const handleSuccessConfirm = () => {
@@ -109,14 +116,10 @@ const Role: React.FC = () => {
     closeDialog();
   };
 
-  const handelDeleteRole = () => {
-    if (roleToDelete) {
-      console.log(
-        `Deleting role: ${roleToDelete.name} (ID: ${roleToDelete.no})`
-      );
-      // Here you would filter `allRolesData` and update state
-    }
-    handelCloseModal();
+  const handleDeleteModal = (roleCode: string) => {
+    setRoleToDelete(roleCode)
+    console.log('Here!!!', roleCode)
+    setIsModalOpen(true)
   };
 
   useEffect(() => {
@@ -125,7 +128,7 @@ const Role: React.FC = () => {
         setLoading(false)
         fetchRoles()
       } catch (error) {
-
+        console.log(error.message)
       }
 
     })()
@@ -187,7 +190,7 @@ const Role: React.FC = () => {
                       />
                       <Trash2
                         className="h-4 w-4 text-error-400 cursor-pointer hover:text-red-500"
-                        onClick={() => handleDelete(role.roleCode)}
+                        onClick={() => handleDeleteModal(role.roleCode)}
                       />
                     </div>
                   </td>
@@ -274,45 +277,7 @@ const Role: React.FC = () => {
         </div>
       </div>
 
-      {/* --- MODAL (Unchanged) --- */}
-      {isModalOpen && roleToDelete && (
-        <div
-          className="fixed inset-0 bg-opacity-100 backdrop-blur-sm flex justify-center items-center z-50"
-          onClick={handelCloseModal}
-        >
-          <div
-            className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-sm w-full mx-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-center mb-4">
-              <div className="bg-gray-100 p-4 rounded-full">
-                <Trash2 size={40} className="text-red-800" />
-              </div>
-            </div>
-            <h1 className="text-xl font-bold text-black-800 mb-4">
-              Are you sure you want to delete this record?
-            </h1>
-            <p className="text-base text-gray-400 mb-4">
-              This action cannot be undone
-            </p>
-            <div className="flex justify-center gap-4 mt-8">
-              <button
-                onClick={handelCloseModal}
-                className="py-2 px-8 border border-gray-300 rounded-lg font-semibold text-gray-800 hover:bg-gray-100 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handelDeleteRole}
-                className="py-2 px-8 bg-red-700 text-white rounded-lg font-semibold hover:bg-red-900 transition-colors"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
+      <DeleteDialog open={isModalOpen} onOpenChange={closeDialog} onConfirm={handleDelete} />
       <SuccessDialog
         open={open}
         onOpenChange={closeDialog}

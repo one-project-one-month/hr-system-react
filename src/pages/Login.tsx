@@ -108,7 +108,7 @@ export default function LoginForm() {
               Forgot Password?
             </Link>
           </div>
-          <Button type="submit" className="w-full outline-btn">
+          <Button type="submit" className="w-full primary-btn">
             Login
           </Button>
           <div className="flex justify-center gap-5 py-5 text-disabled">

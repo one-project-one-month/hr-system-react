@@ -183,13 +183,13 @@ export default function BacklogList() {
 
         {/* Action Buttons */}
         <Button
-          className="outline-btn cursor-pointer"
+          className="primary-btn cursor-pointer"
           onClick={handleExportCSV}
         >
           <FolderUp /> Export
         </Button>
         <Link to="/backlog/create">
-          <Button className="outline-btn">
+          <Button className="primary-btn">
             <Plus /> New
           </Button>
         </Link>

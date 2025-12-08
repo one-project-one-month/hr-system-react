@@ -187,7 +187,7 @@ export default function MenuItemList() {
 
           <div className="flex gap-2 text-primary-700 bg-natural-50">
             <Link to="/menu-item/create">
-              <Button className="outline-btn">
+              <Button className="primary-btn">
                 <Plus className="h-4 w-4" />
                 New
               </Button>
