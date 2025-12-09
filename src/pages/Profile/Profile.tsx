@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Camera } from "lucide-react";
+import { Camera, CircleUser } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { ProfileService } from "@/services/profileService";
 import { profileSchema } from "@/schema/profile";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
+import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
@@ -15,25 +25,26 @@ export default function Profile() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
-  const [profileImage, setProfileImage] = useState<string>(
-    "./public/image/profile-img.jpg"
-  );
-
+  const [profileImagePreview, setProfileImagePreview] = useState<string>("");
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const { open, description, onConfirm, closeDialog, openDialog } =
+    useSuccessDialogStore();
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      profileImage: "",
+      profileImage: undefined,
       employeeCode: "",
       username: "",
       name: "",
-      roleName: "",
       email: "",
       phoneNo: "",
+      gender: ""
     },
   });
 
@@ -50,14 +61,23 @@ export default function Profile() {
           profileImage: employeeData.profileImage ?? "",
           employeeCode: employeeData.employeeCode ?? "",
           username: employeeData.username ?? "",
-          roleName: employeeData.roleName ?? "",
           name: employeeData.name ?? "",
           email: employeeData.email ?? "",
           phoneNo: employeeData.phoneNo ?? "",
+          gender: employeeData.gender ?? ""
         });
-        // if (employeeData.profileImage) {
-        //   setProfileImage(employeeData.profileImage);
-        // }
+        if (employeeData.profileImage) {
+          setProfileImageFile(employeeData.profileImage);
+          const BASE_URL = import.meta.env.VITE_API_URL;
+          const imageUrl = employeeData.profileImage
+      ? `${BASE_URL}${employeeData.profileImage.replaceAll("\\", "/")}`
+      : "";
+
+    setProfileImagePreview(imageUrl);
+
+          setProfileImageFile(null);
+
+        }
       } catch (err) {
         console.error(err);
       }
@@ -66,28 +86,46 @@ export default function Profile() {
   }, [user?.employeeCode]);
 
   // ✅ Submit handler
-  const onSubmit = async () => {
+  const onSubmit = async (values: z.infer<typeof profileSchema>) => {
     try {
-      // await ProfileService.updateProfile(data); // You can define this method in your service
-      alert("✅ Profile updated successfully!");
+      const formData = new FormData();
+
+      formData.append("employeeCode", values.employeeCode);
+      formData.append("username", values.username);
+      formData.append("name", values.name);
+      formData.append("email", values.email);
+      formData.append("phoneNo", values.phoneNo);
+      if (values.gender) formData.append("gender", values.gender);
+
+      // append the file only if selected
+      if (profileImageFile) {
+        formData.append("ProfileImage", profileImageFile);
+      }
+      await ProfileService.updateEmployee(formData);
+      openDialog("Update Profile successful!", onConfirm);
+
     } catch (err) {
       console.error("Failed to update profile:", err);
-      alert("❌ Failed to update profile. Please try again.");
     }
   };
 
   // ✅ Handle image change (preview)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setProfileImage(reader.result as string);
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    setProfileImageFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => setProfileImagePreview(reader.result as string);;
+    reader.readAsDataURL(file);
   };
 
   // ✅ Cancel button handler
   const handleCancel = () => navigate("/employee");
+
+  const handleSuccessConfirm = () => {
+    if (onConfirm) onConfirm();
+    closeDialog();
+  };
 
   return (
     <div className="min-h-screen w-full bg-[#ced6d2] flex items-center justify-center px-5 py-5">
@@ -95,12 +133,14 @@ export default function Profile() {
         {/* Profile Image Section */}
         <div className="flex flex-col items-center md:items-start mb-8">
           <div className="relative">
-            <div className="size-[150px] rounded-full overflow-hidden bg-yellow-500">
-              <img
-                src={profileImage}
+            <div className="size-[150px] rounded-full overflow-hidden flex items-center justify-center bg-gray-200">
+              {profileImagePreview ? (<img
+                src={profileImagePreview}
                 alt="Profile"
                 className="w-full h-full object-cover"
-              />
+              />) :
+                (<CircleUser className="w-20 h-20" />)
+              }
             </div>
             <label
               htmlFor="photo-upload"
@@ -161,26 +201,6 @@ export default function Profile() {
               )}
             </div>
 
-            {/* Role Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Role Name
-              </label>
-              <Input
-                {...register("roleName")}
-                type="text"
-                disabled
-                readOnly
-                className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${errors.roleName ? "border-red-500" : "border-gray-300"
-                  }`}
-              />
-              {errors.roleName && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.roleName.message}
-                </p>
-              )}
-            </div>
-
             {/* Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -198,6 +218,34 @@ export default function Profile() {
                 </p>
               )}
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Gender
+              </label>
+
+              <Controller
+                name="gender"
+                control={control}
+                render={({ field }) => (
+                  <Select value={field.value ?? ""}
+                    onValueChange={field.onChange}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select Gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Male">Male</SelectItem>
+                      <SelectItem value="Female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+
+              {errors.gender && (
+                <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>
+              )}
+            </div>
+
 
             {/* Email */}
             <div>
@@ -238,22 +286,28 @@ export default function Profile() {
 
           {/* Action Buttons */}
           <div className="flex justify-end gap-4">
-            <button
+            <Button
               type="button"
               onClick={handleCancel}
               className="cancel-btn"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               className="primary-btn"
             >
               Save changes
-            </button>
+            </Button>
           </div>
         </form>
       </div>
+      <SuccessDialog
+        open={open}
+        onOpenChange={closeDialog}
+        onConfirm={handleSuccessConfirm}
+        description={description}
+      />
     </div>
   );
 }

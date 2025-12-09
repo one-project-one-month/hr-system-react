@@ -1,4 +1,7 @@
 import { useDataStore } from "@/stores/useDataStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+
+const { token } = useAuthStore.getState(); // or use the hook inside a component
 
 export const ProfileService = {
   fetchEmployee: async (employeeCode: string) => {
@@ -8,13 +11,23 @@ export const ProfileService = {
     });
     return useDataStore.getState().data ?? {};
   },
-  //Profile update is not available in the current API
-  //   updateEmployee: async (employeeCode: string, payload: {}) => {
-  //     await useDataStore.getState().fetchData({
-  //       endPoint: `/Employee/update/${employeeCode}`,
-  //       method: "PUT",
-  //       body: payload,
-  //     });
-  //     return useDataStore.getState().data ?? {};
-  //   },
+ updateEmployee: async (payload: FormData) => {
+  console.log (token)
+  const response = await fetch(`/api/Employee/EditProfile`, {
+    method: "POST", // or "PUT"
+    body: payload,   // FormData with all fields + file
+    headers: {
+      // Authorization header if needed
+      "Authorization": `Bearer ${token}`
+      // Do NOT set 'Content-Type'; the browser sets it automatically for FormData
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update profile");
+  }
+
+  return await response.json();
+}
+
 };
