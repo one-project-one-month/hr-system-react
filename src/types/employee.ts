@@ -1,5 +1,13 @@
 export interface Employee {
-    Id: number;
+    employeeCode: string;
+    username: string;
+    name: string;
+    roleName: string;
+    email: string;
+    phoneNo: string;
+}
+
+export interface EmployeeResponse {
     EmployeeCode: string;
     Username: string;
     Name: string;
@@ -9,7 +17,6 @@ export interface Employee {
     StartDate: string;
     ResignDate: string;
     Salary?: number;
-    Password?: string;
 }
 
 export interface fetchData {
@@ -17,4 +24,11 @@ export interface fetchData {
     pageNo: number;
     pageSize: number;
     roleName: string;
+}
+
+export interface fetchEmployees {
+    pageSize: number;
+    pageNo: number;
+    totalCount: number;
+    items: EmployeeResponse[] | never;
 }

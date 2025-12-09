@@ -27,6 +27,7 @@ export const EmployeeService = {
       body: payload,
     });
   },
+
   fetchEmployee: async (employeeCode: string) => {
     await useDataStore.getState().fetchData({
       endPoint: `/Employee/edit/${employeeCode}`,
@@ -34,6 +35,7 @@ export const EmployeeService = {
     });
     return useDataStore.getState().data ?? {};
   },
+
   updateEmployee: async (employeeCode: string, payload: {}) => {
     await useDataStore.getState().fetchData({
       endPoint: `/Employee/update/${employeeCode}`,
@@ -42,6 +44,7 @@ export const EmployeeService = {
     });
     return useDataStore.getState().data ?? {};
   },
+
   deleteEmployee: async (employeeCode: string) => {
     await useDataStore.getState().fetchData({
       endPoint: `/Employee/delete/${employeeCode}`,
@@ -49,4 +52,12 @@ export const EmployeeService = {
     });
     return useDataStore.getState().data ?? {};
   },
+
+  addEmployeeToProjects: async (projectCode: string, payload: {}) => {
+    await useDataStore.getState().fetchData({
+      endPoint: `/Project/add-employee/${projectCode}`,
+      method: "POST",
+      body: payload,
+    })
+  }
 };

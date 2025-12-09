@@ -55,6 +55,7 @@ export default function Profile() {
       try {
         const result = await ProfileService.fetchEmployee(user?.employeeCode);
         const employeeData = Array.isArray(result) ? result[0] : result;
+        console.log (employeeData)
         if (!employeeData) return;
         // populate form values using react-hook-form and update preview image
         reset({
@@ -70,11 +71,10 @@ export default function Profile() {
           setProfileImageFile(employeeData.profileImage);
           const BASE_URL = import.meta.env.VITE_API_URL;
           const imageUrl = employeeData.profileImage
-      ? `${BASE_URL}${employeeData.profileImage.replaceAll("\\", "/")}`
-      : "";
+            ? `${BASE_URL}${employeeData.profileImage.replaceAll("\\", "/")}`
+            : "";
 
-    setProfileImagePreview(imageUrl);
-
+          setProfileImagePreview(imageUrl);
           setProfileImageFile(null);
 
         }

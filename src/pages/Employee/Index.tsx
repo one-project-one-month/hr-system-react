@@ -45,6 +45,7 @@ import { useNavigate } from "react-router-dom";
 import { EmployeeService } from "@/services/employeeService";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
+import type { EmployeeResponse, fetchEmployees } from "@/types/employee";
 
 export default function EmployeeList({ onSort, sortConfig }) {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
   const [data, setData] = useState({});
   const [searchName, setSearchName] = useState("");
   const [searchRole, setSearchRole] = useState("");
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState<EmployeeResponse[]>([]);
   const { open, description, onConfirm, closeDialog, openDialog } =
     useSuccessDialogStore();
   const [loading, setLoading] = useState(false);
@@ -110,7 +111,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
     setRowsPerPage(fetchEmployees.pageSize);
     setCurrentPage(fetchEmployees.pageNo);
     setData(fetchEmployees);
-    setEmployees(fetchEmployees?.items || []);
+    setEmployees(fetchEmployees?.items);
   };
   // ✅ Flatten API data
 
