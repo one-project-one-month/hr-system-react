@@ -79,17 +79,6 @@ const Role: React.FC = () => {
   };
   const pageNumbers = getPageNumbers();
 
-  // --- MODAL HANDLERS (Unchanged) ---
-  const handelOpenModal = (role: RoleItems) => {
-    setRoleToDelete(role);
-    setIsModalOpen(true);
-  };
-
-  const handelCloseModal = () => {
-    setIsModalOpen(false);
-    setRoleToDelete("");
-  };
-
   const handleEdit = async (roleCode: string) => {
     event?.stopPropagation();
     const role = await RoleService.fetchRole(roleCode);
@@ -98,19 +87,19 @@ const Role: React.FC = () => {
     }
   }
 
-  const handleDelete = async (roleCode: string) => {
+  const handleDelete = async () => {
     try {
-      const role = await RoleService.fetchRole(roleCode);
+      const role = await RoleService.fetchRole(roleToDelete);
       if (role) {
-        await RoleService.deleteRole(roleCode)
+        await RoleService.deleteRole(roleToDelete)
+        fetchRoles()
       }
       setIsModalOpen(false)
     } catch (error) {
       console.log(error)
     }
-
-
   }
+
   const handleSuccessConfirm = () => {
     if (onConfirm) onConfirm();
     closeDialog();
@@ -118,7 +107,6 @@ const Role: React.FC = () => {
 
   const handleDeleteModal = (roleCode: string) => {
     setRoleToDelete(roleCode)
-    console.log('Here!!!', roleCode)
     setIsModalOpen(true)
   };
 

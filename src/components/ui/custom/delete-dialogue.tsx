@@ -13,7 +13,7 @@ import {
 interface DeleteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onConfirm: (code: string) => Promise<void>;
+  onConfirm: () => Promise<void>;
   title?: string;
   description?: string;
 }
@@ -44,7 +44,7 @@ export function DeleteDialog({
             CANCEL
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => onConfirm}
+            onClick={() => onConfirm()}
             className="bg-red-600 hover:bg-red-700 text-white"
           >
             DELETE

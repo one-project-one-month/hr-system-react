@@ -231,6 +231,7 @@ export default function RoleMenuPermissionPanel() {
     roleCode: "",
     menuPermissions: [],
   });
+  console.log (selectedRole)
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
@@ -293,6 +294,7 @@ export default function RoleMenuPermissionPanel() {
       const fetchRMP = await roleMenuPermissionService.fetchRoleMenuPermission(
         selectedRole ?? ""
       );
+      console.log (fetchRMP)
       const fetchedRoles = await roleMenuPermissionService.fetchRoles();
       const fetchedPermissions =
         await roleMenuPermissionService.fetchPermissions();
@@ -357,6 +359,7 @@ export default function RoleMenuPermissionPanel() {
           });
         });
       });
+      console.log (flatPermissions)
       setNewPermissions({
         roleCode: selectedRole ?? "",
         menuPermissions: flatPermissions,
