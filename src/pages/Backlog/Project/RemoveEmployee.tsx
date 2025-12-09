@@ -22,7 +22,8 @@ import {
 import { useEffect, useState } from "react";
 import type { Employee } from "@/types/employee";
 import { EmployeeService } from "@/services/employeeService";
-import { roleMenuPermissionService } from "@/services/roleMenuPermissionService";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
+import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 
 
 export function RemoveEmployee() {
@@ -46,6 +47,8 @@ export function RemoveEmployee() {
   const totalRows = employeeList.length;
   const startRow = (currentPage - 1) * rowsPerPage + 1;
   const endRow = Math.min(currentPage * rowsPerPage, totalRows);
+  const { open, description, onConfirm, closeDialog, openDialog } =
+    useSuccessDialogStore();
   const goPrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   const goToLast = () => setCurrentPage(totalPages);
@@ -53,9 +56,9 @@ export function RemoveEmployee() {
 
   const toggleEmployee = (employeeCode: string, checked: boolean) => {
     if (checked) {
-      setSelectedEmployees((prev) => [...prev, id]);
+      setSelectedEmployees((prev) => [...prev, employeeCode]);
     } else {
-      setSelectedEmployees((prev) => prev.filter((empId) => empId !== id));
+      setSelectedEmployees((prev) => prev.filter((empId) => empId !== em));
     }
   };
 
@@ -79,6 +82,7 @@ export function RemoveEmployee() {
       );
     }
   };
+
   const handleRemoveSelected = () => {
     if (selectedEmployees.length === 0) return;
     setEmployeeList((prev) =>
@@ -87,19 +91,22 @@ export function RemoveEmployee() {
     setSelectedEmployees([]);
   };
 
-    useEffect (() => {
-  
-      (async () => {
-        const EmployeeData =await EmployeeService.fetchEmployees({
+  const handleSuccessConfirm = () => {
+    if (onConfirm) onConfirm();
+    closeDialog();
+  };
+
+  useEffect(() => {
+    (async () => {
+      const EmployeeData = await EmployeeService.fetchEmployees({
         name: "",
         pageNo: currentPage,
         pageSize: rowsPerPage,
         roleName: "",
       })
-      setEmployeeList (EmployeeData.items as Employee[] ?? [])
-      console.log ({EmployeeData})
-    }) ()
-    },[])
+      setEmployeeList(EmployeeData.items as Employee[] ?? [])
+    })()
+  }, [])
 
   return (
     <div className="p-6 w-full flex flex-col">
@@ -260,6 +267,12 @@ export function RemoveEmployee() {
           Remove
         </Button>
       </div>
+      <SuccessDialog
+        open={open}
+        onOpenChange={closeDialog}
+        onConfirm={handleSuccessConfirm}
+        description={description}
+      />
     </div>
   );
 }

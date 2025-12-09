@@ -41,6 +41,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { roleMenuPermissionService } from "@/services/roleMenuPermissionService";
 import type { Project } from "@/types/project";
 import { projectService } from "@/services/projectService";
+import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 
 export function AddEmployee() {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ export function AddEmployee() {
 
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const { onConfirm, openDialog } = useSuccessDialogStore();
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
@@ -91,7 +93,7 @@ export function AddEmployee() {
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
 
-  const allCurrentPageIds = currentData.map((emp) => emp.EmployeeCode);
+  const allCurrentPageIds = currentData.map((emp) => emp.employeeCode);
   const isAllSelected =
     allCurrentPageIds.length > 0 &&
     allCurrentPageIds.every((employeeCode) => selectedEmployees.includes(employeeCode));
@@ -126,6 +128,8 @@ export function AddEmployee() {
       await EmployeeService.addEmployeeToProjects(selectedProject, {
         employeeCodes: selectedData
       });
+
+    openDialog("Add Employee to the project Successful!", onConfirm);
     } catch (error) {
       setAlertMessage("Failed to add employees to the project. Please try again.");
       setAlertDialogOpen(true);
@@ -141,7 +145,6 @@ export function AddEmployee() {
   };
 
   useEffect(() => {
-
     (async () => {
       const EmployeeData = await EmployeeService.fetchEmployees({
         name: "",
