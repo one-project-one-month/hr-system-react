@@ -32,7 +32,6 @@ export default function ForgotPassword() {
       setLoading(true);
 
       await sendVerificationMail(email);
-
       navigate("/verify-otp", { state: { email } });
     } catch (err: any) {
       console.error(err);
@@ -69,9 +68,8 @@ export default function ForgotPassword() {
               />
               {isInvalid && (
                 <p
-                  className={`text-sm transition-opacity duration-200 ${
-                    isInvalid ? "text-red-600 opacity-100" : "opacity-0"
-                  }`}
+                  className={`text-sm transition-opacity duration-200 ${isInvalid ? "text-red-600 opacity-100" : "opacity-0"
+                    }`}
                 >
                   Please enter a valid email address.
                 </p>

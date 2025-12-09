@@ -303,80 +303,13 @@ export default function EmployeeList({ onSort, sortConfig }) {
             <TableRow key="no-data">
               <TableCell colSpan={8} className="h-24 text-center">
                 <div className="flex items-center justify-center text-primary-500">
-                  No Data Matched.
+                  No Data.
                 </div>
               </TableCell>
             </TableRow>
           )}
         </TableBody>
       </Table>
-      {/* Pagination */}
-      {/* <div className="flex items-center justify-between p-4 border-t">
-        <div className="text-sm text-muted-foreground">
-          {startRow}–{endRow} of {totalRows}
-        </div>
-
-        <div className="flex space-x-1">
-          <button onClick={goToFirst} disabled={currentPage === 1}>
-            <ChevronsLeft />
-          </button>
-          <button onClick={goPrev} disabled={currentPage === 1}>
-            <ChevronLeft />
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => {
-                setCurrentPage(page);
-                setEmployees([]);
-              }}
-              className={`px-3 py-1 rounded ${
-                page === currentPage
-                  ? "bg-primary-500 text-white"
-                  : "bg-white hover:bg-gray-200"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-          <button
-            onClick={() => {
-              goNext();
-            }}
-            disabled={currentPage === totalPages}
-          >
-            <ChevronRight />
-          </button>
-          <button onClick={goToLast} disabled={currentPage === totalPages}>
-            <ChevronsRight />
-          </button>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <span className="text-sm text-muted-foreground">Rows per page:</span>
-          <select
-            value={debouncedFilters.pageSize}
-            onChange={(e) => {
-              const newRows = Number(e.target.value);
-              setRowsPerPage(newRows);
-              setCurrentPage(1);
-              setEmployees([]);
-              setDebouncedFilters((prev) => ({
-                ...prev,
-                pageNo: newRows,
-                pageSize: currentPage,
-              }));
-            }}
-            className="border rounded px-2 py-1 text-sm"
-          >
-            {[10, 20, 30, 50].map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div> */}
       <div className="flex flex-col md:flex-row items-center gap-2">
         {/* Paginations */}
         <div className="w-full flex items-center justify-center md:justify-around p-4 border-t flex-col md:flex-row gap-3 ">
