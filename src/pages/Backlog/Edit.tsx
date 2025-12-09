@@ -38,7 +38,6 @@ export function BacklogEdit() {
   const handleSubmit = async (values: any) => {
     try {
       setUpdating(true);
-      console.log("Updating backlog:", values);
 
       // Transform the data to match API expectations exactly as shown in Swagger
       const payload = {
@@ -57,11 +56,9 @@ export function BacklogEdit() {
         workingHour: parseInt(values.workingHour) || 0,
       };
 
-      console.log("Transformed payload:", payload);
 
       const result = await backlogService.updateTask(payload);
 
-      console.log("Full update result:", result);
 
       // The response might have isSuccess or might be checking the wrong property
       if (result && result.isSuccess !== false) {

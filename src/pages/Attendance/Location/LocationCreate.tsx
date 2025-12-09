@@ -20,7 +20,6 @@ export default function LocationCreate() {
   // Watch data changes after submit
   useEffect(() => {
     if (isSubmitting && data) {
-      console.log("🔍 Create Response:", data);
 
       // Check if API returned success
       if (data.isSuccess === true) {
@@ -37,7 +36,6 @@ export default function LocationCreate() {
 
   const handleSubmit = async (values: any) => {
     try {
-      console.log("📤 Submitting:", values);
       setIsSubmitting(true);
       await LocationService.createLocation(values);
     } catch (error) {

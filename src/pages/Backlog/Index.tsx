@@ -65,7 +65,6 @@ export default function BacklogList() {
           currentPage,
           rowsPerPage
         );
-        console.log("API Response:", result);
         // FIX: Access tasks from result.data.tasks
         setTasks(result.data?.tasks ?? []);
       } catch (error) {

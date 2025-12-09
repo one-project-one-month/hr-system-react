@@ -14,9 +14,6 @@ export function CompanyRulesEdit() {
     const load = async () => {
       const description = searchParams.get("description");
       const value = searchParams.get("value");
-      console.log("Loading company rule for ID:", companyRuleCode);
-      console.log("Description from params:", description);
-      console.log("Value from params:", value);
       setInitialValues({
         companyRuleCode,
         description,
@@ -27,7 +24,6 @@ export function CompanyRulesEdit() {
   }, [companyRuleCode]);
 
   const handleUpdate = async (values: any) => {
-    console.log("Updated values:", values);
 
     try {
       await companyRulesService.updateCompanyRules(

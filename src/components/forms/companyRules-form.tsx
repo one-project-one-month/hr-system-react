@@ -63,7 +63,6 @@ export default function CompanyRulesForm({
   };
 
   const onSubmit = async (values: CompanyRulesFormValues) => {
-    console.log(values);
     if (onSubmitExternal) {
       try {
         await onSubmitExternal(values);

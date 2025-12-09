@@ -121,7 +121,6 @@ export default function AttendanceForm({
   };
 
   const onSubmit = async (values: AttendanceFormValues) => {
-    console.log(values);
     if (onSubmitExternal) {
       try {
         await onSubmitExternal(values);

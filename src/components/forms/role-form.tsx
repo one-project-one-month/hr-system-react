@@ -17,7 +17,6 @@ export default function RoleForm() {
     const navigate = useNavigate()
     const [error, setError] = useState("")
     const { code } = useParams()
-    console.log(code)
     const form = useForm<z.infer<typeof roleSchema>>({
         resolver: zodResolver(roleSchema),
         defaultValues: {
@@ -37,7 +36,6 @@ export default function RoleForm() {
                 openDialog("Create Role Successful!", onConfirm);
             }
             else {
-                console.log(code)
                 await RoleService.updateRole(code, values);
                 openDialog("Update Role Successful!", onConfirm);
             }
@@ -57,7 +55,6 @@ export default function RoleForm() {
             try {
                 if (!code) return
                 const fetched = await RoleService.fetchRole(code)
-                console.log(fetched)
                 reset({
                     roleName: fetched.data.roleName ?? ""
                 })

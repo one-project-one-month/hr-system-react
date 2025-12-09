@@ -263,7 +263,6 @@ export default function RoleMenuPermissionPanel() {
     permissionCode: string,
     value: boolean
   ) => {
-    console.log(menuGroupCode);
     setNewPermissions((prev) => ({
       ...prev,
       roleCode: selectedRole,
@@ -358,7 +357,6 @@ export default function RoleMenuPermissionPanel() {
           });
         });
       });
-      console.log(fetchRMP)
       setNewPermissions({
         roleCode: selectedRole ?? "",
         menuPermissions: flatPermissions,

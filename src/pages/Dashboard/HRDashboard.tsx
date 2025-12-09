@@ -63,7 +63,6 @@ export default function () {
             <button
               onClick={() => {
                 requestLocation();
-                console.log(position);
               }}
               className='flex items-center justify-end flex-col gap-2 flex-1'>
               <div className='checkin-circle flex items-center justify-center'>

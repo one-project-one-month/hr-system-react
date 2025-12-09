@@ -82,7 +82,6 @@ export default function BacklogForm({
         setProjectsError(null);
 
         const empRes = await backlogService.fetchEmployees(1, 100);
-        console.log("Employee: ", empRes);
         if (isMounted) {
           setEmployees(
             (empRes.items ?? [])

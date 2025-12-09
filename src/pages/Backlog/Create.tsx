@@ -12,7 +12,6 @@ export function BacklogCreate() {
   const handleSubmit = async (values: any) => {
     try {
       setCreating(true);
-      console.log("Creating backlog:", values);
 
       const payload = {
         employeeCode: values.employeeCode,
@@ -29,7 +28,6 @@ export function BacklogCreate() {
         workingHour: parseInt(values.workingHour) || 0,
       };
 
-      console.log("Transformed payload:", payload);
 
       const result = await backlogService.createTask(payload);
 

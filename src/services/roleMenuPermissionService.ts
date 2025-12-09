@@ -6,7 +6,7 @@ export const roleMenuPermissionService = {
     await  useDataStore.getState().fetchData({
       endPoint: `/role-menu-permission/menu-tree?RoleCode=${roleCode}`,
     });
-     return useDataStore.getState().data?.menuTree ?? [];
+     return useDataStore.getState().data?.data.menuTree ?? [];
   },
   
   fetchRoles: async () => {
