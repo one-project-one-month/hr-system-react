@@ -4,11 +4,7 @@ import type { fetchData } from "@/types/employee";
 export const EmployeeService = {
   fetchEmployees: async (fetchData: fetchData) => {
     await useDataStore.getState().fetchData({
-      endPoint: `/Employee/list?
-      EmployeeName=${fetchData.name}
-      &PageNo=${fetchData.pageNo}
-      &PageSize=${fetchData.pageSize}
-      &RoleName=${fetchData.roleName}`,
+      endPoint: `/Employee/list?EmployeeName=${fetchData.name}&PageNo=${fetchData.pageNo}&PageSize=${fetchData.pageSize}&RoleName=${fetchData.roleName}`,
     });
     return useDataStore.getState().data ?? {};
   },
@@ -56,6 +52,14 @@ export const EmployeeService = {
   addEmployeeToProjects: async (projectCode: string, payload: {}) => {
     await useDataStore.getState().fetchData({
       endPoint: `/Project/add-employee/${projectCode}`,
+      method: "POST",
+      body: payload,
+    })
+  },
+
+  removeEmployeesFromProjects: async (projectCode: string, payload: {}) => {
+    await useDataStore.getState().fetchData({
+      endPoint: `/Project/remove-employee/${projectCode}`,
       method: "POST",
       body: payload,
     })

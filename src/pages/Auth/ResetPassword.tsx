@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -10,9 +10,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MoveLeft, Eye, EyeOff } from "lucide-react";
+import { resetPassword } from "@/services/verificationService";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
+  const { state } = useLocation();
 
   const [pwd, setPwd] = useState("");
   const [cpwd, setCpwd] = useState("");
@@ -29,6 +31,14 @@ export default function ResetPassword() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
+    const payload =
+    {
+      email: state?.email,
+      resetToken: state?.resetToken ?? "",
+      newPassword: pwd
+    }
+    console.log (payload)
+    await resetPassword(payload);
     try {
       setLoading(true);
       navigate("/password-changed");
@@ -71,9 +81,8 @@ export default function ResetPassword() {
               </div>
               {pwdInvalid && (
                 <p
-                  className={`text-sm mt-1 ${
-                    pwdInvalid ? "text-red-600" : "opacity-0"
-                  }`}
+                  className={`text-sm mt-1 ${pwdInvalid ? "text-red-600" : "opacity-0"
+                    }`}
                 >
                   Password must be at least {minLen} characters.
                 </p>
@@ -103,9 +112,8 @@ export default function ResetPassword() {
               </div>
               {matchInvalid && (
                 <p
-                  className={`text-sm mt-1 ${
-                    matchInvalid ? "text-red-600" : "opacity-0"
-                  }`}
+                  className={`text-sm mt-1 ${matchInvalid ? "text-red-600" : "opacity-0"
+                    }`}
                 >
                   Passwords do not match.
                 </p>

@@ -27,10 +27,8 @@ export default function ForgotPassword() {
     e.preventDefault();
     setTouched(true);
     if (!emailRe.test(email)) return;
-
     try {
       setLoading(true);
-
       await sendVerificationMail(email);
       navigate("/verify-otp", { state: { email } });
     } catch (err: any) {

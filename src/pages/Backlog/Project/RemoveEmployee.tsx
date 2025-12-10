@@ -71,14 +71,14 @@ export function RemoveEmployee() {
 
   const handleSelectAll = (checked: boolean | "indeterminate") => {
     if (checked) {
-      const idsToAdd = currentData
+      const employeeCodesToAdd = currentData
         .map((emp) => emp.employeeCode)
-        .filter((id) => !selectedEmployees.includes(id));
-      setSelectedEmployees((prev) => [...prev, ...idsToAdd]);
+        .filter((employeeCode) => !selectedEmployees.includes(employeeCode));
+      setSelectedEmployees((prev) => [...prev, ...employeeCodesToAdd]);
     } else {
-      const idsToRemove = currentData.map((emp) => emp.employeeCode);
+      const employeeCodesToAdd = currentData.map((emp) => emp.employeeCode);
       setSelectedEmployees((prev) =>
-        prev.filter((employeeCode) => !idsToRemove.includes(employeeCode))
+        prev.filter((employeeCode) => !employeeCodesToAdd.includes(employeeCode))
       );
     }
   };

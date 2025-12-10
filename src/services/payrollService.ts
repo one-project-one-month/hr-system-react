@@ -1,5 +1,5 @@
 import { useDataStore } from "@/stores/useDataStore";
-import type { PayrollFilter } from "@/types/payrollFilter";
+import type { PayrollFilter, PayrollDetailFilter } from "@/types/payroll";
 
 export const PayrollService = {
     fetchPayrollSummary: async (payrollFilter: PayrollFilter) => {
@@ -16,5 +16,18 @@ export const PayrollService = {
             body: payload
         });
         return useDataStore.getState().data ?? {};
+    },
+    monthDetailList: async (payrollDetailFilter: PayrollDetailFilter) => {
+        await useDataStore.getState().fetchData({
+            endPoint: `/Payroll/month-detail-list?PayrollSummaryCode=${payrollDetailFilter.PayrollSummaryCode}&EmployeeName=${payrollDetailFilter.EmployeeName}&PageNo=${payrollDetailFilter.PageNo}&PageSize=${payrollDetailFilter.PageSize}`,
+            method: "GET",
+        })
+    },
+    fetchPayrollListEmployee : async (payrollFilter: PayrollFilter) =>  {
+        await useDataStore.getState().fetchData({
+            endPoint: `/Payroll/list/employee?MonthYear=${payrollFilter.MonthYear}&PageNo=${payrollFilter.PageNo}&PageSize=${payrollFilter.PageSize}`,
+            method:"GET"
+        })
     }
+
 }

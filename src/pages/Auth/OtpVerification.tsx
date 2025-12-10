@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MoveLeft } from "lucide-react";
-
+import { verifyCode } from "@/services/verificationService";
 const BOXES = 6;
 
 export default function OtpVerification() {
@@ -71,11 +71,13 @@ export default function OtpVerification() {
   async function handleVerify() {
     if (!canContinue) return;
     try {
+      console.log ({email , code })
+      const resetToken = await verifyCode(email ?? "", code)
+      const token = resetToken?.data?.resetToken;
       setSubmitting(true);
       setError("");
-      // Simulate success:
       await new Promise((r) => setTimeout(r, 500));
-      navigate("/reset-password", { state: { email } });
+      navigate("/reset-password", { state: { email, resetToken: token } });
     } catch (err) {
       console.error(err);
       setError("The OTP you entered is incorrect. Please try again.");

@@ -77,7 +77,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
         { label: "Attendance", icon: <Clock />, path: "/attendance", menuGroupCode: "ATTENDANCE" },
       ],
     },
-    { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: "/payroll" },
+    { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: "/payrollSummary" },
   ];
 
   // Recursive MenuItem component

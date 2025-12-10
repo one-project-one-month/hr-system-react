@@ -25,7 +25,8 @@ import { UpdateAttendance } from "@/pages/Attendance/Edit";
 import { DetailsAttendance } from "@/pages/Attendance/Detail";
 
 // Payroll
-import Payroll from "@/pages/Payroll/Payroll";
+import PayrollSummary from "@/pages/Payroll/Payroll";
+import PayrollDetailList from "@/pages/Payroll/PayrollDetailList";
 import PayrollDetail from "@/pages/Payroll/PayrollDetail";
 
 // menu Group
@@ -273,12 +274,17 @@ export const routes: AppRoute[] = [
 
     // Payroll
     {
-        path: "/payroll",
-        element: <Payroll />,
+        path: "/payrollSummary",
+        element: <PayrollSummary />,
         permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
     },
     {
-        path: "/payroll/:id",
+        path: "/payrollDetailList/:code",
+        element: <PayrollDetailList />,
+        permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
+    },
+     {
+        path: "/payrollDetailL/:code",
         element: <PayrollDetail />,
         permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
     },

@@ -14,12 +14,10 @@ export const ProfileService = {
  updateEmployee: async (payload: FormData) => {
   console.log (token)
   const response = await fetch(`/api/Employee/EditProfile`, {
-    method: "POST", // or "PUT"
-    body: payload,   // FormData with all fields + file
+    method: "POST", 
+    body: payload,
     headers: {
-      // Authorization header if needed
       "Authorization": `Bearer ${token}`
-      // Do NOT set 'Content-Type'; the browser sets it automatically for FormData
     },
   });
 

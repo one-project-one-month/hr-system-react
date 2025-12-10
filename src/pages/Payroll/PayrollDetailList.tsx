@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -15,20 +15,21 @@ import {
   ChevronRight,
   ChevronsRight,
   ChevronsLeft,
-  BadgeDollarSign,
-  AlertCircle,
+  Search,
+  CircleX,
 } from "lucide-react";
 import { PayrollService } from "@/services/payrollService";
-import MonthYearPicker from "@/components/ui/month-year-picker";
-import type { PayrollSummary } from "@/types/payroll";
+import type { PayrollDetail } from "@/types/payroll";
+import { Input } from "@/components/ui/input";
 
 export default function PayrollList() {
   const navigate = useNavigate();
-  const [data, setData] = useState<PayrollSummary[]>([]);
+  const { code } = useParams()
+  const [data, setData] = useState<PayrollDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [monthYear, setMonthYear] = useState<Date | null>(null)
-  const [error, setError] = useState("")
+  const [searchName, setSearchName] = useState("")
   const totalPages = Math.ceil(data.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentData = data.slice(startIndex, startIndex + rowsPerPage);
@@ -39,49 +40,23 @@ export default function PayrollList() {
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
+  console.log (code)
 
-  const handleRowClick = (payrollSummaryCode: string) => {
-    const payroll = data.find((p) => p.payrollSummaryCode === payrollSummaryCode);
-    navigate(`/payrollDetailList/${payrollSummaryCode}`, { state: payroll });
+  const handleRowClick = (payrollCode: string) => {
+    const payroll = data.find((p) => p.payrollCode === payrollCode);
+    navigate(`/payrollDetail/${payrollCode}`, { state: payroll });
   };
-
-  const processPayroll = async () => {
-    try {
-      if (!monthYear) {
-        setError("Please select month and year first!");
-        return;
-      }
-      setError("")
-      await PayrollService.processPayroll({ payrollMonth: cleanMonthYear(monthYear) })
-    } catch (error) {
-      console.log(error)
-      setError("Failed to process payroll");
-    }
-  }
-
-  const cleanMonthYear = (date: Date | null) => {
-    if (!date) return ""
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return `${year}-${String(month).padStart(2, "0")}`;
-  }
-
   useEffect(() => {
     (async () => {
-      try {
-        const payrollSummary = await PayrollService.fetchPayrollSummary(
-          {
-            MonthYear: cleanMonthYear(monthYear) ?? "",
-            PageNo: currentPage,
-            PageSize: rowsPerPage
-          }
-        )
-        setData(payrollSummary?.data?.items as PayrollSummary[] ?? [])
-      } catch (err) {
-        console.log(err)
-        setError("Failed to fetch payroll summary")
-      }
-
+      const monthDetailList = await PayrollService.monthDetailList(
+        {
+          PayrollSummaryCode: code ?? "",
+          EmployeeName: searchName,
+          PageNo: currentPage,
+          PageSize: rowsPerPage
+        }
+      )
+      setData(monthDetailList?.data?.items as PayrollDetail[] ?? [])
     })()
 
   }, [monthYear])
@@ -91,26 +66,29 @@ export default function PayrollList() {
       <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
         <p>Payroll</p>
         {/* search */}
-        <div className="relative w-full md:w-[20%] text-primary-800">
-          <MonthYearPicker
-            value={monthYear}
-            onChange={(d) => setMonthYear(d)}
-            startYear={2000}
-            endYear={2035}
-          />
-          {error && (
-            <div className="mt-3 flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
-              <AlertCircle className="w-4 h-4" />
-              <span>{error}</span>
-            </div>
-          )}
-        </div>
+        <div className="relative w-full md:w-[200px] text-primary-800">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
+            <Input
+              type="text"
+              value={searchName}
+              placeholder="Search..."
+              onInput={(e) => setSearchName(e.target.value)}
+              className="border-primary-700 bg-natural-50 focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9 text-primary-400"
+            />
+            {searchName ? (
+              <CircleX
+                onClick={() => setSearchName("")}
+                className="cursor-pointer absolute absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4"
+              />
+            ) : (
+              ""
+            )}
+          </div>
         {/* buttons */}
         <Button className="primary-btn">
           <FolderUp />
           Export
         </Button>
-        <Button className="primary-btn" onClick={processPayroll}><BadgeDollarSign />Process Payroll</Button>
       </div>
       <Table className="w-full overflow-auto shadow-sm rounded-md">
         <TableHeader className="bg-primary-300">
@@ -119,28 +97,22 @@ export default function PayrollList() {
               No
             </TableHead>
             <TableHead >
-              Payroll Month
+              Employee Code
             </TableHead>
             <TableHead >
-              Total Working Days
+              Employee Name 
             </TableHead>
             <TableHead >
-              Total Employees
+              Payroll Date 
             </TableHead>
             <TableHead >
-              total Working Hours
+              Status 
             </TableHead>
             <TableHead >
-              Total Leave Hours
+              Total Working Hours 
             </TableHead>
             <TableHead >
-              Total Actual Working Hours
-            </TableHead>
-            <TableHead >
-              Total Base Salary
-            </TableHead>
-            <TableHead >
-              Total Net Pay
+              NetPay   
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -150,17 +122,15 @@ export default function PayrollList() {
               <TableRow
                 key={index}
                 className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none py-3"
-                onClick={() => handleRowClick(payroll.payrollSummaryCode)}
+                onClick={() => handleRowClick(payroll.payrollCode)}
               >
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{payroll.payrollMonth}</TableCell>
-                <TableCell>{payroll.totalWorkingDays}</TableCell>
-                <TableCell>{payroll.employeeCount}</TableCell>
-                <TableCell>{payroll.totalWorkingHours}</TableCell>
-                <TableCell>{payroll.totalLeaveHours}</TableCell>
-                <TableCell>{payroll.totalActualWorkingHours}</TableCell>
-                <TableCell>{payroll.totalBaseSalary}</TableCell>
-                <TableCell>{payroll.totalNetPay}</TableCell>
+                <TableCell>{payroll.employeeCode}</TableCell>
+                <TableCell>{payroll.employeeName}</TableCell>
+                <TableCell>{payroll.payrollDate}</TableCell>
+                <TableCell>{payroll.status}</TableCell>
+                <TableCell>{payroll.totalWorkingHour}</TableCell>
+                <TableCell>{payroll.netPay}</TableCell>
               </TableRow>
             )) : (
               <TableRow key="no-data">

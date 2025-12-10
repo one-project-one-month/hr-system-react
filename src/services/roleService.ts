@@ -7,9 +7,7 @@ export const RoleService = {
         params: listParams
     ) => {
         await useDataStore.getState().fetchData({
-            endPoint: `/Role/list?RoleName=${params.roleName}
-            &PageNo=${params.pageNo}
-            &PageSize=${params.pageSize}`
+            endPoint: `/Role/list?RoleName=${params.roleName}&PageNo=${params.pageNo}&PageSize=${params.pageSize}`
         })
         return useDataStore.getState().data;
     },
