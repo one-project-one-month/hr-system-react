@@ -36,6 +36,12 @@ export default function LoginForm() {
         values.username,
         values.password
       );
+
+      console.log (user)
+      if (user.isFirstTimeLogin) {
+        navigate("/changePassword", { state: { employeeCode: user.employeeCode } });
+        return;
+      }
       if (user) {
         switch (user.roleName.toLocaleLowerCase()) {
           case "administrator":

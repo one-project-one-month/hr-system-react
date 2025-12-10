@@ -8,30 +8,12 @@ import {
   dashboardService,
 } from "@/services/dashboardService";
 import type { AttendanceTypes, DashboardStats } from "@/types/dashboardService";
-
-
-const attendanceWeekly = [
-  { date: "Oct 2", checkIn: 35, checkOut: 10 },
-  { date: "Oct 3", checkIn: 45, checkOut: 14 },
-  { date: "Oct 4", checkIn: 43, checkOut: 11 },
-  { date: "Oct 5", checkIn: 47, checkOut: 9 },
-  { date: "Oct 6", checkIn: 42, checkOut: 9 },
-];
-
-const attendanceMonthly = [
-  { date: "Week 1", checkIn: 160, checkOut: 40 },
-  { date: "Week 2", checkIn: 170, checkOut: 38 },
-  { date: "Week 3", checkIn: 155, checkOut: 42 },
-  { date: "Week 4", checkIn: 165, checkOut: 39 },
-];
-
 export default function AdminDashboard() {
   const [range, setRange] = useState<"weekly" | "monthly">("weekly");
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [attendanceList, setAttendanceList] = useState<AttendanceTypes | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  console.log(attendanceList);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -62,7 +44,6 @@ export default function AdminDashboard() {
           return;
         }
         setAttendanceList(resp.data);
-        console.log (resp.data);
       } catch (err) {
         console.error(err);
         setError("Something went wrong while fetching dashboard stats.");

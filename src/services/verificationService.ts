@@ -35,7 +35,7 @@ export async function changePassword(changePassword:changePassword) {
   const res = await fetch("/api/Auth/change-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ changePassword }),
+    body: JSON.stringify(changePassword),
   });
 
   if (!res.ok) {

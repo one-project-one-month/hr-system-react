@@ -6,7 +6,7 @@ import OtpVerification from "@/pages/Auth/OtpVerification";
 import PasswordChanged from "@/pages/Auth/PasswordChanged";
 import ResetPassword from "@/pages/Auth/ResetPassword";
 import LoginPage from "@/pages/Login";
-
+import ChangePassword from "@/pages/Auth/ChangePassword";
 import Unauthorized from "@/pages/Unauthorized";
 import NotFound from "@/pages/NotFound";
 
@@ -66,6 +66,7 @@ function App() {
           <Route path="/verify-otp" element={<OtpVerification />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/password-changed" element={<PasswordChanged />} />
+          <Route path="/changePassword" element={<ChangePassword />} />,
         </Route>
 
         {/* error handling */}

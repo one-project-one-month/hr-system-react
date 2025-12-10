@@ -123,7 +123,6 @@ export function AddEmployee() {
     }
     const selectedData = EmployeeData.filter((emp) =>
       selectedEmployees.includes(emp.employeeCode)).map(e => (e.employeeCode));
-    console.log(selectedProject)
     try {
       await EmployeeService.addEmployeeToProjects(selectedProject, {
         employeeCodes: selectedData

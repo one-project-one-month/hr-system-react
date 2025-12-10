@@ -2,7 +2,7 @@ import CreateRole from "@/pages/Admin/Role/CreatetRole";
 import Role from "@/pages/Admin/Role/Index";
 import UpdateRole from "@/pages/Admin/Role/UpdateRole";
 import ViewRole from "@/pages/Admin/Role/ViewRole";
-
+import ChangePassword from "@/pages/Auth/ChangePassword";
 // Backlog
 import { BacklogCreate } from "@/pages/Backlog/Create";
 import { BacklogDetail } from "@/pages/Backlog/Detail";

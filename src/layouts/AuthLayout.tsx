@@ -45,7 +45,7 @@ export default function AuthLayout() {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="absolute top-1/2 left-1/2 md:left-1/3 -translate-x-1/2  -translate-y-1/2 md:-translate-y-1/3 w-[80%] md:w-[30%]">
+      <div className="absolute top-1/2 left-1/2 md:left-1/3 -translate-x-1/2  -translate-y-1/2 md:-translate-y-1/3 w-[80%] md:w-[40%]">
         <div className="w-full">
           <Outlet />
         </div>

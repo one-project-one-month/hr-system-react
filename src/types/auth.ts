@@ -10,6 +10,7 @@ export interface User {
     roleName: string;
     username: string;
     menuTree: {};
+    isFirstTimeLogin: boolean;
 }
 export interface AuthState {
     user: User | null;
