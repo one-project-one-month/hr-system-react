@@ -18,9 +18,9 @@ export const dashboardService = {
     return asApi<DashboardStats>(raw);
   },
 
-  fetchAttendanceLists: async (): Promise<ApiEnvelope<AttendanceTypes>> => {
+  fetchAttendanceLists: async (type:string): Promise<ApiEnvelope<AttendanceTypes>> => {
     await useDataStore.getState().fetchData({
-      endPoint: `/AdminDashboard/attendances-histogram/weekly`,
+      endPoint: `/AdminDashboard/attendances-histogram/${type}`,
     });
 
     const raw = useDataStore.getState().data as unknown;

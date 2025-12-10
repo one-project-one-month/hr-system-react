@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChartCard } from "@/components/ui/bar-chart";
 import {
   dashboardService,
-  type AttendanceTypes,
-  type DashboardStats,
 } from "@/services/dashboardService";
+import type { AttendanceTypes, DashboardStats } from "@/types/dashboardService";
+
 
 const attendanceWeekly = [
   { date: "Oct 2", checkIn: 35, checkOut: 10 },
@@ -27,9 +27,6 @@ const attendanceMonthly = [
 
 export default function AdminDashboard() {
   const [range, setRange] = useState<"weekly" | "monthly">("weekly");
-
-  const chartData = range === "weekly" ? attendanceWeekly : attendanceMonthly;
-
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [attendanceList, setAttendanceList] = useState<AttendanceTypes | null>(null);
   const [loading, setLoading] = useState(false);
@@ -43,7 +40,6 @@ export default function AdminDashboard() {
         // setError(null);
 
         const resp = await dashboardService.fetchStatsCards();
-
         if (!resp.isSuccess || !resp.data) {
           setError(resp.message || "Failed to load dashboard stats");
           return;
@@ -60,8 +56,13 @@ export default function AdminDashboard() {
 
     const fetchAttendance = async () => {
       try {
-        const resp = await dashboardService.fetchAttendanceLists();
+        const resp = await dashboardService.fetchAttendanceLists(range);
+        if (!resp.isSuccess || !resp.data) {
+          setError(resp.message || "Failed to load attendance data");
+          return;
+        }
         setAttendanceList(resp.data);
+        console.log (resp.data);
       } catch (err) {
         console.error(err);
         setError("Something went wrong while fetching dashboard stats.");
@@ -96,22 +97,27 @@ export default function AdminDashboard() {
       {/* Chart section */}
       <div className="space-y-3">
         <BarChartCard
-          data={chartData}
-          xKey="date"
+          data={attendanceList}
+          xKey="label"
           period={range}
           onTogglePeriod={() =>
             setRange((prev) => (prev === "weekly" ? "monthly" : "weekly"))
           }
           bars={[
             {
-              dataKey: "checkIn",
-              name: "Check in",
-              color: "#00A86B",
+              dataKey: "halfDayAbsent",
+              name: "Half Day Leave",
+              color: "#C78BDB",
             },
             {
-              dataKey: "checkOut",
-              name: "Check out",
-              color: "#B1E7D1",
+              dataKey: "present",
+              name: "Present",
+              color: "#02B16C",
+            },
+            {
+              dataKey: "absent",
+              name: "Absent",
+              color: "#DBC28B",
             },
           ]}
           footer={<>Attendance&nbsp; check in / check out histogram</>}

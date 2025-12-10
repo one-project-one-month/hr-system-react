@@ -77,24 +77,18 @@ export function BarChartCard({
               <XAxis
                 dataKey={xKey}
                 tickLine={false}
-                axisLine={{ stroke: "#2F80ED", strokeWidth: 1 }} // blue baseline
-                tick={{
-                  fontSize: 11,
-                  fill: "hsl(var(--muted-foreground))",
+                axisLine={{ stroke: "#2F80ED" }}
+                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))"  }}
+                label={{
+                  value: "Date",
+                  position: "centerBottom",
+                  offset: 20,
+                  fill: "#575A59",
+                  fontSize: 16,
+                  dy: 20,
                 }}
-                height={32}
-                label={
-                  <Label
-                    value="Date"
-                    position="insideBottom"
-                    offset={-10}
-                    style={{
-                      fontSize: 16,
-                      fill: "#575A59",
-                    }}
-                  />
-                }
               />
+
 
               <YAxis
                 tickLine={false}
