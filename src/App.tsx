@@ -27,6 +27,7 @@ function App() {
   const rolePathMap: Record<string, string> = {
     Administrator: "/admin",
     "HR Specialist": "/hr",
+    HR:"/hr", 
     Employee: "/employee",
   };
   const defaultPath = "/employee";

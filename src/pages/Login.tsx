@@ -48,6 +48,8 @@ export default function LoginForm() {
             navigate("/admin/dashboard");
             break;
           case "hr specialist":
+          case "hr":
+          case "hr manager":  
             navigate("/hr/dashboard");
             break;
           default:

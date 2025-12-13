@@ -6,9 +6,10 @@ export const hrAttendanceReportService = {
       date: date,
       dataView: dataView.toString()
     });
+    console.log(date, dataView);
 
     await useDataStore.getState().fetchData({
-      endPoint: `/Reports/GetHRAttendanceReport?${param.toString()}`,
+      endPoint: `/hr-dashboard/attendance-overview?${param.toString()}`,
     });
 
     return useDataStore.getState().data ?? [];

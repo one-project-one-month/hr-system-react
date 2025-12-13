@@ -21,7 +21,8 @@ export default function () {
     (async () => {
       setReportsLoading(true);
       try {
-        const res = await svc.fetchHRAttendanceReport(Date.now().toString(), dataView);
+        const today = new Date().toISOString().split("T")[0];
+        const res = await svc.fetchHRAttendanceReport(today, dataView);
         if (!mounted) return;
 
         setEmpCount(res.empCount ?? 0);
