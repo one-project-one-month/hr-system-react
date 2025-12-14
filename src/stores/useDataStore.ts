@@ -2,62 +2,66 @@ import { create } from "zustand";
 import { useAuthStore } from "./useAuthStore";
 
 interface FetchConfig {
-  endPoint: string;
-  method?: string;
-  body?: any;
-  headers?: Record<string, string>;
+    endPoint: string;
+    method?: string;
+    body?: any;
+    headers?: Record<string, string>;
 }
 interface DataStore {
-  data: any[];
-  loading: boolean;
-  error: string | null;
-  fetchData: (config: FetchConfig) => Promise<any>;
+    data: any[];
+    loading: boolean;
+    error: string | null;
+    fetchData: (config: FetchConfig) => Promise<any>;
+    clearError?: () => void;
 }
 
 export const useDataStore = create<DataStore>((set) => ({
-  data: [],
-  loading: false,
-  error: null,
+    data: [],
+    loading: false,
+    error: null,
 
-  fetchData: async ({
-    endPoint,
-    method = "GET",
-    body,
-    headers = {},
-  }: FetchConfig) => {
-    set({ loading: true, error: null });
+    fetchData: async ({
+        endPoint,
+        method = "GET",
+        body,
+        headers = {},
+    }: FetchConfig) => {
+        set({ loading: true, error: null });
 
-    try {
-      const token = useAuthStore.getState().token;
-      
-      const defaultHeaders = {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        ...(headers || {}),
-      };
+        try {
+            const token = useAuthStore.getState().token;
 
-      const options: RequestInit = {
-        method,
-        headers: defaultHeaders,
-        ...(body && { body: JSON.stringify(body) }),
-      };
-      const response = await fetch(`/api${endPoint}`, options);
+            const defaultHeaders = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                ...(headers || {}),
+            };
 
-      const text = await response.text();
-      const data = text ? JSON.parse(text) : null;
+            const options: RequestInit = {
+                method,
+                headers: defaultHeaders,
+                ...(body && { body: JSON.stringify(body) }),
+            };
+            const response = await fetch(`/api${endPoint}`, options);
 
-      if (!response.ok) {
-        throw new Error(
-          data?.message || data?.error || `API Error ${response.status}`
-        );
-      }
+            const text = await response.text();
+            const data = text ? JSON.parse(text) : null;
 
-      set({ data, loading: false });
-    } catch (err) {
-      set({ error: err.message, loading: false });
-      throw err; // optionally rethrow
-    }
-  },
+            if (!response.ok) {
+                throw new Error(
+                    data?.message ||
+                        data?.error ||
+                        `API Error ${response.status}`
+                );
+            }
 
-  clearError: () => set({ error: null }),
+            set({ data, loading: false });
+            return data;
+        } catch (err) {
+            set({ error: err.message, loading: false });
+            throw err; // optionally rethrow
+        }
+    },
+
+    clearError: () => set({ error: null }),
 }));
