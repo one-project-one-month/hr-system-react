@@ -163,10 +163,10 @@ export default function MenuItemList() {
   return (
     <div className="p-6 w-full flex-1">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-5">
+      <div className="flex flex-col w-full md:flex-row justify-between items-start md:items-center gap-2 mb-5">
         <p className="font-bold text-primary-400">Menu Item</p>
 
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-col w-full md:flex-row items-start md:items-center gap-2 md:w-auto">
           {/* Search */}
           <div className="relative w-full md:w-[200px] text-primary-800">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
@@ -185,9 +185,9 @@ export default function MenuItemList() {
             )}
           </div>
 
-          <div className="flex gap-2 text-primary-700 bg-natural-50">
-            <Link to="/menu-item/create">
-              <Button className="primary-btn">
+          <div className="flex gap-2 text-primary-700 bg-natural-50 w-full md:w-auto">
+            <Link to="/menu-item/create" className="w-full">
+              <Button className="primary-btn w-full">
                 <Plus className="h-4 w-4" />
                 New
               </Button>
