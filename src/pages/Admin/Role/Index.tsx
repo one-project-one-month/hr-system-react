@@ -134,15 +134,15 @@ const Role: React.FC = () => {
   return (
     <div className="p-3 sm:p-6 md:p-8 w-full">
       {/* Main content wrapper */}
-      <div className="p-6 md:p-8 bg-white rounded-lg shadow-md">
+      <div className="p-6 md:p-8 bg-white rounded-lg shadow-md w-full">
         {/* Header Section */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl sm:text-2xl md:text-xl font-bold text-primary-700">
+        <div className="flex mb-6 w-full md:flex-row flex-col gap-4 md:justify-between md:items-center">
+          <h1 className="text-xl font-bold text-primary-700">
             Role
           </h1>
           <Link
             to="/role/create"
-            className="flex items-center gap-2 text-white bg-[rgba(2,177,108,1)] py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
+            className="w-full md:w-auto flex items-center gap-2 text-white bg-[rgba(2,177,108,1)] py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
           >
             <Plus size={20} />
             New

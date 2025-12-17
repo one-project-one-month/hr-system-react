@@ -156,13 +156,13 @@ export default function MenuGroupList() {
   return (
     <>
       <div className="p-6 w-full flex flex-col">
-        <div className="flex justify-between gap-2 items-center mb-4">
-          <p className="text-xl md:text-2xl lg:text-3xl font-bold">
+        <div className="flex flex-col md:flex-row justify-between gap-2 mb-4 w-full">
+          <p className="text-xl font-bold w-full">
             Menu Group
           </p>
 
-          <div className="flex gap-3 items-center">
-            <div className="relative w-[250px] md:w-[350px] lg:w-[450px] border-primary-500 border rounded-md">
+          <div className="flex flex-col md:flex-row w-full gap-3 items-center justify-end">
+            <div className="relative w-full md:w-[35%] lg:w-[50%] border-primary-500 border rounded-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-primary-600" />
               <Input
                 type="text"
@@ -172,7 +172,7 @@ export default function MenuGroupList() {
               />
             </div>
 
-            <Button asChild className="bg-primary-500 text-white">
+            <Button asChild className="bg-primary-500 text-white w-full md:w-auto">
               <Link to="/menu-group/create">
                 <Plus /> New
               </Link>
@@ -182,9 +182,9 @@ export default function MenuGroupList() {
 
         {/* Table */}
         <div>
-          <Table className="w-full border-collapse">
-            <TableHeader>
-              <TableRow className="bg-primary-300 border-0">
+          <Table className="w-full">
+            <TableHeader className="bg-primary-400 text-center">
+              <TableRow key="header-row">
                 <TableHead className="w-[80px] text-center py-4">No.</TableHead>
                 <TableHead className="text-center py-4">
                   Menu Group Name
@@ -232,7 +232,7 @@ export default function MenuGroupList() {
                 paginatedData.map((item, index) => (
                   <TableRow
                     key={item.menuGroupId}
-                    className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none"
+                    className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none py-3"
                   >
                     {/* No. */}
                     <TableCell className="text-center">
