@@ -107,7 +107,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           {openMenus[item.label] && (
             <div className="w-full ms-2 p-1!">
               {item.children.map((child) => (
-                <MenuItem key={child.label} item={child} />
+                <MenuItem key={child.label} item={child}/>
               ))}
             </div>
           )}
@@ -120,7 +120,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
         key={item.label}
         to={item.path!}
         onClick={onClose}
-        className={`sidebar-btn ${location.pathname === item.path ? "bg-primary-500 text-natural-50" : ""}`}
+        className={`sidebar-btn gap-2 mb-1 ${location.pathname === item.path ? "bg-primary-500 text-natural-50" : ""}`}
       >
         {item.icon} {item.label}
       </Link>
@@ -128,7 +128,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center">
       {menuConfig.map((item) => (
         <MenuItem key={item.label} item={item} />
       ))}

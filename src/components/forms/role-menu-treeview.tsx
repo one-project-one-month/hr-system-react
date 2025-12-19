@@ -280,6 +280,7 @@ export default function RoleMenuPermissionPanel() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      console.log (newPermissions)
       await roleMenuPermissionService.savePermissions(newPermissions);
     } catch (err) {
       setError(err.message);
@@ -294,7 +295,6 @@ export default function RoleMenuPermissionPanel() {
       const fetchRMP = await roleMenuPermissionService.fetchRoleMenuPermission(
         selectedRole ?? ""
       );
-      console.log (fetchRMP)
       const fetchedRoles = await roleMenuPermissionService.fetchRoles();
       const fetchedPermissions =
         await roleMenuPermissionService.fetchPermissions();
@@ -321,33 +321,33 @@ export default function RoleMenuPermissionPanel() {
           return;
         }
 
-        // DASHBOARD
-        if (
-          group.menuGroupCode === "DASHBOARD" ||
-          group.menuGroupCode === "PAYROLL" ||
-          group.menuGroupCode === "ROLE_MENU_PERMISSION"
-        ) {
-          flatPermissions.push({
-            menuGroupCode: group.menuGroupCode,
-            menuItemCode: null,
-            permissionCode: null,
-            isChecked: group.isChecked,
-          });
-          return;
-        }
+        // // DASHBOARD
+        // if (
+        //   group.menuGroupCode === "DASHBOARD" ||
+        //   group.menuGroupCode === "PAYROLL" ||
+        //   group.menuGroupCode === "ROLE_MENU_PERMISSION"
+        // ) {
+        //   flatPermissions.push({
+        //     menuGroupCode: group.menuGroupCode,
+        //     menuItemCode: null,
+        //     permissionCode: null,
+        //     isChecked: group.isChecked,
+        //   });
+        //   return;
+        // }
 
-        // COMPANY_RULES → LIST + UPDATE
-        if (["COMPANY_RULES"].includes(group.menuGroupCode)) {
-          ["LIST", "UPDATE"].forEach((code) => {
-            flatPermissions.push({
-              menuGroupCode: group.menuGroupCode,
-              menuItemCode: null,
-              permissionCode: code,
-              isChecked: group.isChecked,
-            });
-          });
-          return;
-        }
+        // // COMPANY_RULES → LIST + UPDATE
+        // if (["COMPANY_RULES"].includes(group.menuGroupCode)) {
+        //   ["LIST", "UPDATE"].forEach((code) => {
+        //     flatPermissions.push({
+        //       menuGroupCode: group.menuGroupCode,
+        //       menuItemCode: null,
+        //       permissionCode: code,
+        //       isChecked: group.isChecked,
+        //     });
+        //   });
+        //   return;
+        // }
 
         // Default → all permissions
         (fetchedPermissions ?? []).forEach((p: any) => {
@@ -359,7 +359,6 @@ export default function RoleMenuPermissionPanel() {
           });
         });
       });
-      console.log (flatPermissions)
       setNewPermissions({
         roleCode: selectedRole ?? "",
         menuPermissions: flatPermissions,
