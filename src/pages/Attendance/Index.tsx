@@ -182,7 +182,7 @@ export function AttendanceList() {
         <p className="page-title">Attendance</p>
         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 w-full md:w-auto">
           {/* date picker */}
-          <div className="grid gap-2">
+          <div className="w-full gap-2">
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -218,7 +218,7 @@ export function AttendanceList() {
               </PopoverContent>
             </Popover>
           </div>
-          <div className="relative w-full md:w-[200px] text-primary-800">
+          <div className="relative w-full md:w-[300px] text-primary-800">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
             <Input
               type="text"
@@ -237,18 +237,11 @@ export function AttendanceList() {
             )}
           </div>
           {/* buttons */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="primary-btn border border-primary-700 focus:outline-none py-1 px-2 rounded-md flex gap-2">
-              <FileUp />
-              Export
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="z-20 border border-primary-700 bg-natural-50 w-24 p-4 rounded-md">
-              <DropdownMenuSeparator />
-              <DropdownMenuItem> PDF</DropdownMenuItem>
-              <DropdownMenuItem>Excel</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <Button className="primary-btn" onClick={goToCreatForm}>
+          <Button className="primary-btn w-full md:w-auto">
+            <FileUp />
+            Export
+          </Button>
+          <Button className="primary-btn w-full md:w-auto" onClick={goToCreatForm}>
             <Plus />
             New
           </Button>

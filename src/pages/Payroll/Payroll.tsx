@@ -91,7 +91,7 @@ export default function PayrollList() {
       <div className="flex flex-col md:flex-row gap-2 mb-4 w-full">
         <p className="page-title">Payroll</p>
         {/* search */}
-        <div className="w-full md:w-[20%] text-primary-800">
+        <div className="w-full md:w-auto text-primary-800">
           <MonthYearPicker
             value={monthYear}
             onChange={(d) => setMonthYear(d)}

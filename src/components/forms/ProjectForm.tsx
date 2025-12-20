@@ -88,19 +88,7 @@ export function ProjectForm({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
-        {/* Code */}
-        {/* <div className="space-y-2">
-          <label className="text-sm font-medium">
-            Code <span className="text-red-500">*</span>
-          </label>
-          <Input
-            placeholder="PJ1234"
-            value={values.code}
-            onChange={(e) => update("code", e.target.value)}
-            disabled={submitting}
-          />
-        </div> */}
-
+        
         {/* Name */}
         <div className="space-y-2">
           <label className="text-sm font-medium">Name</label>

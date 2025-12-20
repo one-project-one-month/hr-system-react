@@ -24,7 +24,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { backlogService } from "@/services/backlogService";
 import type { EmployeeApiItem, ProjectApiItem, LookupOption, BacklogFormProps } from "@/types/backlog"
-import type { formSchema } from "@/schema/backlog";
+import { formSchema } from "@/schema/backlog";
 import { z } from "zod";
 
 export default function BacklogForm({
