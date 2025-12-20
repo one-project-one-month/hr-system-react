@@ -127,13 +127,13 @@ const ParentMenu = ({
 
   // Filter permissions for special groups
   const getPermissionsForGroup = () => {
-    if (hasChildMenus) return []; // Handled by child menus
+    if (hasChildMenus && menuGroup.menuGroupCode !== 'COMPANY_RULES') return []; // Handled by child menus
     if (
       menuGroup.menuGroupCode === "DASHBOARD" ||
       menuGroup.menuGroupCode === "PAYROLL"
     )
       return [];
-    if (["COMPANY_RULES"].includes(menuGroup.menuGroupCode)) {
+    if (menuGroup.menuGroupCode === 'COMPANY_RULES') {
       return permissions.filter((p) =>
         ["LIST", "UPDATE"].includes(p.permissionCode)
       );
@@ -180,7 +180,7 @@ const ParentMenu = ({
         </div>
 
         {/* Child Menus */}
-        {hasChildMenus && isOpen && (
+        {hasChildMenus && isOpen && menuGroup.menuGroupCode !== 'COMPANY_RULES' && (
           <div className="flex flex-col gap-2">
             {menuGroup.childMenus.map((menu: any) => {
               return (
@@ -200,6 +200,26 @@ const ParentMenu = ({
 
         {/* Permissions for childless groups */}
         {!hasChildMenus && isOpen && (
+          <div className="flex gap-2 ms-6 mt-1">
+            {groupPermissions.map((p) => {
+              return (
+                <PermissionCheckbox
+                  key={p.permissionCode}
+                  menuItemCode={null}
+                  menuGroupCode={menuGroup.menuGroupCode}
+                  permissionCode={p.permissionCode}
+                  newPermissions={newPermissions}
+                  togglePermission={togglePermission}
+                />
+              );
+            })}
+          </div>
+        )}
+
+        {hasChildMenus 
+          && menuGroup.menuGroupCode === 'COMPANY_RULES' 
+          && isOpen 
+          && (
           <div className="flex gap-2 ms-6 mt-1">
             {groupPermissions.map((p) => {
               return (
