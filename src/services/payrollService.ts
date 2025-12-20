@@ -22,6 +22,7 @@ export const PayrollService = {
             endPoint: `/Payroll/month-detail-list?PayrollSummaryCode=${payrollDetailFilter.PayrollSummaryCode}&EmployeeName=${payrollDetailFilter.EmployeeName}&PageNo=${payrollDetailFilter.PageNo}&PageSize=${payrollDetailFilter.PageSize}`,
             method: "GET",
         })
+        return useDataStore.getState().data.data.items ?? []
     },
     fetchPayrollListEmployee : async (payrollFilter: PayrollFilter) =>  {
         await useDataStore.getState().fetchData({

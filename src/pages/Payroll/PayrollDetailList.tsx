@@ -56,7 +56,7 @@ export default function PayrollList() {
           PageSize: rowsPerPage
         }
       )
-      setData(monthDetailList?.data?.items as PayrollDetail[] ?? [])
+      setData(monthDetailList as PayrollDetail[] ?? [])
     })()
 
   }, [monthYear])
@@ -64,7 +64,7 @@ export default function PayrollList() {
   return (
     <div className="p-6 w-full flex-1">
       <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
-        <p>Payroll</p>
+        <p className="page-title">Payroll Detail</p>
         {/* search */}
         <div className="relative w-full md:w-[200px] text-primary-800">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
@@ -127,7 +127,7 @@ export default function PayrollList() {
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{payroll.employeeCode}</TableCell>
                 <TableCell>{payroll.employeeName}</TableCell>
-                <TableCell>{payroll.payrollDate}</TableCell>
+                <TableCell>{payroll.payrollDate ? new Date(payroll.payrollDate).toLocaleDateString(): ""}</TableCell>
                 <TableCell>{payroll.status}</TableCell>
                 <TableCell>{payroll.totalWorkingHour}</TableCell>
                 <TableCell>{payroll.netPay}</TableCell>
@@ -145,7 +145,7 @@ export default function PayrollList() {
       </Table>
 
       {/* Paginations */}
-      <div className="flex items-center justify-between p-4 border-t">
+      <div className="flex flex-col gap-2 md:flex-row items-center justify-between p-4 border-t">
         {/* Left: Showing rows */}
         <div className="text-sm text-muted-foreground">
           {startRow}–{endRow} of {totalRows}
