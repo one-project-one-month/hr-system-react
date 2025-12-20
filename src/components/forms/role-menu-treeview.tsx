@@ -387,7 +387,7 @@ export default function RoleMenuPermissionPanel() {
   }, [selectedRole]);
 
   return (
-    <div className="pt-6 max-w-6xl mx-auto w-full flex gap-6">
+    <div className="pt-6 max-w-6xl mx-auto w-full flex flex-col md:flex-row gap-6">
       <div className="flex flex-col gap-3 mb-4 w-64">
         <Label>Role</Label>
         <Select onValueChange={(v) => setSelectedRole(v)}>
@@ -415,8 +415,8 @@ export default function RoleMenuPermissionPanel() {
 
       {/* Permissions Panel */}
       <div className="flex-1">
-        <Card className="border-none shadow-none">
-          <CardContent className="flex flex-col gap-4">
+        <div className="border-none shadow-none">
+          <div className="flex flex-col gap-4">
             {roleMenuPermission.length < 1 && (
               <div className="p-4 text-sm text-muted-foreground">
                 No menus matched.
@@ -438,7 +438,7 @@ export default function RoleMenuPermissionPanel() {
             ))}
 
             {/* Action Buttons */}
-            <div className="flex gap-4 mt-4">
+            <div className="flex gap-4 my-4 justify-end pe-2">
               <Button className="cancel-btn">Cancel</Button>
               <Button
                 onClick={handleSave}
@@ -448,8 +448,8 @@ export default function RoleMenuPermissionPanel() {
                 {saving ? "Saving..." : "Save"}
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

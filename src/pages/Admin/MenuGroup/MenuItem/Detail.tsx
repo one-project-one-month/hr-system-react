@@ -48,7 +48,7 @@ export default function MenuItemForm() {
 
   return (
     <div className="flex-1 p-6">
-      <h2 className="text-2xl font-bold mb-6 text-center sm:text-left text-primary-500">
+      <h2 className="page-title">
         Menu Item Detail
       </h2>
 

@@ -3,6 +3,9 @@ import type { Config } from 'tailwindcss';
 const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    fontfamily: {
+      sans:['Inter', 'sans-serif']
+    },
     extend: {
       keyframes: {
         bounce: {

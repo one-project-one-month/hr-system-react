@@ -191,7 +191,7 @@ export default function ProjectListing() {
     <div className="p-6 w-full flex-1">
       {/* Header row */}
       <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
-        <p>Project Listing</p>
+        <p className="page-title">Project Listing</p>
 
         {/* date picker */}
         {/* <div className="grid gap-2">
@@ -251,7 +251,7 @@ export default function ProjectListing() {
         </div>
 
         <Button
-          className="primary-btn cursor-pointer"
+          className="primary-btn cursor-pointer w-full md:w-auto"
           onClick={() =>
             exportToExcel({
               columns: excelColumns,
@@ -264,9 +264,9 @@ export default function ProjectListing() {
           Export
         </Button>
 
-        <Link to="/projects/new">
+        <Link to="/projects/new" className="w-full md:w-auto">
           <Button
-            className="primary-btn cursor-pointer"
+            className="primary-btn cursor-pointer w-full"
             disabled={roleName?.toLowerCase() === "employee"}
           >
             <Plus className="mr-2 h-4 w-4" />
@@ -275,8 +275,8 @@ export default function ProjectListing() {
         </Link>
 
         {/**Add Employee */}
-        <Link to="/projects/add-employee">
-          <Button className="primary-btn">
+        <Link to="/projects/add-employee" className="w-full md:w-auto">
+          <Button className="primary-btn w-full">
             <Plus className="mr-2 h-4 w-4" />
             Add Employee
           </Button>
@@ -377,7 +377,7 @@ export default function ProjectListing() {
       </Table>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between p-4 border-t">
+      <div className="flex flex-col md:flex-row gap-2 items-center justify-between p-4 border-t">
         <div className="text-sm text-muted-foreground">
           {startRow}–{endRow} of {totalCount}
         </div>

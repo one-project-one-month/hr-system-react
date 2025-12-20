@@ -155,7 +155,7 @@ export default function Location() {
   return (
     <div className="p-6 w-full flex-1 bg-[#f0f3f1]">
       <div className="flex justify-between flex-col md:flex-row mb-4">
-        <p className="font-bold text-2xl">Location</p>
+        <p className="page-title">Location</p>
 
         <div className="flex gap-2 flex-col md:flex-row ">
           {/* search */}

@@ -61,7 +61,7 @@ export function LocationForm({
   return (
     <div className="bg-[#f0f3f1] w-full">
       <div className="w-full mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-6">{title}</h1>
+        <h1 className="page-title">{title}</h1>
         {error && (
           <div className="text-red-500 mb-4">
             {error || "Name Already exist"}

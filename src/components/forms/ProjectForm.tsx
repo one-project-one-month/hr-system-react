@@ -76,7 +76,7 @@ export function ProjectForm({
       }}
     >
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
+        <h2 className="page-title">
           {mode === "create" ? "Create Project" : "Edit Project"}
         </h2>
       </div>

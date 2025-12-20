@@ -165,7 +165,7 @@ export default function BacklogForm({
   return (
     <div className="py-6 px-10 w-full flex-1">
       <div className="flex items-center gap-4 mb-6">
-        <p className="font-semibold">Backlog Information</p>
+        <p className="page-title">Backlog Information</p>
       </div>
 
       <Form {...form}>

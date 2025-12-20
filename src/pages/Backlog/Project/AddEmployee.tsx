@@ -165,7 +165,7 @@ export function AddEmployee() {
 
   return (
     <div className="p-6 w-full flex flex-col">
-      <div className="flex justify-between gap-2 items-center mb-4">
+      <div className="flex flex-col md:flex-row items-start justify-between gap-2 md:items-center mb-4 w-full">
         <Select value={selectedProject} onValueChange={setSelectedProject}>
           <SelectTrigger className="bg-white bordertext-black">
             <SelectValue placeholder="Select Project" />

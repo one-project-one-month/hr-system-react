@@ -137,7 +137,7 @@ const Role: React.FC = () => {
       <div className="p-6 md:p-8 bg-white rounded-lg shadow-md w-full">
         {/* Header Section */}
         <div className="flex mb-6 w-full md:flex-row flex-col gap-4 md:justify-between md:items-center">
-          <h1 className="text-xl font-bold text-primary-700">
+          <h1 className="page-title">
             Role
           </h1>
           <Link

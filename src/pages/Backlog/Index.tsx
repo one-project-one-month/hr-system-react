@@ -160,7 +160,7 @@ export default function BacklogList() {
     <div className="p-6 w-full flex-1">
       {/* Header and Controls */}
       <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
-        <p className="font-semibold">Backlog Group Listing</p>
+        <p className="page-title">Backlog</p>
 
         {/* Search Bar */}
         <div className="relative w-full md:w-[200px] text-primary-800">
