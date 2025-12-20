@@ -203,6 +203,21 @@
     @apply rounded-lg shadow-md;
   }
 
+  [data-slot="table-container"]::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+  }
+
+  [data-slot="table-container"]::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+  [data-slot="table-container"]::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 116, 139, 0.5) !important;
+    /* slate-500 */
+    border-radius: 9999px !important;
+  }
+
   .edit-btn {
     @apply h-4 w-4 text-primary-500 cursor-pointer hover:text-primary-500
   }
