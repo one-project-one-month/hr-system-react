@@ -68,16 +68,16 @@ export default function RoleForm() {
     return (
         <div className="w-full p-8">
             {/* Main content wrapper */}
-            <div className="bg-white p-6 md:p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+            <div className="p-6 md:p-8 max-w-4xl mx-auto">
 
                 {/* Header Section */}
-                <h1 className="text-xl font-bold !text-primary-700 mb-8">
-                    Add New Role
+                <h1 className="page-title">
+                Add New Role
                 </h1>
 
                 {/* Form Section */}
                 <Form {...form}>
-                    <form className='flex flex-col'
+                    <form className='flex flex-col mt-2'
                         onSubmit={form.handleSubmit(handleFormSubmit)}
                         onReset={onReset}>
                         {/* Form fields grid */}
@@ -89,7 +89,7 @@ export default function RoleForm() {
                                     <FormLabel>Role Name</FormLabel>
                                     <FormControl>
                                         <Input
-                                            className="border-natural-500 rounded-sm py-5 md:w-[50%]"
+                                            className="w-full md:w-[50%]"
                                             placeholder="Enter role name"
                                             {...field}
                                         />

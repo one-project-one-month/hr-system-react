@@ -191,7 +191,7 @@ export default function ProjectListing() {
     <div className="p-6 w-full flex-1">
       {/* Header row */}
       <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
-        <p>Project Listing</p>
+        <p className="page-title">Project Listing</p>
 
         {/* date picker */}
         {/* <div className="grid gap-2">

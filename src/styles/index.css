@@ -184,7 +184,7 @@
   }
 
   .sidebar-btn {
-    @apply hover:bg-primary-500 hover:text-natural-50 focus:bg-primary-500 focus:text-natural-50 p-4 w-full shadow-sm flex gap-1 rounded-md;
+    @apply hover:bg-primary-500 hover:text-natural-50 focus:bg-primary-500 focus:text-natural-50 p-3 w-full shadow-sm flex gap-1 rounded-md;
   }
 
   .pagination-btn {
@@ -235,20 +235,46 @@
   }
 
   input {
-    @apply bg-gray-50 text-gray-700 border-gray-200 focus:ring-0 focus:outline-none
+    @apply bg-white text-gray-700 border-gray-200 focus:ring-0 focus:outline-none
+  }
+
+  input,
+  textarea,
+  select,
+  button[role="combobox"] {
+    @apply !rounded-md !outline-none bg-natural-50 border-natural-500 !h-10 text-natural-800;
+  }
+
+  [data-slot="form-control"] {
+    @apply !rounded-md !outline-none !bg-natural-50 !border-natural-500 !h-10 !text-natural-800;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply !outline-none !ring-1 !ring-primary-500 border-primary-500;
+  }
+
+  input::placeholder,
+  textarea::placeholder,
+  select::placeholder {
+    @apply text-muted;
   }
 
   .recharts-legend-item-text {
     @apply text-natural-900
   }
 
-
+  .page-title {
+    @apply text-xl font-bold w-full
+  }
 
 }
 
 /* 🌿 Thin custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
+  height:6px;
   /* scrollbar width */
 }
 

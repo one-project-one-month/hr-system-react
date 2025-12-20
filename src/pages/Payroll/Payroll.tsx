@@ -87,11 +87,11 @@ export default function PayrollList() {
   }, [monthYear])
 
   return (
-    <div className="p-6 w-full flex-1">
-      <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
-        <p>Payroll</p>
+    <div className="p-6 w-full">
+      <div className="flex flex-col md:flex-row gap-2 mb-4 w-full">
+        <p className="page-title">Payroll</p>
         {/* search */}
-        <div className="relative w-full md:w-[20%] text-primary-800">
+        <div className="w-full md:w-[20%] text-primary-800">
           <MonthYearPicker
             value={monthYear}
             onChange={(d) => setMonthYear(d)}
@@ -106,11 +106,11 @@ export default function PayrollList() {
           )}
         </div>
         {/* buttons */}
-        <Button className="primary-btn">
+        <Button className="primary-btn w-full md:w-auto">
           <FolderUp />
           Export
         </Button>
-        <Button className="primary-btn" onClick={processPayroll}><BadgeDollarSign />Process Payroll</Button>
+        <Button className="primary-btn w-full md:w-auto" onClick={processPayroll}><BadgeDollarSign />Process Payroll</Button>
       </div>
       <Table className="w-full overflow-auto shadow-sm rounded-md">
         <TableHeader className="bg-primary-300">

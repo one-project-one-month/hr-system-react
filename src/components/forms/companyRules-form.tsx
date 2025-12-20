@@ -81,7 +81,7 @@ export default function CompanyRulesForm({
   return (
     <div className="p-6 md:p-8 w-full flex-1 bg-gray-50">
       <div className="mb-8">
-        <h1 className="text-xl font-bold text-primary-700">{title}</h1>
+        <h1 className="page-title">{title}</h1>
       </div>
 
       <Form {...form}>

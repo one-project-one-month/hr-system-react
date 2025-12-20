@@ -157,7 +157,7 @@ export default function MenuGroupList() {
     <>
       <div className="p-6 w-full flex flex-col">
         <div className="flex flex-col md:flex-row justify-between gap-2 mb-4 w-full">
-          <p className="text-xl font-bold w-full">
+          <p className="page-title">
             Menu Group
           </p>
 
@@ -291,7 +291,7 @@ export default function MenuGroupList() {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-between items-center mt-4 text-sm text-gray-600">
+        <div className="flex flex-col md:flex-row gap-2 justify-between items-center mt-4 text-sm text-gray-600">
           <div>
             {totalRows === 0
               ? "0-0 of 0"

@@ -179,7 +179,7 @@ export function AttendanceList() {
   return (
     <div className="p-6 w-full flex-1">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-5">
-        <p className="text-3xl font-semibold">Attendance</p>
+        <p className="page-title">Attendance</p>
         <div className="flex flex-col md:flex-row items-start md:items-center gap-2 w-full md:w-auto">
           {/* date picker */}
           <div className="grid gap-2">

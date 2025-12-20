@@ -164,7 +164,7 @@ export default function MenuItemList() {
     <div className="p-6 w-full flex-1">
       {/* Header */}
       <div className="flex flex-col w-full md:flex-row justify-between items-start md:items-center gap-2 mb-5">
-        <p className="font-bold text-primary-400">Menu Item</p>
+        <p className="page-title">Menu Item</p>
 
         <div className="flex flex-col w-full md:flex-row items-start md:items-center gap-2 md:w-auto">
           {/* Search */}
@@ -260,7 +260,7 @@ export default function MenuItemList() {
       </Table>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between p-4 border-t">
+      <div className="flex flex-col gap-2 md:flex-row items-center justify-between p-4 border-t">
         <div className="text-sm text-muted-foreground">
           {startRow}–{endRow} of {safeTotalRows}
         </div>

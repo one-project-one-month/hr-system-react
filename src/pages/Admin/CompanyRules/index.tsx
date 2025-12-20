@@ -94,7 +94,7 @@ export function CompanyRulesList() {
   return (
     <div className="p-6 w-full flex-1">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-5">
-        <p className="text-2xl font-semibold">Company Rules Listing</p>
+        <p className="page-title">Company Rules</p>
       </div>
       <>
         {!companyRulesList || companyRulesList.length === 0 ? (

@@ -50,7 +50,7 @@ export function MenuGroupForm({
         onSubmit(values);
       }}
     >
-      <h2 className="text-2xl mb-6 font-semibold text-gray-800">
+      <h2 className="page-title">
         {mode === "create" ? "Menu Group Information" : "Edit Menu Group"}
       </h2>
 
