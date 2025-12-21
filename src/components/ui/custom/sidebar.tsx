@@ -26,6 +26,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
   const dashboardRoutes = {
     Administrator: "/admin/dashboard",
     "HR Specialist": "/hr/dashboard",
+    "HR": "/hr/dashboard",
     Employee: "/employee/dashboard",
   } as const;
 
