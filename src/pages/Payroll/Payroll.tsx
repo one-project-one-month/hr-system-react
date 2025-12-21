@@ -89,9 +89,9 @@ export default function PayrollList() {
   return (
     <div className="p-6 w-full">
       <div className="flex flex-col md:flex-row gap-2 mb-4 w-full">
-        <p className="page-title">Payroll</p>
+        <p className="page-title">Payroll Summary</p>
         {/* search */}
-        <div className="w-full md:w-[20%] text-primary-800">
+        <div className="w-full md:w-auto text-primary-800">
           <MonthYearPicker
             value={monthYear}
             onChange={(d) => setMonthYear(d)}
@@ -175,7 +175,7 @@ export default function PayrollList() {
       </Table>
 
       {/* Paginations */}
-      <div className="flex items-center justify-between p-4 border-t">
+      <div className="flex flex-col md:flex-row gap-2 items-center justify-between p-4 border-t">
         {/* Left: Showing rows */}
         <div className="text-sm text-muted-foreground">
           {startRow}–{endRow} of {totalRows}

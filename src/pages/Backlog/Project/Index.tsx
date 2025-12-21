@@ -236,7 +236,7 @@ export default function ProjectListing() {
         </div> */}
 
         {/* search */}
-        <div className="relative w-full md:w-[20%] text-primary-800 flex items-center justify-center">
+        <div className="relative w-full md:w-[500px] text-primary-800 flex items-center justify-center">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
           <Input
             type="text"
@@ -269,7 +269,7 @@ export default function ProjectListing() {
             className="primary-btn cursor-pointer w-full"
             disabled={roleName?.toLowerCase() === "employee"}
           >
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus />
             New
           </Button>
         </Link>
@@ -277,8 +277,14 @@ export default function ProjectListing() {
         {/**Add Employee */}
         <Link to="/projects/add-employee" className="w-full md:w-auto">
           <Button className="primary-btn w-full">
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus/>
             Add Employee
+          </Button>
+        </Link>
+        <Link to="/projects/remove-employee" className="w-full md:w-auto">
+          <Button className="primary-btn w-full">
+            <Plus/>
+            Remove Employee
           </Button>
         </Link>
       </div>
@@ -361,13 +367,6 @@ export default function ProjectListing() {
                     >
                       <Trash2 className="h-4 w-4 text-error-400" />
                     </button>
-                    {/* <button
-                      className="p-1 hover:bg-primary-300/50 rounded"
-                      onClick={(e) => e.stopPropagation()}
-                      title="More"
-                    >
-                      <MoreVertical className="h-4 w-4 text-primary-700" />
-                    </button> */}
                   </div>
                 </TableCell>
               </TableRow>

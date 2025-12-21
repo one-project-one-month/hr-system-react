@@ -242,11 +242,23 @@
   textarea,
   select,
   button[role="combobox"] {
-    @apply !rounded-md !outline-none bg-natural-50 border-natural-500 !h-10 text-natural-800;
+    @apply !rounded-md !outline-none !bg-natural-50 !border-natural-500 !h-9 !text-natural-800;
   }
 
   [data-slot="form-control"] {
-    @apply !rounded-md !outline-none !bg-natural-50 !border-natural-500 !h-10 !text-natural-800;
+    @apply !rounded-md !outline-none !bg-natural-50 !border-natural-500 !h-9 !text-natural-800;
+  }
+
+  [data-slot="input"] {
+    @apply !rounded-md !outline-none !bg-natural-50 !border-natural-500 !h-9 !text-natural-800;
+  }
+
+  [data-slot="textarea"] {
+    @apply !rounded-md !outline-none !bg-natural-50 !border-natural-500 !h-20 !text-natural-800;
+  }
+
+  [data-slot="popover-trigger"] {
+    @apply !rounded-md !outline-none !bg-natural-50 !border-natural-500 !h-9 !text-natural-800 flex items-center;
   }
 
   input:focus,

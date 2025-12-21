@@ -27,7 +27,7 @@ export default function PayrollDetail() {
     return (
         <div className="p-6 md:p-8 w-full flex-1 bg-gray-50">
             <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Payroll Detail</h1>
+                <span className="page-title">Payroll</span>
             </div>
 
             {row ? (<div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-48">

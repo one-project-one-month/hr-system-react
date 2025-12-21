@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
+
 import {
   Select,
   SelectContent,
@@ -13,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { PlusCircle, MinusCircle, AlertCircle } from "lucide-react";
 import { roleMenuPermissionService } from "@/services/roleMenuPermissionService";
 import type { MenuPermissionItem, Permission, PermissionCheckboxProps, Role, SavePermission } from "@/types/role-menu-permission";
+import { SuccessDialog } from "../ui/custom/success-dialogue";
 
 const PermissionCheckbox = ({
   menuGroupCode,
@@ -122,9 +124,12 @@ const ParentMenu = ({
       (mp.menuGroupCode === menuGroup.menuGroupCode && mp.isChecked)
   );
 
+  
+  
   const hasChildMenus = menuGroup.childMenus?.length > 0;
   const isOpen = openMenuGroup === menuGroup.menuGroupCode;
-
+  
+  
   // Filter permissions for special groups
   const getPermissionsForGroup = () => {
     if (hasChildMenus && menuGroup.menuGroupCode !== 'COMPANY_RULES') return []; // Handled by child menus
@@ -242,6 +247,8 @@ const ParentMenu = ({
 
 // --------------------- Main Component ---------------------
 export default function RoleMenuPermissionPanel() {
+const { open, description, onConfirm, closeDialog, openDialog } =
+    useSuccessDialogStore();
   const [roleMenuPermission, setRoleMenuPermission] = useState<any[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [permissions, setPermissions] = useState<Permission[]>([]);
@@ -251,9 +258,13 @@ export default function RoleMenuPermissionPanel() {
     roleCode: "",
     menuPermissions: [],
   });
-  console.log (selectedRole)
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+
+  const handleSuccessConfirm = () => {
+    if (onConfirm) onConfirm();
+    closeDialog();
+  };
 
   const toggleMenuGroupCode = (menuGroupCode: string) =>
     setOpenMenuGroup((prev) => (prev === menuGroupCode ? null : menuGroupCode));
@@ -302,6 +313,7 @@ export default function RoleMenuPermissionPanel() {
     try {
       console.log (newPermissions)
       await roleMenuPermissionService.savePermissions(newPermissions);
+      openDialog("Save menu permissions successful!", onConfirm);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -451,6 +463,12 @@ export default function RoleMenuPermissionPanel() {
           </div>
         </div>
       </div>
+      <SuccessDialog
+              open={open}
+              onOpenChange={closeDialog}
+              onConfirm={handleSuccessConfirm}
+              description={description}
+            />
     </div>
   );
 }
