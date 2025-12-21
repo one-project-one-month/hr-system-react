@@ -57,6 +57,21 @@ export const EmployeeService = {
     })
   },
 
+  getAssignedEmployees: async (projectCode: string, pageNo: number, pageSize: number) => {
+    await useDataStore.getState().fetchData({
+      endPoint: `/Project/{projectCode}/assigned-employees`,
+      method: "GET",
+    })
+
+  },
+
+  getUnassignedEmployees: async (projectCode: string, pageNo: number, pageSize: number) => {
+    await useDataStore.getState().fetchData({
+      endPoint: `/Project/{projectCode}/unassigned-employees`,
+      method: "GET",
+    })
+  },
+
   removeEmployeesFromProjects: async (projectCode: string, payload: {}) => {
     await useDataStore.getState().fetchData({
       endPoint: `/Project/remove-employee/${projectCode}`,
