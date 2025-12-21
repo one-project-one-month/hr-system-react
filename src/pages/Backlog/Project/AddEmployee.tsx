@@ -29,6 +29,7 @@ import type { Employee } from "@/types/employee";
 import { AlertDialog } from "@radix-ui/react-alert-dialog";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import {
+  AlertTriangle,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -52,7 +53,7 @@ export function AddEmployee() {
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
-  const filteredData = EmployeeData.filter((emp) => {
+  const [filteredData, setFilteredData] = useState<Employee[]>(EmployeeData.filter((emp) => {
     if (!emp.name || !emp.email || !emp.phoneNo || !emp.roleName) {
       return EmployeeData;
     }
@@ -64,7 +65,7 @@ export function AddEmployee() {
     const matchesRole = roleFilter ? emp.roleName === roleFilter : true;
 
     return matchesSearch && matchesRole;
-  });
+  }))
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const totalPages = Math.ceil(EmployeeData.length / rowsPerPage);
@@ -127,8 +128,7 @@ export function AddEmployee() {
       await EmployeeService.addEmployeeToProjects(selectedProject, {
         employeeCodes: selectedData
       });
-
-    openDialog("Add Employee to the project Successful!", onConfirm);
+      openDialog("Add Employee to the project Successful!", onConfirm);
     } catch (error) {
       setAlertMessage("Failed to add employees to the project. Please try again.");
       setAlertDialogOpen(true);
@@ -162,6 +162,15 @@ export function AddEmployee() {
       setRoles(rolesData.items as Role[] ?? [])
     })()
   }, [])
+
+  useEffect(() => {
+    (async () => {
+    const assignedEmp = await EmployeeService.getUnassignedEmployees(selectedProject,currentPage,rowsPerPage)
+    console.log(assignedEmp)
+    const filtered = EmployeeData.filter(emp => assignedEmp.some(asemp => asemp.employeeCode === emp.employeeCode) )
+    setFilteredData(filtered)
+  })()
+  }, [selectedProject])
 
   return (
     <div className="p-6 w-full flex flex-col">
@@ -237,7 +246,7 @@ export function AddEmployee() {
                 colSpan={5}
                 className="text-center py-8 text-muted-foreground"
               >
-                No employees found
+                No employees to add.
               </TableCell>
             </TableRow>
           ) : (
@@ -361,8 +370,8 @@ export function AddEmployee() {
           <AlertDialogHeader>
             <AlertDialogTitle className="text-md">
               <div className="flex gap-3 items-center">
-                <Check className="h-6 w-6 text-gray-600" />
-                Alert
+                <AlertTriangle className="h-6 w-6 text-secondary-500" />
+                Alert!
               </div>
             </AlertDialogTitle>
             <AlertDialogDescription className="whitespace-pre-line">
