@@ -24,6 +24,23 @@ export interface PayrollSummary {
     totalNetPay: number
 }
 
+export interface PayrollSummaryEmployee {
+    payrollMonth: string;
+    payrollDate: string;
+    actualWorkingHour: number;
+    allowance: number;
+    baseSalary: number;
+    bonus: number;
+    deduction: number;
+    grossPay: number;
+    leaveHour: number;
+    netPay: number;
+    payrollCode: string;
+    status: string;
+    tax: number;
+    totalWorkingHour: number;
+}
+
 export interface PayrollDetail {
     payrollId : string;
     payrollCode : string;
