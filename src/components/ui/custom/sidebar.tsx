@@ -14,32 +14,46 @@ import {
     LayoutDashboardIcon,
     PanelTopOpen,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import type { MenuConfig } from "@/types/role-menu-permission";
+import { RoleService } from "@/services/roleService";
 
 export default function Sidebar({ onClose }: { onClose: () => void }) {
     const location = useLocation();
     const authStore = useAuthStore();
     const menuPermissions = authStore.user?.menuTree?.menuTree;
 
-    const dashboardRoutes = {
-        Administrator: "/admin/dashboard",
-        HR: "/hr/dashboard",
-        Employee: "/employee/dashboard",
-    } as const;
+  const dashboardRoutes = {
+    Administrator: "/admin/dashboard",
+    "HR Specialist": "/hr/dashboard",
+    "HR": "/hr/dashboard",
+    Employee: "/employee/dashboard",
+  } as const;
 
     const leaveRoutes = {
         Employee: "/leave/create",
         HR: "/leave",
+        "HR Specialist": "/leave",
     };
 
-    const rawRole = authStore.user?.roleName;
-    console.log(rawRole);
-    const dashboardRoute =
-        rawRole && dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
-            ? dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
-            : "/employee/dashboard";
+  const payrollRoutes = {
+    Employee: "/payroll",
+    Administrator: "/payrollSummary",
+    "HR Specialist": "/payrollSummary",
+    "HR": "/payrollSummary",
+    "HR Manager": "/payrollSummary"
+  }
+
+  const rawRole = authStore.user?.roleName;
+  const dashboardRoute =
+    rawRole && dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
+      ? dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
+      : "/employee/dashboard";
+
+  const payrollRoute = rawRole && payrollRoutes[rawRole as keyof typeof payrollRoutes]
+    ? payrollRoutes[rawRole as keyof typeof payrollRoutes]
+    : "/payroll"
 
     const leaveRoute = rawRole && leaveRoutes[rawRole as keyof typeof leaveRoutes]
         ? leaveRoutes[rawRole as keyof typeof leaveRoutes  ]
@@ -143,12 +157,8 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
                 },
             ],
         },
-        {
-            label: "Payroll",
-            icon: <DollarSign />,
-            menuGroupCode: "PAYROLL",
-            path: "/payrollSummary",
-        },
+    { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: payrollRoute},
+
         {
             label: "Leave",
             icon: <DollarSign />,
@@ -223,4 +233,23 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
             </button>
         </div>
     );
+  };
+
+  useEffect(() => {
+    (async() => {
+      const roles = await RoleService.fetchRoles({pageNo: 1, pageSize:100, roleName:""})
+      console.log (roles)
+    })()
+  }, [])
+
+  return (
+    <div className="flex flex-col items-center gap-1">
+      {menuConfig.map((item) => (
+        <MenuItem key={item.label} item={item} />
+      ))}
+      <button onClick={logOut} className="sidebar-btn">
+        <LogOut /> Logout
+      </button>
+    </div>
+  );
 }

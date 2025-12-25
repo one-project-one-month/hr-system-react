@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import * as Checkbox from "@radix-ui/react-checkbox";
-import { Check } from "lucide-react";
+import { AlertTriangle, Check, Search } from "lucide-react";
 
 import {
   ChevronLeft,
@@ -24,27 +24,49 @@ import type { Employee } from "@/types/employee";
 import { EmployeeService } from "@/services/employeeService";
 import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { roleMenuPermissionService } from "@/services/roleMenuPermissionService";
+import { projectService } from "@/services/projectService";
+import type { Project } from "@/types/project";
+import type { Role } from "@/types/role-menu-permission";
+import { Input } from "@/components/ui/input";
+import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 
 export function RemoveEmployee() {
-  const location = useLocation();
   const navigate = useNavigate();
-
-  const { project, employees } = location.state || {
-    project: "",
-    employees: EmployeeData,
-  };
-  const [employeeList, setEmployeeList] = useState<Employee[]>(
-    employees.length ? employees : EmployeeData
-  );
+  const [selectedProject, setSelectedProject] = useState("");
+  const [EmployeeData, setEmployeeData] = useState<Employee[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState<string[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [filteredData, setFilteredData] = useState<Employee[]>(EmployeeData.filter((emp) => {
+    if (!emp.name || !emp.email || !emp.phoneNo || !emp.roleName) {
+      return EmployeeData;
+    }
+    const matchesSearch =
+      emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      emp.email.includes(searchTerm.toLowerCase()) ||
+      emp.phoneNo.includes(searchTerm.toLowerCase());
 
+    const matchesRole = roleFilter ? emp.roleName === roleFilter : true;
+
+    return matchesSearch && matchesRole;
+  }))
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const totalPages = Math.ceil(employeeList.length / rowsPerPage);
+  const totalPages = Math.ceil(EmployeeData.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const currentData = employeeList.slice(startIndex, startIndex + rowsPerPage);
-  const totalRows = employeeList.length;
+  const currentData = filteredData.slice(startIndex, startIndex + rowsPerPage);
+  const totalRows = filteredData.length;
   const startRow = (currentPage - 1) * rowsPerPage + 1;
   const endRow = Math.min(currentPage * rowsPerPage, totalRows);
   const { open, description, onConfirm, closeDialog, openDialog } =
@@ -53,7 +75,8 @@ export function RemoveEmployee() {
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
-
+const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
   const toggleEmployee = (employeeCode: string, checked: boolean) => {
     if (checked) {
       setSelectedEmployees((prev) => [...prev, employeeCode]);
@@ -69,6 +92,7 @@ export function RemoveEmployee() {
     selectedEmployees.includes(emp.employeeCode)
   );
 
+
   const handleSelectAll = (checked: boolean | "indeterminate") => {
     if (checked) {
       const employeeCodesToAdd = currentData
@@ -83,12 +107,36 @@ export function RemoveEmployee() {
     }
   };
 
-  const handleRemoveSelected = () => {
-    if (selectedEmployees.length === 0) return;
-    setEmployeeList((prev) =>
-      prev.filter((emp) => !selectedEmployees.includes(emp.employeeCode))
-    );
-    setSelectedEmployees([]);
+    const handleRemoveSelected = async () => {
+      const selectedData = EmployeeData.filter((emp) =>
+        selectedEmployees.includes(emp.employeeCode)).map(e => (e.employeeCode));
+      try {
+        await EmployeeService.removeEmployeesFromProjects(selectedProject, {
+          employeeCodes: selectedData
+        });
+        openDialog("Remove Employee to the project Successful!", onConfirm);
+      } catch (error) {
+        setAlertMessage("Failed to remove employees to the project. Please try again.");
+        setAlertDialogOpen(true);
+        return;
+      }
+  
+      navigate("/projects/remove-employee", {
+        state: {
+          project: selectedProject,
+          employees: selectedData,
+        },
+      });
+    };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
+
+  const handleRoleFilterChange = (value: string) => {
+    setRoleFilter(value);
+    setCurrentPage(1);
   };
 
   const handleSuccessConfirm = () => {
@@ -98,13 +146,29 @@ export function RemoveEmployee() {
 
   useEffect(() => {
     (async () => {
+      const assignedEmp = await EmployeeService.getAssignedEmployees(selectedProject,currentPage,rowsPerPage)
+      const filtered = EmployeeData.filter(emp => assignedEmp.some(asemp => asemp.employeeCode === emp.employeeCode) )
+      setFilteredData(filtered as Employee[] ?? [])
+    })()
+  }, [selectedProject])
+
+  useEffect(() => {
+    (async () => {
       const EmployeeData = await EmployeeService.fetchEmployees({
         name: "",
         pageNo: currentPage,
         pageSize: rowsPerPage,
-        roleName: "",
+        roleName: roleFilter,
       })
-      setEmployeeList(EmployeeData.items as Employee[] ?? [])
+      const rolesData = await roleMenuPermissionService.fetchRoles();
+      const projectsData = await projectService.fetchProjects({
+        pageNo: 1,
+        pageSize: 10,
+        search: "",
+      });
+      setProjects(projectsData?.data?.items as Project[] ?? [])
+      setEmployeeData(EmployeeData?.items as Employee[] ?? [])
+      setRoles(rolesData.items as Role[] ?? [])
     })()
   }, [])
 
@@ -112,75 +176,119 @@ export function RemoveEmployee() {
     <div className="p-6 w-full flex flex-col">
       <div className="flex justify-between gap-2 items-center mb-4">
         <h2 className="text-xl font-semibold mb-4 text-black">
-          <span className="text-primary-600">{project}</span>
+          <span className="page-title">Remove Employee</span>
         </h2>
       </div>
+      <div className="flex flex-col md:flex-row items-start justify-between gap-2 md:items-center mb-4 w-full">
+        <Select value={selectedProject} onValueChange={setSelectedProject}>
+          <SelectTrigger className="bg-white bordertext-black">
+            <SelectValue placeholder="Select Project" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border text-black">
+            {projects.map((p) => (<SelectItem
+              className="bg-white text-black hover:bg-gray-100"
+              value={p.projectCode} key={p.projectCode}
+            >
+              {p.projectName}
+            </SelectItem>))}
+          </SelectContent>
+        </Select>
+
+        <div className="flex gap-3 items-center">
+          <div className="relative w-[250px] md:w-[350px] lg:w-[450px] ">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground h-5 w-5 " />
+            <Input
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="pl-9 text-black focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 rounded-md shadow-sm border-0"
+            />
+          </div>
+        </div>
+
+        <Select value={roleFilter} onValueChange={handleRoleFilterChange}>
+          <SelectTrigger className="bg-white border text-black w-[150px]">
+            <SelectValue placeholder="Role" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border text-black">
+            {roles.map((role) => (
+              <SelectItem
+                key={role.roleId}
+                value={role.roleName}
+                className="bg-white text-black hover:bg-gray-100"
+              >
+                {role.roleName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
       <div>
-        {employeeList.length === 0 ? (
-          <p className="text-muted-foreground">No employees selected.</p>
-        ) : (
-          <Table className="w-full border-collapse">
-            <TableHeader>
-              <TableRow className="bg-primary-300">
-                <TableHead>
+        <Table className="w-full border-collapse">
+          <TableHeader>
+            <TableRow className="bg-primary-300">
+              <TableHead>
+                <Checkbox.Root
+                  checked={
+                    isAllSelected
+                      ? true
+                      : isSomeSelected
+                        ? "indeterminate"
+                        : false
+                  }
+                  onCheckedChange={handleSelectAll}
+                  className="w-5 h-5 border border-gray-400 rounded flex items-center justify-center"
+                >
+                  <Checkbox.Indicator>
+                    {isSomeSelected ? (
+                      <div className="w-2.5 h-0.5 bg-black" />
+                    ) : (
+                      <Check className="w-4 h-4 text-black" />
+                    )}
+                  </Checkbox.Indicator>
+                </Checkbox.Root>
+              </TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Phone</TableHead>
+              <TableHead>Role</TableHead>
+            </TableRow>
+          </TableHeader>
+          {filteredData.length === 0 ? (<TableBody>
+            <TableRow>
+              <TableCell colSpan={5} className="text-center">No Employee to remove.</TableCell>
+            </TableRow>
+          </TableBody>) : (<TableBody>
+            {filteredData.map((emp) => (
+              <TableRow
+                key={emp.employeeCode}
+                className="odd:bg-primary-100 even:bg-primary-50"
+              >
+                <TableCell>
                   <Checkbox.Root
-                    checked={
-                      isAllSelected
-                        ? true
-                        : isSomeSelected
-                          ? "indeterminate"
-                          : false
+                    checked={selectedEmployees.includes(emp.employeeCode)}
+                    onCheckedChange={(checked) =>
+                      toggleEmployee(emp.employeeCode, Boolean(checked))
                     }
-                    onCheckedChange={handleSelectAll}
                     className="w-5 h-5 border border-gray-400 rounded flex items-center justify-center"
                   >
                     <Checkbox.Indicator>
-                      {isSomeSelected ? (
-                        <div className="w-2.5 h-0.5 bg-black" />
-                      ) : (
-                        <Check className="w-4 h-4 text-black" />
-                      )}
+                      <Check className="w-4 h-4 text-black" />
                     </Checkbox.Indicator>
                   </Checkbox.Root>
-                </TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Role</TableHead>
+                </TableCell>
+                <TableCell className="text-black">{emp.name}</TableCell>
+                <TableCell className="text-black">{emp.email}</TableCell>
+                <TableCell className="text-black">{emp.phoneNo}</TableCell>
+                <TableCell className="text-black">{emp.roleName}</TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentData.map((emp) => (
-                <TableRow
-                  key={emp.employeeCode}
-                  className="odd:bg-primary-100 even:bg-primary-50"
-                >
-                  <TableCell>
-                    <Checkbox.Root
-                      checked={selectedEmployees.includes(emp.employeeCode)}
-                      onCheckedChange={(checked) =>
-                        toggleEmployee(emp.employeeCode, Boolean(checked))
-                      }
-                      className="w-5 h-5 border border-gray-400 rounded flex items-center justify-center"
-                    >
-                      <Checkbox.Indicator>
-                        <Check className="w-4 h-4 text-black" />
-                      </Checkbox.Indicator>
-                    </Checkbox.Root>
-                  </TableCell>
-                  <TableCell className="text-black">{emp.name}</TableCell>
-                  <TableCell className="text-black">{emp.email}</TableCell>
-                  <TableCell className="text-black">{emp.phoneNo}</TableCell>
-                  <TableCell className="text-black">{emp.roleName}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
+            ))}
+          </TableBody>)}
+        </Table>
       </div>
 
       {/* Paginations */}
-      <div className="flex items-center justify-between p-4 border-t">
+      <div className="flex flex-col md:flex-row gap-2 items-center justify-between p-4 border-t">
         {/* Left: Showing rows */}
         <div className="text-sm text-muted-foreground">
           {startRow}–{endRow} of {totalRows}
@@ -273,6 +381,29 @@ export function RemoveEmployee() {
         onConfirm={handleSuccessConfirm}
         description={description}
       />
+      <AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
+              <AlertDialogContent className="bg-secondary-50 text-black">
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="text-md">
+                    <div className="flex gap-3 items-center">
+                      <AlertTriangle className="h-6 w-6 text-secondary-500" />
+                      Alert!
+                    </div>
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="whitespace-pre-line">
+                    {alertMessage}
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogAction
+                    onClick={() => setAlertDialogOpen(false)}
+                    className="bg-primary-600 hover:bg-primary-700 text-white"
+                  >
+                    OK
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
     </div>
   );
 }

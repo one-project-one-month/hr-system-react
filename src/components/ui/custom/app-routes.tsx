@@ -2,7 +2,6 @@ import CreateRole from "@/pages/Admin/Role/CreatetRole";
 import Role from "@/pages/Admin/Role/Index";
 import UpdateRole from "@/pages/Admin/Role/UpdateRole";
 import ViewRole from "@/pages/Admin/Role/ViewRole";
-import ChangePassword from "@/pages/Auth/ChangePassword";
 // Backlog
 import { BacklogCreate } from "@/pages/Backlog/Create";
 import { BacklogDetail } from "@/pages/Backlog/Detail";
@@ -28,6 +27,7 @@ import { DetailsAttendance } from "@/pages/Attendance/Detail";
 import PayrollSummary from "@/pages/Payroll/Payroll";
 import PayrollDetailList from "@/pages/Payroll/PayrollDetailList";
 import PayrollDetail from "@/pages/Payroll/PayrollDetail";
+import EmployeePayroll from "@/pages/Payroll/EmployeePayroll";
 
 // menu Group
 import MenuGroupList from "@/pages/Admin/MenuGroup/Index";
@@ -287,6 +287,11 @@ export const routes: AppRoute[] = [
      {
         path: "/payrollDetailL/:code",
         element: <PayrollDetail />,
+        permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
+    },
+    {
+        path: "/payroll",
+        element: <EmployeePayroll />,
         permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
     },
 
