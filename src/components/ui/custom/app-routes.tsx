@@ -67,6 +67,7 @@ import EmployeeDashboard from "@/pages/Dashboard/EmployeeDashboard";
 import type { AppRoute } from "@/types/appRoutes";
 import Unauthorized from "@/pages/Unauthorized";
 import { CompanyRulesEdit } from "@/pages/Admin/CompanyRules/Edit";
+import LeaveCreate from "@/pages/Leave/LeaveCreate";
 
 export const routes: AppRoute[] = [
     // Menu Group 
@@ -287,6 +288,12 @@ export const routes: AppRoute[] = [
         path: "/payrollDetailL/:code",
         element: <PayrollDetail />,
         permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
+    },
+
+    // Leave
+    {
+        path: "/leave/create",
+        element: <LeaveCreate />,
     },
 
     // Employee

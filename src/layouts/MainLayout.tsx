@@ -6,11 +6,21 @@ import { useContext, useState } from "react";
 import Logo from "../assets/logo.png";
 import { X } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
+import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 
 export default function MainLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const { loading, isAuthenticated } = useContext(AuthContext);
   const location = useLocation();
+  const { open, description, onConfirm, closeDialog } = useSuccessDialogStore();
+
+  const handleConfirm = () => {
+    if (onConfirm) {
+      onConfirm();
+    }
+    closeDialog();
+  };
 
   if (loading) return <div>Loading...</div>;
 
@@ -26,18 +36,20 @@ export default function MainLayout() {
         <aside
           className={`w-[300px] bg-natural-50 text-text shadow-lg z-30
                     transition-transform duration-300
-                    ${isSidebarOpen
-              ? "fixed top-0 h-full overflow-y-auto overflow-x-hidden"
-              : "hidden lg:block max-h-[100vh-60px] overflow-y-auto hide-scrollbar"
-            }
+                    ${
+                      isSidebarOpen
+                        ? "fixed top-0 h-full overflow-y-auto overflow-x-hidden"
+                        : "hidden lg:block max-h-[100vh-60px] overflow-y-auto hide-scrollbar"
+                    }
                     lg:translate-x-0
                 `}
         >
           <div
-            className={`${isSidebarOpen
-              ? "sticky inset-0 flex justify-between p-2 items-center bg-natural-50"
-              : "hidden"
-              }`}
+            className={`${
+              isSidebarOpen
+                ? "sticky inset-0 flex justify-between p-2 items-center bg-natural-50"
+                : "hidden"
+            }`}
           >
             <img src={Logo} alt="logo" className="w-30" />
             <X
@@ -59,6 +71,12 @@ export default function MainLayout() {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
+      <SuccessDialog
+        open={open}
+        onOpenChange={closeDialog}
+        description={description}
+        onConfirm={handleConfirm}
+      />
     </div>
   );
 }
