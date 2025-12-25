@@ -52,7 +52,7 @@ export default function AdminDashboard() {
 
     fetchStats();
     fetchAttendance();
-  }, []);
+  }, [range]);
 
   return (
     <div className="w-full space-y-6 h-auto p-6">
