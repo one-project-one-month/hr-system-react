@@ -13,8 +13,9 @@ import { cn } from "@/lib/utils";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { PayrollBarChart } from "@/components/ui/payroll-bar-chart";
 import { useAuthStore } from "@/stores/useAuthStore";
-import { checkInOutService } from "@/services/checkInOutService";
 import { useCheckInStore } from "@/stores/useCheckInStore";
+import { EmployeeService } from "@/services/employeeService";
+import { AttendanceHistogram } from "@/components/ui/custom/attendance-histogram";
 
 /* --------------------------- mock data section --------------------------- */
 
@@ -50,17 +51,52 @@ const weeklyPayData = [
 
 export default function EmployeeDashboard() {
     const [period, setPeriod] = useState<"weekly" | "monthly">("monthly");
-
-    const chartData = period === "weekly" ? weeklyPayData : monthlyPayData;
+    const [year, setYear] = useState("2025")
+    const [chartData, setChartData] = useState([]);
 
     const bars = useMemo(
         () => [
             { dataKey: "netPay", name: "Net Pay", color: "#00A86B" },
-            { dataKey: "deductions", name: "Deductions", color: "#B1E7D1" },
+            { dataKey: "deduction", name: "Deductions", color: "#B1E7D1" },
             { dataKey: "bonus", name: "Bonus", color: "#8A3FFC" },
         ],
         []
     );
+    const mockAttendanceData = [
+        { month: "Jan", present: 160, late: 18, year: 2025 },
+        { month: "Feb", present: 152, late: 22, year: 2025 },
+        { month: "Feb", present: 152, late: 22, year: 2025 },
+        { month: "Feb", present: 152, late: 22, year: 2025 },
+        { month: "Feb", present: 152, late: 22, year: 2025 },
+        { month: "Mar", present: 168, late: 14, year: 2025 },
+        { month: "Apr", present: 158, late: 20, year: 2025 },
+        { month: "May", present: 170, late: 12, year: 2025 },
+        { month: "Jun", present: 162, late: 16, year: 2025 },
+        { month: "Jul", present: 155, late: 19, year: 2025 },
+        { month: "Aug", present: 148, late: 25, year: 2025 },
+        { month: "Sep", present: 165, late: 15, year: 2025 },
+        { month: "Oct", present: 172, late: 11, year: 2025 },
+        { month: "Nov", present: 160, late: 17, year: 2025 },
+        { month: "Dec", present: 150, late: 23, year: 2025 },
+
+        { month: "Jan", present: 162, late: 16, year: 2026 },
+        { month: "Feb", present: 155, late: 20, year: 2026 },
+        { month: "Mar", present: 170, late: 13, year: 2026 },
+        { month: "Apr", present: 160, late: 18, year: 2026 },
+        { month: "May", present: 175, late: 10, year: 2026 },
+        { month: "Jun", present: 168, late: 14, year: 2026 },
+        { month: "Jul", present: 158, late: 17, year: 2026 },
+        { month: "Aug", present: 150, late: 21, year: 2026 },
+        { month: "Sep", present: 167, late: 15, year: 2026 },
+        { month: "Oct", present: 174, late: 9, year: 2026 },
+        { month: "Nov", present: 162, late: 16, year: 2026 },
+        { month: "Dec", present: 152, late: 22, year: 2026 },
+    ];  useEffect(() => {
+        (async () => {
+            const data = await EmployeeService.fetchMonthlyPayrollComparison(year)
+            setChartData(data.payrollChart)
+        })()
+    }, [year])
 
     return (
         <div className="min-h-screen bg-[#F5F7F8] px-4 pb-6 pt-12 md:px-8 md:pb-8 md:pt-12">
@@ -75,8 +111,15 @@ export default function EmployeeDashboard() {
                     data={chartData}
                     xKey={period === "weekly" ? "week" : "month"}
                     bars={bars}
-                    year="2024"
+                    year={year}
+                    yearOptions={['2025', '2026']}
                     footer="Monthly Pay Comparison"
+                />
+            </div>
+            <div className="mt-4">
+                <AttendanceHistogram 
+                    data={mockAttendanceData} 
+                    yearOptions={[2025,2026]} 
                 />
             </div>
         </div>

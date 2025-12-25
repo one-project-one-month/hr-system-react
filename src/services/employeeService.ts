@@ -75,12 +75,17 @@ export const EmployeeService = {
   },
 
   removeEmployeesFromProjects: async (projectCode: string, payload: {}) => {
-    console.log(projectCode)
-    console.log(payload)
     await useDataStore.getState().fetchData({
       endPoint: `/Project/remove-employee/${projectCode}`,
       method: "POST",
       body: payload,
     })
+  },
+
+  fetchMonthlyPayrollComparison: async (year: string) => {
+    await useDataStore.getState().fetchData({
+      endPoint: `/Payroll/employee-dashboard/monthly-payroll-chart?Year=${year}`
+    })
+    return useDataStore.getState().data.data;
   }
 };
