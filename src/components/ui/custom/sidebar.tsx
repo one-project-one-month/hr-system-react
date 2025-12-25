@@ -14,9 +14,10 @@ import {
   LayoutDashboardIcon,
   PanelTopOpen,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import type { MenuConfig } from "@/types/role-menu-permission";
+import { RoleService } from "@/services/roleService";
 
 export default function Sidebar({ onClose }: { onClose: () => void }) {
   const location = useLocation();
@@ -30,11 +31,23 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
     Employee: "/employee/dashboard",
   } as const;
 
+  const payrollRoutes = {
+    Employee: "/payroll",
+    Administrator: "/payrollSummary",
+    "HR Specialist": "/payrollSummary",
+    "HR": "/payrollSummary",
+    "HR Manager": "/payrollSummary"
+  }
+
   const rawRole = authStore.user?.roleName;
   const dashboardRoute =
     rawRole && dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
       ? dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
       : "/employee/dashboard";
+
+  const payrollRoute = rawRole && payrollRoutes[rawRole as keyof typeof payrollRoutes]
+    ? payrollRoutes[rawRole as keyof typeof payrollRoutes]
+    : "/payroll"
 
   const logOut = () => authStore.logout();
 
@@ -78,7 +91,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
         { label: "Attendance", icon: <Clock />, path: "/attendance", menuGroupCode: "ATTENDANCE" },
       ],
     },
-    { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: "/payrollSummary" },
+    { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: payrollRoute},
   ];
 
   // Recursive MenuItem component
@@ -108,7 +121,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
           {openMenus[item.label] && (
             <div className="flex flex-col gap-1 w-full ms-2 p-1!">
               {item.children.map((child) => (
-                <MenuItem key={child.label} item={child}/>
+                <MenuItem key={child.label} item={child} />
               ))}
             </div>
           )}
@@ -127,6 +140,13 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
       </Link>
     );
   };
+
+  useEffect(() => {
+    (async() => {
+      const roles = await RoleService.fetchRoles({pageNo: 1, pageSize:100, roleName:""})
+      console.log (roles)
+    })()
+  }, [])
 
   return (
     <div className="flex flex-col items-center gap-1">

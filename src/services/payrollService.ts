@@ -29,6 +29,7 @@ export const PayrollService = {
             endPoint: `/Payroll/list/employee?MonthYear=${payrollFilter.MonthYear}&PageNo=${payrollFilter.PageNo}&PageSize=${payrollFilter.PageSize}`,
             method:"GET"
         })
+        return useDataStore.getState().data.data.items ?? []
     }
 
 }
