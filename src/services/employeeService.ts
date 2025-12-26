@@ -86,6 +86,13 @@ export const EmployeeService = {
     await useDataStore.getState().fetchData({
       endPoint: `/Payroll/employee-dashboard/monthly-payroll-chart?Year=${year}`
     })
-    return useDataStore.getState().data.data;
+    return useDataStore.getState().data.data ?? [];
+  },
+
+  fetchEmployeeAttendance: async (year:string, empCode: string) => {
+    await useDataStore.getState().fetchData({
+      endPoint: `/employee-dashboard/attandance-histogram?year=${year}&empCode=${empCode}`
+    })
+    return useDataStore.getState().data.data ?? [];
   }
 };
