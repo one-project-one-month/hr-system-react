@@ -68,6 +68,7 @@ import type { AppRoute } from "@/types/appRoutes";
 import Unauthorized from "@/pages/Unauthorized";
 import { CompanyRulesEdit } from "@/pages/Admin/CompanyRules/Edit";
 import LeaveCreate from "@/pages/Leave/LeaveCreate";
+import LeaveList from "@/pages/Leave/Index";
 
 export const routes: AppRoute[] = [
     // Menu Group 
@@ -296,6 +297,11 @@ export const routes: AppRoute[] = [
     },
 
     // Leave
+    {
+        path: "/leave",
+        element: <LeaveList />,
+        permission: { menuGroupCode: "LEAVE", menuCode: "LEAVE", permissionCode: "LIST" },
+    },
     {
         path: "/leave/create",
         element: <LeaveCreate />,
