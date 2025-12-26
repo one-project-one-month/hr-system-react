@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Briefcase, Clock, DollarSign, LayoutDashboardIcon, LayoutTemplate, ListCheck, LogOut, Map, Menu, PanelTopOpen, UserRound, UsersRound } from "lucide-react";
+import { Briefcase, Calendar, Clock, DollarSign, LayoutDashboardIcon, LayoutTemplate, ListCheck, LogOut, Map, Menu, PanelTopOpen, UserRound, UsersRound } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RoleService } from "@/services/roleService";
 import { SidebarMenuItem } from "./sidebar-menuitems";
@@ -73,7 +73,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
                 { label: "Attendance", icon: <Clock />, path: "/attendance", menuGroupCode: "ATTENDANCE", }],
         },
         { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: payrollRoute },
-        { label: "Leave", icon: <DollarSign />, menuGroupCode: "LEAVE", path: leaveRoute, }];
+        { label: "Leave", icon: <Calendar />, menuGroupCode: "LEAVE", path: leaveRoute, }];
 
         
     const toggleMenu = useCallback((key: string) => {
