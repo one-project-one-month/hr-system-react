@@ -6,6 +6,7 @@ interface FetchConfig {
     method?: string;
     body?: any;
     headers?: Record<string, string>;
+    responseType?: "json" | "blob";
 }
 interface DataStore {
     data: any[];
@@ -25,41 +26,47 @@ export const useDataStore = create<DataStore>((set) => ({
         method = "GET",
         body,
         headers = {},
+        responseType = "json",
     }: FetchConfig) => {
         set({ loading: true, error: null });
 
         try {
             const token = useAuthStore.getState().token;
 
-            const defaultHeaders = {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-                ...(headers || {}),
-            };
-
             const options: RequestInit = {
                 method,
-                headers: defaultHeaders,
-                ...(body && { body: JSON.stringify(body) }),
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                    ...headers,
+                },
+                ...(body ? { body: JSON.stringify(body) } : {}),
             };
+
             const response = await fetch(`/api${endPoint}`, options);
 
-            const text = await response.text();
-            const data = text ? JSON.parse(text) : null;
-
             if (!response.ok) {
-                throw new Error(
-                    data?.message ||
-                        data?.error ||
-                        `API Error ${response.status}`
-                );
+                const errorText = await response.text();
+                throw new Error(errorText || `API Error ${response.status}`);
             }
 
+            // ✅ HANDLE BLOB FIRST
+            if (responseType === "blob") {
+                const blob = await response.blob();
+                const contentDisposition = response.headers.get("content-disposition");
+
+                set({ loading: false });
+                console.log (blob, contentDisposition)
+                return { blob, contentDisposition };
+            }
+
+            // ✅ HANDLE JSON
+            const data = await response.json();
             set({ data, loading: false });
             return data;
-        } catch (err) {
+        } catch (err: any) {
             set({ error: err.message, loading: false });
-            throw err; // optionally rethrow
+            throw err;
         }
     },
 

@@ -27,19 +27,10 @@ import {
   Search,
   Calendar1Icon,
   FileUp,
-  Divide,
-  EyeIcon,
   CircleX,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
 import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { attendanceService } from "@/services/attendanceService";
