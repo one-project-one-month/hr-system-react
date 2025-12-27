@@ -44,7 +44,7 @@ export function AttendanceHistogram({ data, yearOptions }: Props) {
   }, [data, year]);
 
   return (
-    <Card className="w-full bg-natural-50">
+    <Card className="w-full bg-natural-50 !border-none">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Attendance Histogram — {year}</CardTitle>
 

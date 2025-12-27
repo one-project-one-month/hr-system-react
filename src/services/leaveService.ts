@@ -1,12 +1,13 @@
 import { useDataStore } from "@/stores/useDataStore";
 import type { CreateLeaveInputs } from "@/schema/leave";
+import type { LeaveList } from "@/types/leave";
 
 export const leaveService = {
-  getLeaves: async (pageNo: number, pageSize: number) => {
+  getLeaves: async (LeaveFilter: LeaveList) => {
     await useDataStore
       .getState()
       .fetchData({
-        endPoint: `/Leave/list?PageNo=${pageNo}&PageSize=${pageSize}`,
+        endPoint: `/Leave/list?Query=${LeaveFilter.Query}&LeaveType=${LeaveFilter.LeaveType}&PageNo=${LeaveFilter.PageNo}&PageSize=${LeaveFilter.PageSize}`,
       });
     return useDataStore.getState().data;
   },

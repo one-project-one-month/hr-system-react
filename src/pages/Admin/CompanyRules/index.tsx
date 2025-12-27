@@ -75,12 +75,12 @@ export function CompanyRulesList() {
   };
 
   const handleRowClick = (item: CompanyRule) => {
-    navigate(`/company-rules/${item.companyRuleCode}/detail?description=${item.description}&value=${item.value}`);
+    navigate(`/company-rules/detail/${item.companyRuleCode}`);
   };
 
   const handleEditClick = (event: React.MouseEvent, item: CompanyRule) => {
     event.stopPropagation();
-    navigate(`/company-rules/${item.companyRuleCode}/edit?description=${item.description}&value=${item.value}`);
+    navigate(`/company-rules/update/${item.companyRuleCode}`);
   }
 
   if (loading) {

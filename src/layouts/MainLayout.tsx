@@ -28,7 +28,7 @@ export default function MainLayout() {
     return <Navigate to="/" replace state={{ from: location.pathname }} />;
   }
   return (
-    <div className="flex h-screen flex-col overflow-hiden">
+    <div className="flex h-screen flex-col overflow-hiden !font-sans">
       <header className="h-[60px] flex-shrink-0 z-20 shadow-sm">
         <Header onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
       </header>

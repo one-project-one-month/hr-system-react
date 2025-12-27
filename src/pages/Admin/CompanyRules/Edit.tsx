@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { companyRulesService } from "@/services/companyRulesService";
 import CompanyRulesForm from "@/components/forms/companyRules-form";
 
 export function CompanyRulesEdit() {
-  const { companyRuleCode } = useParams();
-  const [searchParams] = useSearchParams();
-
+  const { code } = useParams();
   const [initialValues, setInitialValues] = useState<any>(null);
 
   useEffect(() => {
-    if (!companyRuleCode) return;
+    if (!code) return;
     const load = async () => {
-      const description = searchParams.get("description");
-      const value = searchParams.get("value");
-      setInitialValues({
-        companyRuleCode,
-        description,
-        value,
-      });
+      const fetchedData = await companyRulesService.fetchCompanyRule(code)
+      if (fetchedData.data) {
+        console.log (fetchedData.data)
+        setInitialValues({
+          companyRuleCode: code,
+          description: fetchedData.data.description,
+          value: fetchedData.data.value,
+        });
+      }
     };
     load();
-  }, [companyRuleCode]);
+  }, [code]);
 
   const handleUpdate = async (values: any) => {
 

@@ -23,7 +23,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { AlertCircle, CalendarIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import { createLeaveSchema, type CreateLeaveInputs } from "@/schema/leave";
@@ -101,10 +101,7 @@ export default function LeaveForm() {
             openDialog("Create Leave Successful!", onConfirm);
         } catch (error) {
             console.error("Error saving leave:", error);
-            setToast({
-                message: "Failed to create leave.",
-                type: "error",
-            });
+            setErrMsg(error.message)
         }
     };
 
@@ -118,7 +115,14 @@ export default function LeaveForm() {
             <h2 className="text-2xl font-bold mb-6 text-center sm:text-left text-primary-500">
                 Leave Create
             </h2>
-
+            <span className="">
+                {errMsg && (
+                          <div className="mb-4 flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
+                            <AlertCircle className="w-4 h-4" />
+                            <span>{errMsg}</span>
+                          </div>
+                        )}
+            </span>
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit(handleFormSubmit)}

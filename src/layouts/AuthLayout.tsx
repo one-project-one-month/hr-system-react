@@ -36,7 +36,7 @@ export default function AuthLayout() {
   }, []);
 
   return (
-    <div className="relative flex h-screen">
+    <div className="relative flex h-screen !font-sans">
       <div className="hidden md:block md:w-[30%] bg-secondary-100 flex items-center justify-center"></div>
       <div className="w-full md:w-[70%]">
         <img

@@ -21,6 +21,9 @@ import {
 import { PayrollService } from "@/services/payrollService";
 import MonthYearPicker from "@/components/ui/month-year-picker";
 import type { PayrollSummary } from "@/types/payroll";
+import { exportReport } from "@/services/reportService";
+import { ExportDateDialog } from "@/components/ui/custom/date-picker";
+import { toLocalISOString } from "@/lib/utils";
 
 export default function PayrollList() {
   const navigate = useNavigate();
@@ -35,11 +38,11 @@ export default function PayrollList() {
   const totalRows = data.length;
   const startRow = (currentPage - 1) * rowsPerPage + 1;
   const endRow = Math.min(currentPage * rowsPerPage, totalRows);
+  const [open, setOpen] = useState(false);
   const goPrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
-
   const handleRowClick = (payrollSummaryCode: string) => {
     const payroll = data.find((p) => p.payrollSummaryCode === payrollSummaryCode);
     navigate(`/payrollDetailList/${payrollSummaryCode}`, { state: payroll });
@@ -86,6 +89,61 @@ export default function PayrollList() {
 
   }, [monthYear])
 
+
+  const downloadFile = (
+    blob: Blob,
+    contentDisposition?: string | null
+  ) => {
+    let filename = "download.xlsx";
+
+    if (contentDisposition) {
+      const match =
+        contentDisposition.match(/filename\*=UTF-8''(.+)/) ||
+        contentDisposition.match(/filename="?([^"]+)"?/);
+
+      if (match?.[1]) {
+        filename = decodeURIComponent(match[1]);
+      }
+    }
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  };
+
+
+  const handleExport = async ({ from, to }: { from?: Date; to?: Date }) => {
+    if (!from || !to) return;
+
+    const requestPayload = {
+      format: "xlsx",
+      reportType: "admin",
+      reportName: "Payroll",
+      reportRequest: {
+        pageNo: 0,
+        pageSize: 0,
+        reportType: "Payroll",
+        fromDate: toLocalISOString(from),
+        toDate: toLocalISOString(to),
+        item: "",
+        isExport: true,
+      },
+    };
+
+    try {
+      const { blob, contentDisposition } = await exportReport(requestPayload);
+      downloadFile(blob, contentDisposition);
+    } catch (err) {
+      setError(err.message)
+    }
+  };
+
+
   return (
     <div className="p-6 w-full">
       <div className="flex flex-col md:flex-row gap-2 mb-4 w-full">
@@ -106,7 +164,7 @@ export default function PayrollList() {
           )}
         </div>
         {/* buttons */}
-        <Button className="primary-btn w-full md:w-auto">
+        <Button className="primary-btn w-full md:w-auto" onClick={() => setOpen(true)}>
           <FolderUp />
           Export
         </Button>
@@ -245,6 +303,13 @@ export default function PayrollList() {
           </select>
         </div>
       </div>
+      <ExportDateDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Export Payroll"
+        onConfirm={handleExport}
+        error = {error}
+      />
     </div>
   );
 }

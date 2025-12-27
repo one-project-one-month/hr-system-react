@@ -13,10 +13,10 @@ export const companyRulesService = {
 
   fetchCompanyRule: async (ruleId: string) => {
     const data = await useDataStore.getState().fetchData({
-      endPoint: `/CompanyRules/detail/${ruleId}`,
+      endPoint: `/CompanyRules/update/${ruleId}`,
     });
     return data;
-  } ,
+  },
 
   updateCompanyRules: async (ruleCode: string, data: any) => {
     await useDataStore.getState().fetchData({

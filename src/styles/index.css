@@ -4,6 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-sans: var(--font-sans);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -172,15 +173,8 @@
 
 @layer base {
 
-  body,
-  html {
-    margin: 0;
-    padding: 0;
-  }
-
   body {
-    font-family: var(--font-sans);
-    @apply bg-background text-foreground;
+    @apply !font-sans bg-background text-foreground;
   }
 
   .sidebar-btn {

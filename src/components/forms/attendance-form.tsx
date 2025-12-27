@@ -114,7 +114,12 @@ export default function AttendanceForm({
     return () => clearTimeout(t);
   }, [employeeCode]);
 
-  const title = mode === "create" ? "Add New Attendance" : mode === "edit" ? "Edit Attendance" : "Attendance Detail";
+  const title = mode === "create" 
+    ? "Add New Attendance" 
+    : mode === "edit" 
+      ? "Edit Attendance" 
+      : "Attendance Detail";
+      
   const handleSuccessConfirm = () => {
     setSuccessDialogOpen(false);
     navigate("/attendance");
