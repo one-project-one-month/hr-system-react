@@ -18,3 +18,16 @@ export type LeaveResponse = {
   pageNo: number;
   pageSize: number;
 };
+
+export type leaveType = {
+  id: number;
+  label: string;
+  type: string;
+}
+
+export type LeaveList = {
+  PageNo: number;
+  PageSize: number;
+  LeaveType:string;
+  Query: string;
+}
