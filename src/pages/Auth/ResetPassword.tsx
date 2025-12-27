@@ -76,7 +76,7 @@ export default function ResetPassword() {
                   className="absolute inset-y-0 right-2 flex items-center text-[#575A59]"
                   aria-label={show ? "Hide password" : "Show password"}
                 >
-                  {show ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {show ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               {pwdInvalid && (
@@ -107,7 +107,7 @@ export default function ResetPassword() {
                   className="absolute inset-y-0 right-2 flex items-center text-[#575A59]"
                   aria-label={cshow ? "Hide password" : "Show password"}
                 >
-                  {cshow ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {cshow ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               {matchInvalid && (
