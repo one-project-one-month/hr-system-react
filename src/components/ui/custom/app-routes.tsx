@@ -69,6 +69,7 @@ import Unauthorized from "@/pages/Unauthorized";
 import { CompanyRulesEdit } from "@/pages/Admin/CompanyRules/Edit";
 import LeaveCreate from "@/pages/Leave/LeaveCreate";
 import LeaveList from "@/pages/Leave/Index";
+import { CompanyRulesDetails } from "@/pages/Admin/CompanyRules/Detail";
 
 export const routes: AppRoute[] = [
     // Menu Group 
@@ -118,9 +119,15 @@ export const routes: AppRoute[] = [
 
     },
     {
-        path: "/company-rules/update",
+        path: "/company-rules/update/:code",
         element: <CompanyRulesEdit />,
         permission: { menuGroupCode: "COMPANY_RULES", menuCode: "", permissionCode: "UPDATE" },
+
+    },
+     {
+        path: "/company-rules/detail/:code",
+        element: <CompanyRulesDetails/>,
+        permission: { menuGroupCode: "COMPANY_RULES", menuCode: "", permissionCode: "DETAILS" },
 
     },
 

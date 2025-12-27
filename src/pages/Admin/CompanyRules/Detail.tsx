@@ -1,28 +1,29 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CompanyRulesForm from "@/components/forms/companyRules-form";
+import { companyRulesService } from "@/services/companyRulesService";
 
 export function CompanyRulesDetails() {
-  const { companyRuleId } = useParams();
-  const [searchParams] = useSearchParams();
-
+  const { code } = useParams();
   const [initialValues, setInitialValues] = useState<any>(null);
 
   useEffect(() => {
-    if (!companyRuleId) return;
+    if (!code) return;
     const load = async () => {
-      const description = searchParams.get("description");
-      const value = searchParams.get("value");
-      setInitialValues({
-        companyRuleId,
-        description,
-        value,
+      const fetched = await companyRulesService.fetchCompanyRule(code)
+      if (fetched.data) {
+         setInitialValues({
+        code,
+        description:fetched.data.description,
+        value: fetched.data.value,
       });
+      }
+     
     };
     load();
-  }, [companyRuleId]);
+  }, [code]);
 
   if (!initialValues) return <div>Loading...</div>;
 
-  return <CompanyRulesForm mode="view" initialValues={initialValues} />;
+  return <CompanyRulesForm mode="detail" initialValues={initialValues} />;
 }

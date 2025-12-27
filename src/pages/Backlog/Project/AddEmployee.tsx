@@ -158,6 +158,9 @@ export function AddEmployee() {
         search: "",
       });
       setProjects(projectsData?.data?.items as Project [] ?? [])
+      if(projectsData?.data?.items.length) {
+        setSelectedProject(projectsData?.data?.items[0].projectCode)
+      }
       setEmployeeData(EmployeeData?.items as Employee[] ?? [])
       setRoles(rolesData.items as Role[] ?? [])
     })()
