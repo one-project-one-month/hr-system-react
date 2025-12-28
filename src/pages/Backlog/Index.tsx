@@ -34,6 +34,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { backlogService } from "@/services/backlogService";
+import { ExportDateDialog } from "@/components/ui/custom/date-picker";
+import { useAuthStore } from "@/stores/useAuthStore";
+import type { exportType } from "@/types/excelExport";
+import { downloadFile, toLocalISOString } from "@/lib/utils";
+import { exportReport } from "@/services/reportService";
 
 export default function BacklogList() {
   const navigate = useNavigate();
@@ -46,37 +51,10 @@ export default function BacklogList() {
   const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
   const [searchTaskName, setSearchTaskName] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-
-  // Debounce effect for search
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearch(searchTaskName);
-    }, 400);
-
-    return () => clearTimeout(handler);
-  }, [searchTaskName]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      try {
-        const result = await backlogService.fetchTasks(
-          debouncedSearch,
-          currentPage,
-          rowsPerPage
-        );
-        // FIX: Access tasks from result.data.tasks
-        setTasks(result.data?.tasks ?? []);
-      } catch (error) {
-        console.error("Error loading tasks:", error);
-        console.error("Error details:", error.response?.data);
-        setTasks([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, [currentPage, rowsPerPage, debouncedSearch]);
+  const { user } = useAuthStore()
+  const [error, setError] = useState("")
+  const [exporting, setExporting] = useState(false)
+  const [open, setOpen] = useState(false);
 
   const totalPages = Math.ceil(tasks.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
@@ -105,25 +83,40 @@ export default function BacklogList() {
     setDeleteDialogOpen(true);
   };
 
-  const handleExportCSV = () => {
-    const allKeys = tasks.length > 0 ? Object.keys(tasks[0]) : [];
-    const header = allKeys;
-    const rowsCsv = tasks.map((task) => {
-      const row = allKeys.map((key) => task[key] ?? "");
-      return row
-        .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
-        .join(",");
-    });
+  const handleExport = async (exportType: exportType) => {
+    if (user?.roleName === 'Administrator') {
+      exportType.type = "admin"
+    }
+    else exportType.type = "employee"
 
-    const csv = [header.join(","), ...rowsCsv].join("\n");
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `backlog_tasks_page_${currentPage}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    if (!exportType.from || !exportType.to) return;
+
+    const requestPayload = {
+      format: exportType.format,
+      reportType: exportType.type,
+      reportName: exportType.name,
+      reportRequest: {
+        pageNo: 0,
+        pageSize: 0,
+        reportType: exportType.name,
+        fromDate: toLocalISOString(exportType.from),
+        toDate: toLocalISOString(exportType.to),
+        item: "",
+        isExport: true,
+      },
+    };
+
+    try {
+      setExporting(true)
+      const { blob, contentDisposition } = await exportReport(requestPayload);
+      downloadFile(blob, contentDisposition);
+      setExporting(false)
+    } catch (err) {
+      setError(err.message)
+      setExporting(false)
+    }
   };
+
 
   const confirmDelete = async () => {
     if (!taskToDelete) return;
@@ -156,6 +149,37 @@ export default function BacklogList() {
     setTaskToDelete(null);
   };
 
+  // Debounce effect for search
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTaskName);
+    }, 400);
+
+    return () => clearTimeout(handler);
+  }, [searchTaskName]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const result = await backlogService.fetchTasks(
+          debouncedSearch,
+          currentPage,
+          rowsPerPage
+        );
+        // FIX: Access tasks from result.data.tasks
+        setTasks(result.data?.tasks ?? []);
+      } catch (error) {
+        console.error("Error loading tasks:", error);
+        console.error("Error details:", error.response?.data);
+        setTasks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, [currentPage, rowsPerPage, debouncedSearch]);
+
   return (
     <div className="p-6 w-full flex-1">
       {/* Header and Controls */}
@@ -183,7 +207,7 @@ export default function BacklogList() {
         {/* Action Buttons */}
         <Button
           className="primary-btn cursor-pointer w-full md:w-auto"
-          onClick={handleExportCSV}
+          onClick={() => setOpen(true)}
         >
           <FolderUp /> Export
         </Button>
@@ -351,6 +375,22 @@ export default function BacklogList() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <ExportDateDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Export Backlog"
+        loading={exporting}
+        error={error}
+        onConfirm={({ range, format }) => {
+          handleExport({
+            from: range.from!,
+            to: range.to!,
+            format,
+            type: "admin",
+            name: "Backlog"
+          });
+        }}
+      />
     </div>
   );
 }

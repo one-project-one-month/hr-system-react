@@ -53,3 +53,29 @@ export function handleUnauthorized() {
   const logout = useAuthStore.getState().logout;
   logout();
 }
+
+export const downloadFile = (
+    blob: Blob,
+    contentDisposition?: string | null
+  ) => {
+    let filename = "download.xlsx";
+
+    if (contentDisposition) {
+      const match =
+        contentDisposition.match(/filename\*=UTF-8''(.+)/) ||
+        contentDisposition.match(/filename="?([^"]+)"?/);
+
+      if (match?.[1]) {
+        filename = decodeURIComponent(match[1]);
+      }
+    }
+
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  };

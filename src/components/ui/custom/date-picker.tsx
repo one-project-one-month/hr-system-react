@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
-import { AlertCircle, Calendar1Icon } from "lucide-react";
+import { AlertCircle, Calendar1Icon, FileDown } from "lucide-react";
 
 import {
   AlertDialog,
@@ -11,22 +11,38 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../alert-dialog";
+import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
+
 import { Button } from "../button";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Calendar } from "../calendar";
 import { cn } from "@/lib/utils";
-import { AlertDialogDescription } from "@radix-ui/react-alert-dialog";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../select";
 
 export interface DateRange {
   from?: Date;
   to?: Date;
 }
 
+export type ExportFormat = "pdf" | "xlsx" | "csv";
+
+export interface ExportPayload {
+  range: DateRange;
+  format: ExportFormat;
+}
+
 interface ExportDateDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title?: string;
-  onConfirm: (range: DateRange) => void;
+  onConfirm: (payload: ExportPayload) => void;
   loading?: boolean;
   error: string;
 }
@@ -37,13 +53,18 @@ export function ExportDateDialog({
   title = "Export",
   onConfirm,
   loading = false,
-  error
+  error,
 }: ExportDateDialogProps) {
   const [date, setDate] = useState<DateRange>({});
+  const [formatType, setFormatType] = useState<ExportFormat>("xlsx");
 
   const handleConfirm = () => {
     if (!date.from || !date.to) return;
-    onConfirm(date);
+
+    onConfirm({
+      range: date,
+      format: formatType,
+    });
   };
 
   return (
@@ -51,15 +72,18 @@ export function ExportDateDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>
+            Choose date range and export format
+          </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogDescription>Pick a date range to export</AlertDialogDescription>
-        {/* Date Picker */}
+
         <div className="space-y-4">
+          {/* Date Picker */}
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 className={cn(
-                  "justify-between text-left font-normal w-[260px]",
+                  "justify-between text-left font-normal w-[260px] border",
                   !date.from && "text-muted-foreground"
                 )}
               >
@@ -79,7 +103,7 @@ export function ExportDateDialog({
               </Button>
             </PopoverTrigger>
 
-            <PopoverContent className="w-auto p-0 bg-natural-50" align="start">
+            <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="range"
                 selected={date}
@@ -89,25 +113,46 @@ export function ExportDateDialog({
                 numberOfMonths={2}
               />
             </PopoverContent>
-            {error && (
-            <div className="mt-3 flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
+          </Popover>
+
+          {/* Export Format */}
+          <Select
+            value={formatType}
+            onValueChange={(v) => setFormatType(v as ExportFormat)}
+          >
+            <SelectTrigger className="w-[260px]">
+              <SelectValue placeholder="Select export format" />
+            </SelectTrigger>
+            <SelectContent className="bg-natural-50">
+              <SelectItem value="xlsx">
+                <div className="flex items-center gap-2">
+                  <FileDown className="w-4 h-4" />
+                  Excel (.xlsx)
+                </div>
+              </SelectItem>
+              <SelectItem value="csv">CSV (.csv)</SelectItem>
+              <SelectItem value="pdf">PDF (.pdf)</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Error */}
+          {error && (
+            <div className="flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
               <AlertCircle className="w-4 h-4" />
-              <span>No Data to export within this date range!</span>
+              <span>No data to export within this date range</span>
             </div>
           )}
-          </Popover>
         </div>
 
-        {/* Actions */}
         <AlertDialogFooter>
-          <Button  onClick={() => onOpenChange(false)} className="cancel-btn">
+          <Button onClick={() => onOpenChange(false)} variant="outline">
             Cancel
           </Button>
 
           <Button
-            className="primary-btn"
             onClick={handleConfirm}
             disabled={!date.from || !date.to || loading}
+            className="primary-btn"
           >
             {loading ? "Exporting..." : "Download"}
           </Button>

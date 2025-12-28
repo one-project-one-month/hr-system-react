@@ -14,7 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, downloadFile, toLocalISOString } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Edit,
@@ -46,9 +46,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import type { dateFilter } from "@/schema/attendance";
+import { ExportDateDialog } from "@/components/ui/custom/date-picker";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useDataStore } from "@/stores/useDataStore";
+import { exportReport } from "@/services/reportService";
 
 export function AttendanceList() {
   const navigate = useNavigate()
+  const { error } = useDataStore()
+  const { user } = useAuthStore()
+
   const [attendanceList, setAttendanceList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,6 +67,8 @@ export function AttendanceList() {
     pageSize: 0,
   });
 
+  const [exporting, setExporting] = useState(false)
+  const [openExport, setOpenExport] = useState(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [date, setDate] = useState<dateFilter>({ from: undefined, to: undefined });
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -68,6 +77,9 @@ export function AttendanceList() {
     useSuccessDialogStore();
   const formatDateTime = (datetime: string) => datetime ? format(new Date(datetime), "yyyy-MM-dd HH:mm") : "-";
   const formatDate = (dateStr: string) => dateStr ? format(new Date(dateStr), "yyyy-MM-dd") : "-";
+  const [searchName, setSearchName] = useState("");
+
+
   const totalPages = attendanceList
     ? Math.ceil(attendanceList.length / rowsPerPage)
     : 0;
@@ -80,7 +92,6 @@ export function AttendanceList() {
   const endRow = attendanceList
     ? Math.min(currentPage * rowsPerPage, totalRows)
     : 0;
-  const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
     const loadData = async () => {
@@ -146,6 +157,7 @@ export function AttendanceList() {
     setAttendanceToDelete(attendanceCode);
     setDeleteDialogOpen(true);
   };
+
   const confirmDelete = async () => {
     try {
       setLoading(true);
@@ -167,6 +179,40 @@ export function AttendanceList() {
     setDeleteDialogOpen(false);
     setAttendanceToDelete("");
   };
+
+  const handleExport = async (exportType: exportType) => {
+    if (user?.roleName === 'Administrator') {
+      exportType.type = "admin"
+    }
+    else exportType.type = "employee"
+
+    if (!exportType.from || !exportType.to) return;
+
+    const requestPayload = {
+      format: exportType.format,
+      reportType: exportType.type,
+      reportName: exportType.name,
+      reportRequest: {
+        pageNo: 0,
+        pageSize: 0,
+        reportType: exportType.name,
+        fromDate: toLocalISOString(exportType.from),
+        toDate: toLocalISOString(exportType.to),
+        item: "",
+        isExport: true,
+      },
+    };
+
+    try {
+      setExporting(true)
+      const { blob, contentDisposition } = await exportReport(requestPayload);
+      downloadFile(blob, contentDisposition);
+      setExporting(false)
+    } catch (err) {
+      setExporting(false)
+    }
+  };
+
   return (
     <div className="p-6 w-full flex-1">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-5">
@@ -228,7 +274,7 @@ export function AttendanceList() {
             )}
           </div>
           {/* buttons */}
-          <Button className="primary-btn w-full md:w-auto">
+          <Button className="primary-btn w-full md:w-auto" onClick={() => setOpenExport(true)}>
             <FileUp />
             Export
           </Button>
@@ -415,6 +461,23 @@ export function AttendanceList() {
         onOpenChange={setSuccessDialogOpen}
         onConfirm={handleSuccessConfirm}
         description={description}
+      />
+
+      <ExportDateDialog
+        open={openExport}
+        onOpenChange={setOpenExport}
+        title="Export Attendance"
+        loading={exporting}
+        error={error}
+        onConfirm={({ range, format }) => {
+          handleExport({
+            from: range.from!,
+            to: range.to!,
+            format,
+            type: "admin",
+            name: "Attendance"
+          });
+        }}
       />
     </div>
   );
