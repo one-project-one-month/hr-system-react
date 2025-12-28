@@ -36,6 +36,10 @@ import {
 import { projectService } from "@/services/projectService";
 import { useExcelExport, type ExcelColumn } from "@/hooks/useExcelExport";
 import type { ApiEnvelope, ListData, Row } from "@/types/project";
+import { ExportDateDialog } from "@/components/ui/custom/date-picker";
+import type { exportType } from "@/types/excelExport";
+import { downloadFile, toLocalISOString } from "@/lib/utils";
+import { exportReport } from "@/services/reportService";
 
 
 const isApiEnvelope = <T,>(x: unknown): x is ApiEnvelope<T> =>
@@ -65,7 +69,9 @@ export default function ProjectListing() {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const { user } = useAuthStore()
+  const [exporting, setExporting] = useState(false)
+  const [open, setOpen] = useState(false);
   // delete state
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -187,6 +193,40 @@ export default function ProjectListing() {
     }
   };
 
+  const handleExport = async (exportType: exportType) => {
+    if (user?.roleName === 'Administrator') {
+      exportType.type = "admin"
+    }
+    else exportType.type = "employee"
+
+    if (!exportType.from || !exportType.to) return;
+
+    const requestPayload = {
+      format: exportType.format,
+      reportType: exportType.type,
+      reportName: exportType.name,
+      reportRequest: {
+        pageNo: 0,
+        pageSize: 0,
+        reportType: exportType.name,
+        fromDate: toLocalISOString(exportType.from),
+        toDate: toLocalISOString(exportType.to),
+        item: "",
+        isExport: true,
+      },
+    };
+
+    try {
+      setExporting(true)
+      const { blob, contentDisposition } = await exportReport(requestPayload);
+      downloadFile(blob, contentDisposition);
+      setExporting(false)
+    } catch (err) {
+      setError(err.message)
+      setExporting(false)
+    }
+  };
+
   return (
     <div className="p-6 w-full flex-1">
       {/* Header row */}
@@ -252,14 +292,7 @@ export default function ProjectListing() {
 
         <Button
           className="primary-btn cursor-pointer w-full md:w-auto"
-          onClick={() =>
-            exportToExcel({
-              columns: excelColumns,
-              rows,
-              fileName: `Projects_page_${currentPage}.xlsx`,
-              sheetName: "Projects",
-            })
-          }
+          onClick={() =>setOpen(true)}
         >
           Export
         </Button>
@@ -277,13 +310,13 @@ export default function ProjectListing() {
         {/**Add Employee */}
         <Link to="/projects/add-employee" className="w-full md:w-auto">
           <Button className="primary-btn w-full">
-            <Plus/>
+            <Plus />
             Add Employee
           </Button>
         </Link>
         <Link to="/projects/remove-employee" className="w-full md:w-auto">
           <Button className="primary-btn w-full">
-            <Plus/>
+            <Plus />
             Remove Employee
           </Button>
         </Link>
@@ -485,6 +518,22 @@ export default function ProjectListing() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <ExportDateDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Export Project"
+        loading={exporting}
+        error={error}
+        onConfirm={({ range, format }) => {
+          handleExport({
+            from: range.from!,
+            to: range.to!,
+            format,
+            type: "admin",
+            name: "Project"
+          });
+        }}
+      />
     </div>
   );
 }

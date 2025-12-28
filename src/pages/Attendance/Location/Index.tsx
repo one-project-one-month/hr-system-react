@@ -25,12 +25,20 @@ import { DeleteDialog } from "@/components/ui/custom/delete-dialogue";
 import { useDataStore } from "@/stores/useDataStore";
 import { LocationService } from "@/services/LocationService ";
 import type { Location } from "@/types/location";
+import { ExportDateDialog } from "@/components/ui/custom/date-picker";
+import type { exportType } from "@/types/excelExport";
+import { downloadFile, toLocalISOString } from "@/lib/utils";
+import { exportReport } from "@/services/reportService";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function Location() {
   const navigate = useNavigate();
   const { data, loading, error } = useDataStore();
 
   // Search state
+  const { user } = useAuthStore()
+  const [exporting, setExporting] = useState(false)
+  const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
@@ -150,7 +158,38 @@ export default function Location() {
     return pages;
   };
 
-  if (error) return <div className="p-6">Error: {error}</div>;
+  const handleExport = async (exportType: exportType) => {
+    if (user?.roleName === 'Administrator') {
+      exportType.type = "admin"
+    }
+    else exportType.type = "employee"
+
+    if (!exportType.from || !exportType.to) return;
+
+    const requestPayload = {
+      format: exportType.format,
+      reportType: exportType.type,
+      reportName: exportType.name,
+      reportRequest: {
+        pageNo: 0,
+        pageSize: 0,
+        reportType: exportType.name,
+        fromDate: toLocalISOString(exportType.from),
+        toDate: toLocalISOString(exportType.to),
+        item: "",
+        isExport: true,
+      },
+    };
+
+    try {
+      setExporting(true)
+      const { blob, contentDisposition } = await exportReport(requestPayload);
+      downloadFile(blob, contentDisposition);
+      setExporting(false)
+    } catch (err) {
+      setExporting(false)
+    }
+  };
 
   return (
     <div className="p-6 w-full flex-1 bg-[#f0f3f1]">
@@ -187,7 +226,7 @@ export default function Location() {
           </div>
 
           {/* buttons */}
-          <Button className="primary-btn">
+          <Button className="primary-btn" onClick={() => setOpen(true)}>
             <FolderUp />
             Export
           </Button>
@@ -356,6 +395,22 @@ export default function Location() {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         onConfirm={handleDeleteConfirm}
+      />
+      <ExportDateDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Export Location"
+        loading={exporting}
+        error={error}
+        onConfirm={({ range, format }) => {
+          handleExport({
+            from: range.from!,
+            to: range.to!,
+            format,
+            type: "admin",
+            name: "Location"
+          });
+        }}
       />
     </div>
   );

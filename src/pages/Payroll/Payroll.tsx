@@ -23,15 +23,19 @@ import MonthYearPicker from "@/components/ui/month-year-picker";
 import type { PayrollSummary } from "@/types/payroll";
 import { exportReport } from "@/services/reportService";
 import { ExportDateDialog } from "@/components/ui/custom/date-picker";
-import { toLocalISOString } from "@/lib/utils";
+import { downloadFile, toLocalISOString } from "@/lib/utils";
+import type { exportType } from "@/types/excelExport";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function PayrollList() {
   const navigate = useNavigate();
+  const {user} = useAuthStore()
   const [data, setData] = useState<PayrollSummary[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [monthYear, setMonthYear] = useState<Date | null>(null)
   const [error, setError] = useState("")
+  const [exporting, setExporting] = useState(false)
   const totalPages = Math.ceil(data.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentData = data.slice(startIndex, startIndex + rowsPerPage);
@@ -43,6 +47,7 @@ export default function PayrollList() {
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
+
   const handleRowClick = (payrollSummaryCode: string) => {
     const payroll = data.find((p) => p.payrollSummaryCode === payrollSummaryCode);
     navigate(`/payrollDetailList/${payrollSummaryCode}`, { state: payroll });
@@ -69,6 +74,41 @@ export default function PayrollList() {
     return `${year}-${String(month).padStart(2, "0")}`;
   }
 
+  const handleExport = async (exportType: exportType) => {
+    if(user?.roleName === 'Administrator') {
+      exportType.type = "admin"
+    }
+    else exportType.type = "employee"
+  
+    
+    if (!exportType.from || !exportType.to) return;
+
+    const requestPayload = {
+      format: exportType.format,
+      reportType: exportType.type,
+      reportName: exportType.name,
+      reportRequest: {
+        pageNo: 0,
+        pageSize: 0,
+        reportType: exportType.name,
+        fromDate: toLocalISOString(exportType.from),
+        toDate: toLocalISOString(exportType.to),
+        item: "",
+        isExport: true,
+      },
+    };
+
+    try {
+      setExporting(true)
+      const { blob, contentDisposition } = await exportReport(requestPayload);
+      downloadFile(blob, contentDisposition);
+      setExporting(false)
+    } catch (err) {
+      setError(err.message)
+      setExporting(false)
+    }
+  };
+
   useEffect(() => {
     (async () => {
       try {
@@ -88,61 +128,6 @@ export default function PayrollList() {
     })()
 
   }, [monthYear])
-
-
-  const downloadFile = (
-    blob: Blob,
-    contentDisposition?: string | null
-  ) => {
-    let filename = "download.xlsx";
-
-    if (contentDisposition) {
-      const match =
-        contentDisposition.match(/filename\*=UTF-8''(.+)/) ||
-        contentDisposition.match(/filename="?([^"]+)"?/);
-
-      if (match?.[1]) {
-        filename = decodeURIComponent(match[1]);
-      }
-    }
-
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  };
-
-
-  const handleExport = async ({ from, to }: { from?: Date; to?: Date }) => {
-    if (!from || !to) return;
-
-    const requestPayload = {
-      format: "xlsx",
-      reportType: "admin",
-      reportName: "Payroll",
-      reportRequest: {
-        pageNo: 0,
-        pageSize: 0,
-        reportType: "Payroll",
-        fromDate: toLocalISOString(from),
-        toDate: toLocalISOString(to),
-        item: "",
-        isExport: true,
-      },
-    };
-
-    try {
-      const { blob, contentDisposition } = await exportReport(requestPayload);
-      downloadFile(blob, contentDisposition);
-    } catch (err) {
-      setError(err.message)
-    }
-  };
-
 
   return (
     <div className="p-6 w-full">
@@ -307,8 +292,17 @@ export default function PayrollList() {
         open={open}
         onOpenChange={setOpen}
         title="Export Payroll"
-        onConfirm={handleExport}
-        error = {error}
+        loading={exporting}
+        error={error}
+        onConfirm={({ range, format }) => {
+          handleExport({
+            from: range.from!,
+            to: range.to!,
+            format,
+            type : "admin",
+            name : "Payroll"
+          });
+        }}
       />
     </div>
   );
