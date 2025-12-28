@@ -40,12 +40,11 @@ export default function PayrollList() {
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
-  console.log (code)
 
-  const handleRowClick = (payrollCode: string) => {
-    const payroll = data.find((p) => p.payrollCode === payrollCode);
-    navigate(`/payrollDetail/${payrollCode}`, { state: payroll });
-  };
+  // const handleRowClick = (payrollCode: string) => {
+  //   const payroll = data.find((p) => p.payrollCode === payrollCode);
+  //   navigate(`/payrollDetail/${payrollCode}`, { state: payroll });
+  // };
   useEffect(() => {
     (async () => {
       const monthDetailList = await PayrollService.monthDetailList(
@@ -84,11 +83,11 @@ export default function PayrollList() {
               ""
             )}
           </div>
-        {/* buttons */}
+        {/* buttons
         <Button className="primary-btn">
           <FolderUp />
           Export
-        </Button>
+        </Button> */}
       </div>
       <Table className="w-full overflow-auto shadow-sm rounded-md">
         <TableHeader className="bg-primary-300">
@@ -122,7 +121,7 @@ export default function PayrollList() {
               <TableRow
                 key={index}
                 className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none py-3"
-                onClick={() => handleRowClick(payroll.payrollCode)}
+                // onClick={() => handleRowClick(payroll.payrollCode)}
               >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{payroll.employeeCode}</TableCell>
