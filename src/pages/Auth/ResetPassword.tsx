@@ -37,7 +37,6 @@ export default function ResetPassword() {
       resetToken: state?.resetToken ?? "",
       newPassword: pwd
     }
-    console.log (payload)
     await resetPassword(payload);
     try {
       setLoading(true);

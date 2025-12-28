@@ -39,7 +39,6 @@ export default function ResetPassword() {
       newPassword: pwd,
       confirmPassword: cpwd
     }
-    console.log (payload)
     await changePassword(payload);
     try {
       setLoading(true);

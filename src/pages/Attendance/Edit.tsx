@@ -8,7 +8,6 @@ export function UpdateAttendance() {
   const [initialValues, setInitialValues] = useState<any>(null);
 
   useEffect(() => {
-    console.log("Loading attendance record for code:", code);
     if (!code) return;
     const load = async () => {
       try {

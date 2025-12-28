@@ -55,7 +55,6 @@ export default function Profile() {
       try {
         const result = await ProfileService.fetchEmployee(user?.employeeCode);
         const employeeData = Array.isArray(result) ? result[0] : result;
-        console.log (employeeData)
         if (!employeeData) return;
         // populate form values using react-hook-form and update preview image
         reset({

@@ -311,7 +311,6 @@ const { open, description, onConfirm, closeDialog, openDialog } =
   const handleSave = async () => {
     setSaving(true);
     try {
-      console.log (newPermissions)
       await roleMenuPermissionService.savePermissions(newPermissions);
       openDialog("Save menu permissions successful!", onConfirm);
     } catch (err) {

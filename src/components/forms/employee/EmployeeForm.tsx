@@ -101,19 +101,6 @@ export default function EmployeeForm() {
                     className="space-y-3"
                 >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        {/* <FormField
-              control={form.control}
-              name="employeeCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Employee Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Employee Code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
 
                         <FormField
                             control={form.control}

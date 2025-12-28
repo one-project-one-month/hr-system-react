@@ -45,7 +45,7 @@ import { useNavigate } from "react-router-dom";
 import { EmployeeService } from "@/services/employeeService";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
-import type { EmployeeResponse } from "@/types/employee";
+import type { Employee } from "@/types/employee";
 
 export default function EmployeeList({ onSort, sortConfig }) {
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
   const [data, setData] = useState({});
   const [searchName, setSearchName] = useState("");
   const [searchRole, setSearchRole] = useState("");
-  const [employees, setEmployees] = useState<EmployeeResponse[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const { open, description, onConfirm, closeDialog, openDialog } =
     useSuccessDialogStore();
   const [loading, setLoading] = useState(false);
@@ -111,7 +111,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
     setRowsPerPage(fetchEmployees.pageSize);
     setCurrentPage(fetchEmployees.pageNo);
     setData(fetchEmployees);
-    setEmployees(fetchEmployees?.items);
+    setEmployees(fetchEmployees?.items as Employee[]);
   };
   // ✅ Flatten API data
 
@@ -270,7 +270,7 @@ export default function EmployeeList({ onSort, sortConfig }) {
               </TableCell>
             </TableRow>
           ) : employees.length ? (
-            employees.map((user, index) => (
+            employees.map((user:Employee, index) => (
               <TableRow
                 key={user.employeeCode || startIndex + index + 1}
                 className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none py-3"

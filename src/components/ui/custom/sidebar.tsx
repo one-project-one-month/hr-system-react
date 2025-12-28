@@ -91,7 +91,6 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
                 pageSize: 100,
                 roleName: "",
             });
-            console.log(roles);
         })();
     }, []);
 

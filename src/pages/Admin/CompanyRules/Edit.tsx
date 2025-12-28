@@ -12,7 +12,6 @@ export function CompanyRulesEdit() {
     const load = async () => {
       const fetchedData = await companyRulesService.fetchCompanyRule(code)
       if (fetchedData.data) {
-        console.log (fetchedData.data)
         setInitialValues({
           companyRuleCode: code,
           description: fetchedData.data.description,

@@ -42,7 +42,6 @@ export function PayrollBarChart({
   onYearChange,
   footer,
 }: PayrollBarChartProps) {
-  console.log (data)
   return (
     <Card className="rounded-[16px] border border-natural-200 bg-background shadow-sm">
       {/* HEADER (year pill on the right) */}

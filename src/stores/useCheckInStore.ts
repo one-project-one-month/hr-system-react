@@ -64,8 +64,6 @@ const checkInStore = create<CheckInStore>((set, get) => ({
                 remark: "",
             };
 
-            console.log(payload);
-
             await checkInOutService.CheckIn(payload);
             await get()?.loadData(authUser?.employeeCode ?? "");
         } catch (err: any) {

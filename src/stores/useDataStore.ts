@@ -56,7 +56,6 @@ export const useDataStore = create<DataStore>((set) => ({
                 const contentDisposition = response.headers.get("content-disposition");
 
                 set({ loading: false });
-                console.log (blob, contentDisposition)
                 return { blob, contentDisposition };
             }
 

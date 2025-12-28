@@ -12,7 +12,6 @@ export const ProfileService = {
     return useDataStore.getState().data ?? {};
   },
  updateEmployee: async (payload: FormData) => {
-  console.log (token)
   const response = await fetch(`/api/Employee/EditProfile`, {
     method: "POST", 
     body: payload,

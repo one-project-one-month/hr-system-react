@@ -15,19 +15,6 @@ export default function MainLayout() {
   const location = useLocation();
   const { open, description, onConfirm, closeDialog } = useSuccessDialogStore();
 
-  const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm();
-    }
-    closeDialog();
-  };
-
-  if (loading) return <div>Loading...</div>;
-
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace state={{ from: location.pathname }} />;
-  }
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 1024) {
@@ -40,6 +27,20 @@ export default function MainLayout() {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleConfirm = () => {
+    if (onConfirm) {
+      onConfirm();
+    }
+    closeDialog();
+  };
+
+  if (loading) return <div>Loading...</div>;
+
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace state={{ from: location.pathname }} />;
+  }
+  
   return (
     <div className="flex h-screen flex-col overflow-hiden !font-sans">
       <header className="h-[60px] flex-shrink-0 z-20 shadow-sm">

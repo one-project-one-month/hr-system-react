@@ -86,7 +86,6 @@ export default function LeaveForm() {
                 const response = await leaveService.checkLeaveAvailability(value);
                 setLeaveAvailability(response.data);
             } catch (err: any) {
-                console.log('asdf');
                 setErrMsg(err.message);
                 setLeaveAvailability(null);
             }
