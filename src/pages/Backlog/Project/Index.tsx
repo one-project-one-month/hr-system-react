@@ -103,17 +103,6 @@ export default function ProjectListing() {
     [currentPage, rowsPerPage, debouncedSearch]
   );
 
-  // Excel export hook
-  const exportToExcel = useExcelExport<Row>();
-
-  const excelColumns: ExcelColumn<Row>[] = [
-    { header: "Project Code", key: "id", width: 15 },
-    { header: "Name", key: "name", width: 30 },
-    { header: "Status", key: "status", width: 12 },
-    { header: "Start Date", key: "startDate", width: 15 },
-    { header: "End Date", key: "endDate", width: 15 },
-  ];
-
   const fetchList = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -232,50 +221,6 @@ export default function ProjectListing() {
       {/* Header row */}
       <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
         <p className="page-title">Project Listing</p>
-
-        {/* date picker */}
-        {/* <div className="grid gap-2">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                className={cn(
-                  "justify-start text-left font-normal w-[250px] outline-btn",
-                  !date.from && "text-muted-foreground"
-                )}
-              >
-                <Calendar1Icon className="mr-2 h-4 w-4" />
-                {date?.from ? (
-                  date.to ? (
-                    <>
-                      {format(date.from, "LLL dd, y")}/
-                      {format(date.to, "LLL dd, y")}
-                    </>
-                  ) : (
-                    format(date.from, "LLL dd, y")
-                  )
-                ) : (
-                  <span>Pick a date range</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent
-              className="w-auto p-0 bg-primary-500 text-white"
-              align="start"
-            >
-              <Calendar
-                mode="range"
-                selected={date}
-                onSelect={(range) => {
-                  setDate(range ?? {});
-                  setCurrentPage(1);
-                }}
-                numberOfMonths={2}
-              />
-            </PopoverContent>
-          </Popover>
-        </div> */}
-
-        {/* search */}
         <div className="relative w-full md:w-[500px] text-primary-800 flex items-center justify-center">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
           <Input
@@ -300,7 +245,6 @@ export default function ProjectListing() {
         <Link to="/projects/new" className="w-full md:w-auto">
           <Button
             className="primary-btn cursor-pointer w-full"
-            disabled={roleName?.toLowerCase() === "employee"}
           >
             <Plus />
             New

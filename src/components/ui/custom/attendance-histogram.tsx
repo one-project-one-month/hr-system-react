@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ReferenceLine,
 } from "recharts";
 import {
   Card,
@@ -45,12 +46,12 @@ export function AttendanceHistogram({ yearOptions }: Props) {
   useEffect(() => {
     (async () => {
       try {
-        const fetchedAttendance:AttendanceApiData[] = await EmployeeService.fetchEmployeeAttendance(year, user?.employeeCode ?? "")
-        const mappedData: AttendanceApiData [] = fetchedAttendance  ?.map(
-          data  => ({
+        const fetchedAttendance: AttendanceApiData[] = await EmployeeService.fetchEmployeeAttendance(year, user?.employeeCode ?? "")
+        const mappedData: AttendanceApiData[] = fetchedAttendance?.map(
+          data => ({
             ...data,
             month: shortMonth(data.month)
-      }))
+          }))
         setAttendanceData(mappedData)
       } catch (error) {
         console.log(error)
@@ -80,10 +81,39 @@ export function AttendanceHistogram({ yearOptions }: Props) {
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={attendanceData}>
-              <XAxis dataKey="month" />
-              <YAxis allowDecimals={false} />
+              <XAxis
+                dataKey="month"
+                label={{
+                  value: "Month",
+                  position: "insideBottom",
+                  offset: -10, // 👈 move label down (increase for more space)
+                }}
+              />
+
+              <YAxis allowDecimals={false}
+                label={{
+                  value: "Hours",
+                  angle: -90,
+                  position: "insideLeft",
+                }} />
               <Tooltip />
-              <Legend />
+              <Legend
+                verticalAlign="top"
+                align="right"
+                iconType="circle"
+              />
+
+              <ReferenceLine
+                y={160}
+                stroke="#FF6B6B"
+                strokeDasharray="4 4"
+                label={{
+                  value: "Target: 160 hrs",
+                  position: "right",
+                  fill: "#FF6B6B",
+                  fontSize: 12,
+                }}
+              />
 
               <Bar
                 dataKey="present"
