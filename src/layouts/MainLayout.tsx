@@ -2,7 +2,7 @@ import Header from "../components/ui/custom/header";
 import Sidebar from "../components/ui/custom/sidebar";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import "../styles/index.css";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Logo from "../assets/logo.png";
 import { X } from "lucide-react";
 import { AuthContext } from "@/context/AuthContext";
@@ -27,6 +27,19 @@ export default function MainLayout() {
   if (!isAuthenticated) {
     return <Navigate to="/" replace state={{ from: location.pathname }} />;
   }
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // run once on mount
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <div className="flex h-screen flex-col overflow-hiden !font-sans">
       <header className="h-[60px] flex-shrink-0 z-20 shadow-sm">
