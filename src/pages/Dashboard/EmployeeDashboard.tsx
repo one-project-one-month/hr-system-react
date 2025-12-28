@@ -17,34 +17,10 @@ import { useCheckInStore } from "@/stores/useCheckInStore";
 import { EmployeeService } from "@/services/employeeService";
 import { AttendanceHistogram } from "@/components/ui/custom/attendance-histogram";
 
-/* --------------------------- mock data section --------------------------- */
-
 const leaveTypeData = [
     { name: "Annual", value: 80, color: "#017E4D" },
     { name: "Sick Leave", value: 15, color: "#8BDBBB" },
     { name: "Emergency Leave", value: 5, color: "#FB2C36" },
-];
-
-const monthlyPayData = [
-    { month: "Jan", netPay: 4000, deductions: 0, bonus: 0 },
-    { month: "Feb", netPay: 4500, deductions: 0, bonus: 1000 },
-    { month: "Mar", netPay: 3900, deductions: 0, bonus: 0 },
-    { month: "Apr", netPay: 4100, deductions: 0, bonus: 0 },
-    { month: "May", netPay: 4200, deductions: 0, bonus: 2000 },
-    { month: "Jun", netPay: 4000, deductions: 0, bonus: 0 },
-    { month: "Jul", netPay: 4050, deductions: 0, bonus: 0 },
-    { month: "Aug", netPay: 4100, deductions: 0, bonus: 0 },
-    { month: "Sep", netPay: 4150, deductions: 0, bonus: 0 },
-    { month: "Oct", netPay: 4200, deductions: 0, bonus: 0 },
-    { month: "Nov", netPay: 4300, deductions: 0, bonus: 0 },
-    { month: "Dec", netPay: 4350, deductions: 0, bonus: 0 },
-];
-
-const weeklyPayData = [
-    { week: "W1", netPay: 1000, deductions: 0, bonus: 0 },
-    { week: "W2", netPay: 1100, deductions: 0, bonus: 200 },
-    { week: "W3", netPay: 980, deductions: 0, bonus: 0 },
-    { week: "W4", netPay: 1050, deductions: 0, bonus: 150 },
 ];
 
 /* --------------------------- main dashboard ---------------------------- */
@@ -53,7 +29,8 @@ export default function EmployeeDashboard() {
     const [period, setPeriod] = useState<"weekly" | "monthly">("monthly");
     const [year, setYear] = useState("2025")
     const [chartData, setChartData] = useState([]);
-
+    const [attendanceData, setAttendanceData] = useState()
+    const {user} = useAuthStore()
     const bars = useMemo(
         () => [
             { dataKey: "netPay", name: "Net Pay", color: "#00A86B" },
@@ -91,10 +68,18 @@ export default function EmployeeDashboard() {
         { month: "Oct", present: 174, late: 9, year: 2026 },
         { month: "Nov", present: 162, late: 16, year: 2026 },
         { month: "Dec", present: 152, late: 22, year: 2026 },
-    ];  useEffect(() => {
+    ]; useEffect(() => {
         (async () => {
-            const data = await EmployeeService.fetchMonthlyPayrollComparison(year)
-            setChartData(data.payrollChart)
+            try {
+                const data = await EmployeeService.fetchMonthlyPayrollComparison(year)
+                setChartData(data.payrollChart)
+
+                const fetchedAttendance = await EmployeeService.fetchEmployeeAttendance(year,user?.employeeCode ?? "")
+                setAttendanceData(fetchedAttendance.staffAttendanceOverview)
+            }catch (error) {
+                console.log (error)
+            }
+            
         })()
     }, [year])
 
@@ -117,9 +102,9 @@ export default function EmployeeDashboard() {
                 />
             </div>
             <div className="mt-4">
-                <AttendanceHistogram 
-                    data={mockAttendanceData} 
-                    yearOptions={[2025,2026]} 
+                <AttendanceHistogram
+                    data={attendanceData}
+                    yearOptions={[2025, 2026]}
                 />
             </div>
         </div>

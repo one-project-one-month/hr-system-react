@@ -28,7 +28,6 @@ type AttendanceApiData = {
   month: string;
   present: number;
   late: number;
-  year: number;
 };
 
 type Props = {
@@ -38,10 +37,6 @@ type Props = {
 
 export function AttendanceHistogram({ data, yearOptions }: Props) {
   const [year, setYear] = useState(yearOptions[0]);
-
-  const chartData = useMemo(() => {
-    return data.filter((item) => item.year === year);
-  }, [data, year]);
 
   return (
     <Card className="w-full bg-natural-50 !border-none">
@@ -65,7 +60,7 @@ export function AttendanceHistogram({ data, yearOptions }: Props) {
       <CardContent>
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
+            <BarChart data={data}>
               <XAxis dataKey="month" />
               <YAxis allowDecimals={false} />
               <Tooltip />
