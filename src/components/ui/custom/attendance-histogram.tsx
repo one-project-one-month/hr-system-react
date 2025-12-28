@@ -22,7 +22,10 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
+import { EmployeeService } from "@/services/employeeService";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { shortMonth } from "@/lib/mapper";
 
 type AttendanceApiData = {
   month: string;
@@ -31,13 +34,29 @@ type AttendanceApiData = {
 };
 
 type Props = {
-  data: AttendanceApiData[];
   yearOptions: number[];
 };
 
-export function AttendanceHistogram({ data, yearOptions }: Props) {
-  const [year, setYear] = useState(yearOptions[0]);
+export function AttendanceHistogram({ yearOptions }: Props) {
+  const [attendanceData, setAttendanceData] = useState<AttendanceApiData[]>()
+  const [year, setYear] = useState(yearOptions[0])
+  const { user } = useAuthStore()
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const fetchedAttendance:AttendanceApiData[] = await EmployeeService.fetchEmployeeAttendance(year, user?.employeeCode ?? "")
+        const mappedData: AttendanceApiData [] = fetchedAttendance  ?.map(
+          data  => ({
+            ...data,
+            month: shortMonth(data.month)
+      }))
+        setAttendanceData(mappedData)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [year])
   return (
     <Card className="w-full bg-natural-50 !border-none">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -47,7 +66,7 @@ export function AttendanceHistogram({ data, yearOptions }: Props) {
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Year" />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="bg-natural-50">
             {yearOptions.map((y) => (
               <SelectItem key={y} value={y.toString()}>
                 {y}
@@ -60,7 +79,7 @@ export function AttendanceHistogram({ data, yearOptions }: Props) {
       <CardContent>
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data}>
+            <BarChart data={attendanceData}>
               <XAxis dataKey="month" />
               <YAxis allowDecimals={false} />
               <Tooltip />

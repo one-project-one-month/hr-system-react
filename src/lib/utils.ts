@@ -38,7 +38,6 @@ export const toLocalISOString = (date: Date) => {
   )}`;
 };
 
-
 export const capitalizeCamelCase = (text: string): string => {
   const words = text.replace(/([A-Z])/g, " $1").split(" ");
   // Capitalize each word

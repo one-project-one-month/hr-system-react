@@ -16,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEffect, useState } from "react";
+import { EmployeeService } from "@/services/employeeService";
 
 type BarConfig = {
   dataKey: string;
@@ -24,34 +26,41 @@ type BarConfig = {
 };
 
 export interface PayrollBarChartProps {
-  data: Record<string, any>[];
   xKey: string;
   bars: BarConfig[];
-  year: string;
   yearOptions?: string[];
   onYearChange?: (year: string) => void;
   footer?: string;
 }
 
 export function PayrollBarChart({
-  data,
   xKey,
   bars,
-  year,
-  yearOptions = [year],
-  onYearChange,
+  yearOptions,
   footer,
 }: PayrollBarChartProps) {
+  const [year, setYear] = useState("2025")
+    const [chartData, setChartData] = useState([]);
+  useEffect(() => {
+        (async () => {
+            try {
+                const data = await EmployeeService.fetchMonthlyPayrollComparison(year)
+                setChartData(data.payrollChart)
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }, [year])
   return (
     <Card className="rounded-[16px] border border-natural-200 bg-background shadow-sm">
       {/* HEADER (year pill on the right) */}
       <CardHeader className="flex items-center justify-end pb-0 pt-4">
-        <Select value={year} onValueChange={(value) => onYearChange?.(value)}>
+        <Select value={year} onValueChange={(value) => setYear?.(value)}>
           <SelectTrigger className="h-9 w-24 rounded-full border-none bg-primary-500 px-4 py-1 text-xs font-semibold text-white shadow-sm hover:bg-primary-600 focus:ring-0">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
-            {yearOptions.map((y) => (
+          <SelectContent className="bg-natural-50">
+            {yearOptions?.map((y) => (
               <SelectItem key={y} value={y}>
                 {y}
               </SelectItem>
@@ -64,7 +73,7 @@ export function PayrollBarChart({
         <div className="h-[260px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={data}
+              data={chartData}
               barCategoryGap={40}
               barGap={6}
               margin={{ top: 24, right: 32, left: 32, bottom: 24 }}

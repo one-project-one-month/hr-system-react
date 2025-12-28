@@ -93,7 +93,6 @@ export const EmployeeService = {
     await useDataStore.getState().fetchData({
       endPoint: `/employee-dashboard/attendance-histogram?year=${year}&empCode=${empCode}`
     })
-    console.log (useDataStore.getState().data)
-    return useDataStore.getState().data ?? [];
+    return useDataStore.getState().data.staffAttendanceOverview ?? [];
   }
 };
