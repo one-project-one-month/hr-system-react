@@ -13,11 +13,11 @@ export const dateFormatter = (date: string): string => {
     : dt.toISOString().split(".")[0].replace("T", " ");
 };
 
-export const formatDate = (date: Date | undefined) => {
+export const formatDate = (date: string | undefined) => {
   if (!date) {
     return "";
   }
-  return date.toLocaleDateString("en-US", {
+  return new Date(date).toLocaleDateString("en-US", {
     day: "2-digit",
     month: "long",
     year: "numeric",

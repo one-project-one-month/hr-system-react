@@ -41,6 +41,7 @@ export default function Location() {
   const [open, setOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,25 +53,19 @@ export default function Location() {
   }, [currentPage, rowsPerPage, searchTerm]);
 
   const loadLocations = async () => {
-    await LocationService.fetchLocations(searchTerm, currentPage, rowsPerPage);
+    try {
+      await LocationService.fetchLocations(searchTerm, currentPage, rowsPerPage);
+      console.log (data)
+    }catch (error)
+    {
+      throw error
+    }
   };
 
   // Handle search
   const handleSearch = () => {
     setSearchTerm(searchInput);
     setCurrentPage(1); // Reset to first page when searching
-  };
-
-  // Handle search input change
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(e.target.value);
-  };
-
-  // Handle Enter key press
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
   };
 
   // Clear search
@@ -191,6 +186,10 @@ export default function Location() {
     }
   };
 
+   useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchTerm), 300);
+    return () => clearTimeout(t);
+  }, [searchTerm]);
   return (
     <div className="p-6 w-full flex-1 bg-[#f0f3f1]">
       <div className="flex justify-between flex-col md:flex-row mb-4">
@@ -202,27 +201,14 @@ export default function Location() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-800 h-4 w-4" />
             <Input
               type="text"
+              className="ps-9"
               placeholder="Search by location name..."
               value={searchInput}
-              onChange={handleSearchInputChange}
-              onKeyPress={handleKeyPress}
-              className="focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9 pr-20"
-            />
-            {searchInput && (
-              <button
-                onClick={handleClearSearch}
-                className="absolute right-12 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                ✕
-              </button>
-            )}
-            <Button
-              onClick={handleSearch}
-              disabled={loading}
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 px-3 bg-primary-100 hover:bg-primary-600"
-            >
-              Search
-            </Button>
+              onInput={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}/>
+           
           </div>
 
           {/* buttons */}
@@ -264,7 +250,7 @@ export default function Location() {
 
         {loading ? (
           <TableBody>
-            <TableRow>
+            <TableRow key="loading">
               <TableCell colSpan={6} className="text-center py-10">
                 Loading...
               </TableCell>
@@ -272,7 +258,7 @@ export default function Location() {
           </TableBody>
         ) : locations.length === 0 ? (
           <TableBody>
-            <TableRow>
+            <TableRow key="no-location">
               <TableCell colSpan={6} className="text-center py-10">
                 {searchTerm
                   ? `No locations found for "${searchTerm}"`

@@ -20,6 +20,7 @@ import {
 import { PayrollService } from "@/services/payrollService";
 import MonthYearPicker from "@/components/ui/month-year-picker";
 import type { PayrollSummary, PayrollSummaryEmployee } from "@/types/payroll";
+import { formatDate } from "@/lib/utils";
 
 export default function PayrollList() {
   const navigate = useNavigate();
@@ -144,7 +145,7 @@ export default function PayrollList() {
               >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{payroll.payrollMonth}</TableCell>
-                <TableCell>{payroll.payrollDate}</TableCell>
+                <TableCell>{formatDate(payroll.payrollDate)}</TableCell>
                 <TableCell>{payroll.totalWorkingHour}</TableCell>
                 <TableCell>{payroll.actualWorkingHour}</TableCell>
                 <TableCell>{payroll.baseSalary}</TableCell>
