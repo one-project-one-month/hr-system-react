@@ -18,6 +18,7 @@ import {
   ChevronLeft,
   ChevronsLeft,
   Search,
+  CircleX,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
@@ -39,9 +40,8 @@ export default function Location() {
   const { user } = useAuthStore()
   const [exporting, setExporting] = useState(false)
   const [open, setOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
+  const [debouncedSearch, setDebouncedSearch] = useState(searchInput);
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,11 +50,11 @@ export default function Location() {
   // Load locations with pagination and search
   useEffect(() => {
     loadLocations();
-  }, [currentPage, rowsPerPage, searchTerm]);
+  }, [currentPage, rowsPerPage, searchInput]);
 
   const loadLocations = async () => {
     try {
-      await LocationService.fetchLocations(searchTerm, currentPage, rowsPerPage);
+      await LocationService.fetchLocations(searchInput, currentPage, rowsPerPage);
       console.log (data)
     }catch (error)
     {
@@ -64,14 +64,13 @@ export default function Location() {
 
   // Handle search
   const handleSearch = () => {
-    setSearchTerm(searchInput);
+    setSearchInput(searchInput);
     setCurrentPage(1); // Reset to first page when searching
   };
 
   // Clear search
   const handleClearSearch = () => {
     setSearchInput("");
-    setSearchTerm("");
     setCurrentPage(1);
   };
 
@@ -187,9 +186,9 @@ export default function Location() {
   };
 
    useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearch(searchTerm), 300);
+    const t = setTimeout(() => setDebouncedSearch(searchInput), 300);
     return () => clearTimeout(t);
-  }, [searchTerm]);
+  }, [searchInput]);
   return (
     <div className="p-6 w-full flex-1 bg-[#f0f3f1]">
       <div className="flex justify-between flex-col md:flex-row mb-4">
@@ -205,9 +204,17 @@ export default function Location() {
               placeholder="Search by location name..."
               value={searchInput}
               onInput={(e) => {
-              setSearchTerm(e.target.value);
+              setSearchInput(e.target.value);
               setCurrentPage(1);
             }}/>
+            {searchInput ? (
+              <CircleX
+                onClick={() => setSearchInput("")}
+                className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4"
+              />
+            ) : (
+              ""
+            )}
            
           </div>
 
@@ -222,19 +229,6 @@ export default function Location() {
           </Button>
         </div>
       </div>
-
-      {/* Search results info */}
-      {searchTerm && (
-        <div className="mb-4 text-sm text-gray-600">
-          Showing results for: <strong>"{searchTerm}"</strong>
-          <button
-            onClick={handleClearSearch}
-            className="ml-2 text-primary-500 hover:text-primary-700 underline"
-          >
-            Clear search
-          </button>
-        </div>
-      )}
 
       <Table className="w-full overflow-auto shadow-sm rounded-md text-center">
         <TableHeader className="bg-primary-300">
@@ -260,8 +254,8 @@ export default function Location() {
           <TableBody>
             <TableRow key="no-location">
               <TableCell colSpan={6} className="text-center py-10">
-                {searchTerm
-                  ? `No locations found for "${searchTerm}"`
+                {searchInput
+                  ? `No locations found for "${searchInput}"`
                   : "No locations found"}
               </TableCell>
             </TableRow>
