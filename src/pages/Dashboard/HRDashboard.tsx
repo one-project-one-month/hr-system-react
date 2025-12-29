@@ -124,7 +124,7 @@ export default function () {
                             Check Out:{" "}
                             <span>
                                 {!data?.checkOutTime ||
-                                data?.checkOutTime === ""
+                                    data?.checkOutTime === ""
                                     ? "--------"
                                     : data?.checkOutTime}
                             </span>

@@ -19,16 +19,21 @@ import {
 } from "lucide-react";
 import { PayrollService } from "@/services/payrollService";
 import MonthYearPicker from "@/components/ui/month-year-picker";
-import type { PayrollSummary, PayrollSummaryEmployee } from "@/types/payroll";
-import { formatDate } from "@/lib/utils";
+import type { PayrollSummaryEmployee } from "@/types/payroll";
+import { downloadFile, formatDate, toLocalISOString } from "@/lib/utils";
+import { exportReport } from "@/services/reportService";
+import type { exportType } from "@/types/excelExport";
+import { ExportDateDialog } from "@/components/ui/custom/date-picker";
 
 export default function PayrollList() {
-  const navigate = useNavigate();
   const [data, setData] = useState<PayrollSummaryEmployee[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [monthYear, setMonthYear] = useState<Date | null>(null)
   const [error, setError] = useState("")
+  const [exporting, setExporting] = useState(false)
+  const [open, setOpen] = useState(false);
+
   const totalPages = Math.ceil(data.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentData = data.slice(startIndex, startIndex + rowsPerPage);
@@ -46,6 +51,39 @@ export default function PayrollList() {
     const year = date.getFullYear();
     return `${year}-${String(month).padStart(2, "0")}`;
   }
+
+  const handleExport = async (exportType: exportType) => {
+
+    exportType.type = "employee"
+
+
+    if (!exportType.from || !exportType.to) return;
+
+    const requestPayload = {
+      format: exportType.format,
+      reportType: exportType.type,
+      reportName: exportType.name,
+      reportRequest: {
+        pageNo: 0,
+        pageSize: 0,
+        reportType: exportType.name,
+        fromDate: toLocalISOString(exportType.from),
+        toDate: toLocalISOString(exportType.to),
+        item: "",
+        isExport: true,
+      },
+    };
+
+    try {
+      setExporting(true)
+      const { blob, contentDisposition } = await exportReport(requestPayload);
+      downloadFile(blob, contentDisposition);
+      setExporting(false)
+    } catch (err) {
+      setError(err.message)
+      setExporting(false)
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -87,7 +125,7 @@ export default function PayrollList() {
           )}
         </div>
         {/* buttons */}
-        <Button className="primary-btn w-full md:w-auto">
+        <Button className="primary-btn w-full md:w-auto" onClick={() => setOpen(true)}>
           <FolderUp />
           Export
         </Button>
@@ -240,6 +278,22 @@ export default function PayrollList() {
           </select>
         </div>
       </div>
+      <ExportDateDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Export Payroll"
+        loading={exporting}
+        error={error}
+        onConfirm={({ range, format }) => {
+          handleExport({
+            from: range.from!,
+            to: range.to!,
+            format,
+            type: "admin",
+            name: "Payroll"
+          });
+        }}
+      />
     </div>
   );
 }

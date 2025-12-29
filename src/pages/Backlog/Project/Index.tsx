@@ -183,10 +183,10 @@ export default function ProjectListing() {
   };
 
   const handleExport = async (exportType: exportType) => {
-    if (user?.roleName === 'Administrator') {
-      exportType.type = "admin"
-    }
-    else exportType.type = "employee"
+    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin") 
+        || user.roleName.toLowerCase().includes("hr") 
+          ? exportType.type = "admin"
+          :exportType.type = "employee"
 
     if (!exportType.from || !exportType.to) return;
 

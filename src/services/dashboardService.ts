@@ -19,7 +19,7 @@ export const dashboardService = {
   },
 
   fetchAttendanceLists: async (type:string): Promise<ApiEnvelope<AttendanceTypes>> => {
-    const today = new Date();
+    const today = new Date().toISOString().split("T")[0]
     await useDataStore.getState().fetchData({
       endPoint: `/admin-dashboard/attendance-overview?date=${today}&dataView=${type}`,
     });
