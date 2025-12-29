@@ -273,7 +273,7 @@ export default function BacklogList() {
             <TableRow key="title">
               <TableCell colSpan={8} className="h-24 text-center">
                 <div className="flex items-center justify-center text-primary-500">
-                  No Data Matched.
+                  No Backlog.
                 </div>
               </TableCell>
             </TableRow>

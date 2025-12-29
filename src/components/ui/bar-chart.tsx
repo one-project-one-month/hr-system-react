@@ -27,7 +27,7 @@ export type BarChartCardProps = {
   xKey: string;
   bars: BarConfig[];
   /** current period value */
-  period?: "weekly" | "monthly";
+  period?: 1 | 2;
   /** called when the pill is clicked */
   onTogglePeriod?: () => void;
 };
@@ -38,7 +38,7 @@ export function BarChartCard({
   xKey,
   bars,
   footer,
-  period = "weekly",
+  period = 1,
   onTogglePeriod,
 }: BarChartCardProps) {
   return (
@@ -55,7 +55,7 @@ export function BarChartCard({
           onClick={onTogglePeriod}
           className="flex items-center gap-2 rounded-md bg-primary-500 px-4 py-2 text-sm font-medium text-white shadow-sm"
         >
-          {period === "weekly" ? "Weekly" : "Monthly"}
+          {period === 1 ? "Weekly" : "Monthly"}
           {/* <span className="h-2 w-2 rounded-full bg-white" /> */}
         </button>
       </CardHeader>

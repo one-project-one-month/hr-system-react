@@ -9,7 +9,7 @@ import {
 } from "@/services/dashboardService";
 import type { AttendanceTypes, DashboardStats } from "@/types/dashboardService";
 export default function AdminDashboard() {
-  const [range, setRange] = useState<"weekly" | "monthly">("weekly");
+  const [range, setRange] = useState<number>(1);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [attendanceList, setAttendanceList] = useState<AttendanceTypes | null>(null);
   const [loading, setLoading] = useState(false);
@@ -82,7 +82,7 @@ export default function AdminDashboard() {
           xKey="label"
           period={range}
           onTogglePeriod={() =>
-            setRange((prev) => (prev === "weekly" ? "monthly" : "weekly"))
+            setRange((prev) => (prev === 1 ? 2 : 1))
           }
           bars={[
             {
