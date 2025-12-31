@@ -24,7 +24,7 @@ export const dashboardService = {
       endPoint: `/admin-dashboard/attendance-overview?date=${today}&dataView=${type}`,
     });
 
-    const raw = useDataStore.getState().data as unknown;
+    const raw = useDataStore.getState().data.adminAttendanceOverviewReports as unknown;
 
     return asApi<AttendanceTypes>(raw);
   },

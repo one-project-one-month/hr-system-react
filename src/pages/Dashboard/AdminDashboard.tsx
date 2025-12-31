@@ -39,11 +39,12 @@ export default function AdminDashboard() {
     const fetchAttendance = async () => {
       try {
         const resp = await dashboardService.fetchAttendanceLists(range);
+        console.log (resp)
         if (!resp.isSuccess || !resp.data) {
           setError(resp.message || "Failed to load attendance data");
           return;
         }
-        setAttendanceList(resp.data);
+        setAttendanceList(resp);
       } catch (err) {
         console.error(err);
         setError("Something went wrong while fetching dashboard stats.");
@@ -86,7 +87,7 @@ export default function AdminDashboard() {
           }
           bars={[
             {
-              dataKey: "halfDayAbsent",
+              dataKey: "halfDayLeave",
               name: "Half Day Leave",
               color: "#C78BDB",
             },

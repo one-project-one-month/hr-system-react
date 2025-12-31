@@ -21,5 +21,8 @@ export type AttendanceTypes = {
     label: string;
     present: number;
     absent: number;
-    halfDayAbsent: number;
+    halfDayLeave: number;
+    empCount:number;
+    projCount: number;
+    tdyAbsent:number;
 };
