@@ -23,7 +23,7 @@ export const dashboardService = {
       endPoint: `/AdminDashboard/attendances-histogram/${type}`,
     });
 
-    const raw = useDataStore.getState().data as unknown;
+    const raw = useDataStore.getState().data.adminAttendanceOverviewReports as unknown;
 
     return asApi<AttendanceTypes>(raw);
   },
