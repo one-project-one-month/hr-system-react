@@ -11,7 +11,6 @@ import type { AttendanceTypes, DashboardStats } from "@/types/dashboardService";
 export default function AdminDashboard() {
   const [range, setRange] = useState<number>(1);
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [attendanceList, setAttendanceList] = useState<AttendanceTypes | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,23 +35,7 @@ export default function AdminDashboard() {
       }
     };
 
-    const fetchAttendance = async () => {
-      try {
-        const resp = await dashboardService.fetchAttendanceLists(range);
-        console.log (resp)
-        if (!resp.isSuccess || !resp.data) {
-          setError(resp.message || "Failed to load attendance data");
-          return;
-        }
-        setAttendanceList(resp);
-      } catch (err) {
-        console.error(err);
-        setError("Something went wrong while fetching dashboard stats.");
-      }
-    };
-
     fetchStats();
-    fetchAttendance();
   }, [range]);
 
   return (
@@ -79,12 +62,7 @@ export default function AdminDashboard() {
       {/* Chart section */}
       <div className="space-y-3">
         <BarChartCard
-          data={attendanceList}
           xKey="label"
-          period={range}
-          onTogglePeriod={() =>
-            setRange((prev) => (prev === 1 ? 2 : 1))
-          }
           bars={[
             {
               dataKey: "halfDayLeave",

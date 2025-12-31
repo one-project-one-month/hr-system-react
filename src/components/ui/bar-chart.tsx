@@ -1,6 +1,9 @@
 // src/components/ui/bar-chart.tsx
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { dashboardService } from "@/services/dashboardService";
+import type { AttendanceTypes } from "@/types/dashboardService";
+import { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -23,24 +26,38 @@ type BarConfig = {
 export type BarChartCardProps = {
   footer?: React.ReactNode;
   className?: string;
-  data: Record<string, any>[];
   xKey: string;
   bars: BarConfig[];
   /** current period value */
-  period?: 1 | 2;
   /** called when the pill is clicked */
-  onTogglePeriod?: () => void;
 };
 
 export function BarChartCard({
   className,
-  data,
   xKey,
   bars,
   footer,
-  period = 1,
-  onTogglePeriod,
 }: BarChartCardProps) {
+  const [attendanceList, setAttendanceList] = useState<AttendanceTypes[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [period, setPeriod] = useState<number>(1);
+  const onTogglePeriod = () => {
+    setPeriod((prev) => (prev === 1 ? 2 : 1))
+  }
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const resp = await dashboardService.fetchAttendanceLists(period);
+        setAttendanceList(resp);
+      } catch (err) {
+        console.error(err);
+        setError("Something went wrong while fetching dashboard stats.");
+      }
+    };
+
+    fetchAttendance();
+  }, [period]);
+
   return (
     <Card
       className={cn(
@@ -64,7 +81,7 @@ export function BarChartCard({
         <div className="h-[280px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={data}
+              data={attendanceList}
               barCategoryGap={60} // spacing similar to design
               margin={{ top: 10, right: 24, left: 0, bottom: 32 }}
             >
@@ -78,9 +95,20 @@ export function BarChartCard({
                 dataKey={xKey}
                 tickLine={false}
                 axisLine={{ stroke: "#2F80ED" }}
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))"  }}
+                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tickFormatter={(value) => {
+                  if (period === 1) {
+                    // weekly → short date
+                    return new Date(value).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    });
+                  }
+                  // monthly → already a month name
+                  return value;
+                }}
                 label={{
-                  value: "Date",
+                  value: period === 1 ? "Date" : "Month",
                   position: "centerBottom",
                   offset: 20,
                   fill: "#575A59",
@@ -88,7 +116,6 @@ export function BarChartCard({
                   dy: 20,
                 }}
               />
-
 
               <YAxis
                 tickLine={false}
@@ -136,7 +163,6 @@ export function BarChartCard({
                   key={bar.dataKey}
                   dataKey={bar.dataKey}
                   name={bar.name}
-                  stackId="attendance"
                   barSize={40}
                   radius={[0, 0, 0, 0]} // flat tops
                   activeBar={false}
