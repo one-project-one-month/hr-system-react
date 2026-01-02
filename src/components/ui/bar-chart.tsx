@@ -1,5 +1,6 @@
 // src/components/ui/bar-chart.tsx
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { shortMonth } from "@/lib/mapper";
 import { cn } from "@/lib/utils";
 import { dashboardService } from "@/services/dashboardService";
 import type { AttendanceTypes } from "@/types/dashboardService";
@@ -98,14 +99,12 @@ export function BarChartCard({
                 tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
                 tickFormatter={(value) => {
                   if (period === 1) {
-                    // weekly → short date
                     return new Date(value).toLocaleDateString("en-US", {
                       month: "short",
-                      day: "numeric",
+                      year: "numeric",
                     });
                   }
-                  // monthly → already a month name
-                  return value;
+                  return shortMonth(value);
                 }}
                 label={{
                   value: period === 1 ? "Date" : "Month",

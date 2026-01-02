@@ -62,7 +62,7 @@ export default function AdminDashboard() {
       {/* Chart section */}
       <div className="space-y-3">
         <BarChartCard
-          xKey="label"
+          xKey="date"
           bars={[
             {
               dataKey: "halfDayLeave",
