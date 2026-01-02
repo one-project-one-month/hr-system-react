@@ -70,270 +70,450 @@ import { CompanyRulesEdit } from "@/pages/Admin/CompanyRules/Edit";
 import LeaveCreate from "@/pages/Leave/LeaveCreate";
 import LeaveList from "@/pages/Leave/Index";
 import { CompanyRulesDetails } from "@/pages/Admin/CompanyRules/Detail";
+import EmployeeLeaveList from "@/pages/Leave/EmplyeeLeaveList";
+import LeaveEdit from "@/pages/Leave/Edit";
 
 export const routes: AppRoute[] = [
-    // Menu Group 
+    // Menu Group
     {
         path: "/menu-group",
         element: <MenuGroupList />,
-        permission: { menuGroupCode: "MENU", menuCode: "MENU_GROUP", permissionCode: "LIST" },
+        permission: {
+            menuGroupCode: "MENU",
+            menuCode: "MENU_GROUP",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/menu-group/create",
         element: <MenuGroupCreate />,
-        permission: { menuGroupCode: "MENU", menuCode: "MENU_GROUP", permissionCode: "CREATE" },
+        permission: {
+            menuGroupCode: "MENU",
+            menuCode: "MENU_GROUP",
+            permissionCode: "CREATE",
+        },
     },
     {
         path: "/menu-group/edit/:id",
         element: <MenuGroupEdit />,
-        permission: { menuGroupCode: "MENU", menuCode: "MENU_GROUP", permissionCode: "UPDATE" },
+        permission: {
+            menuGroupCode: "MENU",
+            menuCode: "MENU_GROUP",
+            permissionCode: "UPDATE",
+        },
     },
 
     // Menu Item
     {
         path: "/menu-item",
         element: <MenuItemList />,
-        permission: { menuGroupCode: "MENU", menuCode: "MENU_ITEM", permissionCode: "LIST" },
+        permission: {
+            menuGroupCode: "MENU",
+            menuCode: "MENU_ITEM",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/menu-item/create",
         element: <MenuItemCreate />,
-        permission: { menuGroupCode: "MENU", menuCode: "MENU_ITEM", permissionCode: "CREATE" },
+        permission: {
+            menuGroupCode: "MENU",
+            menuCode: "MENU_ITEM",
+            permissionCode: "CREATE",
+        },
     },
     {
         path: "/menu-item/edit/:code",
         element: <MenuItemEdit />,
-        permission: { menuGroupCode: "MENU", menuCode: "MENU_ITEM", permissionCode: "UPDATE" },
+        permission: {
+            menuGroupCode: "MENU",
+            menuCode: "MENU_ITEM",
+            permissionCode: "UPDATE",
+        },
     },
     {
         path: "/menu-item/detail/:code",
         element: <MenuItemDetail />,
-        permission: { menuGroupCode: "MENU", menuCode: "MENU_ITEM", permissionCode: "DETAIL" },
+        permission: {
+            menuGroupCode: "MENU",
+            menuCode: "MENU_ITEM",
+            permissionCode: "DETAIL",
+        },
     },
 
     // Company Rules
     {
         path: "/company-rules",
         element: <CompanyRulesList />,
-        permission: { menuGroupCode: "COMPANY_RULES", menuCode: "", permissionCode: "LIST" },
-
+        permission: {
+            menuGroupCode: "COMPANY_RULES",
+            menuCode: "",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/company-rules/update/:code",
         element: <CompanyRulesEdit />,
-        permission: { menuGroupCode: "COMPANY_RULES", menuCode: "", permissionCode: "UPDATE" },
-
+        permission: {
+            menuGroupCode: "COMPANY_RULES",
+            menuCode: "",
+            permissionCode: "UPDATE",
+        },
     },
-     {
+    {
         path: "/company-rules/detail/:code",
-        element: <CompanyRulesDetails/>,
-        permission: { menuGroupCode: "COMPANY_RULES", menuCode: "", permissionCode: "DETAILS" },
-
+        element: <CompanyRulesDetails />,
+        permission: {
+            menuGroupCode: "COMPANY_RULES",
+            menuCode: "",
+            permissionCode: "DETAILS",
+        },
     },
 
     // Roles
     {
         path: "/role",
         element: <Role />,
-        permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "LIST" },
+        permission: {
+            menuGroupCode: "ROLE",
+            menuCode: "",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/role/create",
         element: <CreateRole />,
-        permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "CREATE" },
+        permission: {
+            menuGroupCode: "ROLE",
+            menuCode: "",
+            permissionCode: "CREATE",
+        },
     },
     {
         path: "/role/edit/:code",
         element: <UpdateRole />,
-        permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "UPDATE" },
+        permission: {
+            menuGroupCode: "ROLE",
+            menuCode: "",
+            permissionCode: "UPDATE",
+        },
     },
     {
         path: "/role/view",
         element: <ViewRole />,
-        permission: { menuGroupCode: "ROLE", menuCode: "", permissionCode: "DETAIL" },
+        permission: {
+            menuGroupCode: "ROLE",
+            menuCode: "",
+            permissionCode: "DETAIL",
+        },
     },
     {
         path: "/role-menu-permission",
         element: <RoleMenuTreeViewCreate />,
-        permission: { menuGroupCode: "ROLE_MENU_PERMISSION", menuCode: "", permissionCode: "PERMISSION" },
+        permission: {
+            menuGroupCode: "ROLE_MENU_PERMISSION",
+            menuCode: "",
+            permissionCode: "PERMISSION",
+        },
     },
 
     // Dashboards
     {
         path: "/hr/dashboard",
         element: <HRDashboard />,
-        permission: { menuGroupCode: "DASHBOARD", menuCode: "", permissionCode: "" },
+        permission: {
+            menuGroupCode: "DASHBOARD",
+            menuCode: "",
+            permissionCode: "",
+        },
     },
     {
         path: "/admin/dashboard",
         element: <AdminDashboard />,
-        permission: { menuGroupCode: "DASHBOARD", menuCode: "DASHBOARD", permissionCode: "" },
+        permission: {
+            menuGroupCode: "DASHBOARD",
+            menuCode: "DASHBOARD",
+            permissionCode: "",
+        },
     },
     {
         path: "/employee/dashboard",
         element: <EmployeeDashboard />,
-        permission: { menuGroupCode: "DASHBOARD", menuCode: "DASHBOARD", permissionCode: "" },
+        permission: {
+            menuGroupCode: "DASHBOARD",
+            menuCode: "DASHBOARD",
+            permissionCode: "",
+        },
     },
 
     // Backlog
     {
         path: "/backlog",
         element: <Backlog />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "BACKLOG", permissionCode: "LIST" },
-
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "BACKLOG",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/backlog/:id",
         element: <BacklogDetail />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "BACKLOG", permissionCode: "DETAILS" },
-
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "BACKLOG",
+            permissionCode: "DETAILS",
+        },
     },
     {
         path: "/backlog/create",
         element: <BacklogCreate />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "BACKLOG", permissionCode: "CREATE" },
-
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "BACKLOG",
+            permissionCode: "CREATE",
+        },
     },
     {
         path: "/backlog/edit/:id",
         element: <BacklogEdit />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "BACKLOG", permissionCode: "EDIT" },
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "BACKLOG",
+            permissionCode: "EDIT",
+        },
     },
 
     // Projects
     {
         path: "/project",
         element: <ProjectList />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "LIST" },
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "PROJECT",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/projects/new",
         element: <ProjectCreate />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "CREATE" },
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "PROJECT",
+            permissionCode: "CREATE",
+        },
     },
     {
         path: "/projects/:id",
         element: <ProjectDetails />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "DETAILS" },
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "PROJECT",
+            permissionCode: "DETAILS",
+        },
     },
     {
         path: "/projects/:id/edit",
         element: <ProjectEdit />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "EDIT" },
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "PROJECT",
+            permissionCode: "EDIT",
+        },
     },
     {
         path: "/projects/add-employee",
         element: <AddEmployee />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "EDIT" },
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "PROJECT",
+            permissionCode: "EDIT",
+        },
     },
     {
         path: "/projects/remove-employee",
         element: <RemoveEmployee />,
-        permission: { menuGroupCode: "BACKLOG", menuCode: "PROJECT", permissionCode: "EDIT" },
+        permission: {
+            menuGroupCode: "BACKLOG",
+            menuCode: "PROJECT",
+            permissionCode: "EDIT",
+        },
     },
 
     // Location
     {
         path: "/location",
         element: <Location />,
-        permission: { menuGroupCode: "ATTENDANCE", menuCode: "LOCATION", permissionCode: "LIST" },
-
+        permission: {
+            menuGroupCode: "ATTENDANCE",
+            menuCode: "LOCATION",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/location/create",
         element: <LocationCreate />,
-        permission: { menuGroupCode: "ATTENDANCE", menuCode: "LOCATION", permissionCode: "CREATE" },
+        permission: {
+            menuGroupCode: "ATTENDANCE",
+            menuCode: "LOCATION",
+            permissionCode: "CREATE",
+        },
     },
     {
         path: "/location/edit/:id",
         element: <LocationEdit />,
-        permission: { menuGroupCode: "ATTENDANCE", menuCode: "LOCATION", permissionCode: "EDIT" },
-
+        permission: {
+            menuGroupCode: "ATTENDANCE",
+            menuCode: "LOCATION",
+            permissionCode: "EDIT",
+        },
     },
     {
         path: "/location/detail/:id",
         element: <LocationDetail />,
-        permission: { menuGroupCode: "ATTENDANCE", menuCode: "LOCATION", permissionCode: "DETAILS" },
-
+        permission: {
+            menuGroupCode: "ATTENDANCE",
+            menuCode: "LOCATION",
+            permissionCode: "DETAILS",
+        },
     },
 
     // Attendance
     {
         path: "/attendance",
         element: <AttendanceList />,
-        permission: { menuGroupCode: "ATTENDANCE", menuCode: "ATTENDANCE", permissionCode: "LIST" },
-
+        permission: {
+            menuGroupCode: "ATTENDANCE",
+            menuCode: "ATTENDANCE",
+            permissionCode: "LIST",
+        },
     },
 
     {
         path: "/attendance/create",
         element: <CreateAttendance />,
-        permission: { menuGroupCode: "ATTENDANCE", menuCode: "ATTENDANCE", permissionCode: "CREATE" }
+        permission: {
+            menuGroupCode: "ATTENDANCE",
+            menuCode: "ATTENDANCE",
+            permissionCode: "CREATE",
+        },
     },
     {
         path: "/attendance/:code/detail",
         element: <DetailsAttendance />,
-        permission: { menuGroupCode: "ATTENDANCE", menuCode: "ATTENDANCE", permissionCode: "DETAILS" }
+        permission: {
+            menuGroupCode: "ATTENDANCE",
+            menuCode: "ATTENDANCE",
+            permissionCode: "DETAILS",
+        },
     },
     {
         path: "/attendance/:code/update",
         element: <UpdateAttendance />,
-        permission: { menuGroupCode: "ATTENDANCE", menuCode: "ATTENDANCE", permissionCode: "UPDATE" }
+        permission: {
+            menuGroupCode: "ATTENDANCE",
+            menuCode: "ATTENDANCE",
+            permissionCode: "UPDATE",
+        },
     },
 
     // Payroll
     {
         path: "/payrollSummary",
         element: <PayrollSummary />,
-        permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
+        permission: {
+            menuGroupCode: "PAYROLL",
+            menuCode: "",
+            permissionCode: "",
+        },
     },
     {
         path: "/payrollDetailList/:code",
         element: <PayrollDetailList />,
-        permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
+        permission: {
+            menuGroupCode: "PAYROLL",
+            menuCode: "",
+            permissionCode: "",
+        },
     },
-     {
+    {
         path: "/payrollDetailL/:code",
         element: <PayrollDetail />,
-        permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
+        permission: {
+            menuGroupCode: "PAYROLL",
+            menuCode: "",
+            permissionCode: "",
+        },
     },
     {
         path: "/payroll",
         element: <EmployeePayroll />,
-        permission: { menuGroupCode: "PAYROLL", menuCode: "", permissionCode: "" }
+        permission: {
+            menuGroupCode: "PAYROLL",
+            menuCode: "",
+            permissionCode: "",
+        },
     },
 
     // Leave
     {
-        path: "/leave",
+        path: "/leave/hr",
         element: <LeaveList />,
-        permission: { menuGroupCode: "LEAVE", menuCode: "LEAVE", permissionCode: "LIST" },
+        permission: {
+            menuGroupCode: "LEAVE",
+            menuCode: "LEAVE",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/leave/create",
         element: <LeaveCreate />,
+    },
+    {
+        path: "/leave/employee",
+        element: <EmployeeLeaveList />,
+    },
+    {
+        path: "/leave/edit/:id",
+        element: <LeaveEdit />,
     },
 
     // Employee
     {
         path: "/employee/new",
         element: <EmployeeCreate />,
-        permission: { menuGroupCode: "EMPLOYEE", menuCode: "", permissionCode: "CREATE" }
+        permission: {
+            menuGroupCode: "EMPLOYEE",
+            menuCode: "",
+            permissionCode: "CREATE",
+        },
     },
     {
         path: "/employee",
         element: <EmployeeList />,
-        permission: { menuGroupCode: "EMPLOYEE", menuCode: "", permissionCode: "LIST" }
+        permission: {
+            menuGroupCode: "EMPLOYEE",
+            menuCode: "",
+            permissionCode: "LIST",
+        },
     },
     {
         path: "/employee/edit/:code",
         element: <EmployeeEdit />,
-        permission: { menuGroupCode: "EMPLOYEE", menuCode: "", permissionCode: "EDIT" }
+        permission: {
+            menuGroupCode: "EMPLOYEE",
+            menuCode: "",
+            permissionCode: "EDIT",
+        },
     },
     {
         path: "/employee/detail/:code",
         element: <EmployeeDetail />,
-        permission: { menuGroupCode: "EMPLOYEE", menuCode: "", permissionCode: "DETAIL" }
+        permission: {
+            menuGroupCode: "EMPLOYEE",
+            menuCode: "",
+            permissionCode: "DETAIL",
+        },
     },
 
     // Profile / Unauthorized

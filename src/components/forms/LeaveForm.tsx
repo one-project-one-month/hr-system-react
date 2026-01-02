@@ -29,7 +29,7 @@ import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import { createLeaveSchema, type CreateLeaveInputs } from "@/schema/leave";
 import { leaveService } from "@/services/leaveService";
 import { Textarea } from "../ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Table,
     TableBody,
@@ -46,12 +46,13 @@ interface LeaveAvailability {
     leaveType: string;
 }
 
-interface ToastState {
-    message: string;
-    type: "success" | "error" | "info" | "warning";
+interface LeaveFormProps {
+    id?: string;
+    isEditMode?: boolean;
+    data?: CreateLeaveInputs;
 }
 
-export default function LeaveForm() {
+export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
     const navigate = useNavigate();
     const openDialog = useSuccessDialogStore((state) => state.openDialog);
     const [leaveAvailability, setLeaveAvailability] =
@@ -67,7 +68,7 @@ export default function LeaveForm() {
 
     const form = useForm<CreateLeaveInputs>({
         resolver: zodResolver(createLeaveSchema),
-        defaultValues: {
+        defaultValues: isEditMode && data ? data : {
             leaveType: "",
             fromDate: "",
             toDate: "",
@@ -76,14 +77,11 @@ export default function LeaveForm() {
         },
     });
 
-    const handleLeaveTypeChange = async (
-        value: string,
-        fieldChange: (value: string) => void
-    ) => {
-        fieldChange(value);
-        if (value) {
+    const fetchLeaveAvailability = async (leaveType: string) => {
+        if (leaveType) {
             try {
-                const response = await leaveService.checkLeaveAvailability(value);
+                const response =
+                    await leaveService.checkLeaveAvailability(leaveType);
                 setLeaveAvailability(response.data);
             } catch (err: any) {
                 setErrMsg(err.message);
@@ -92,15 +90,43 @@ export default function LeaveForm() {
         } else {
             setLeaveAvailability(null);
         }
-    };;
+    };
+
+    useEffect(() => {
+        if (data?.leaveType) {
+            fetchLeaveAvailability(data.leaveType);
+        }
+    }, [data?.leaveType]);
+
+    const handleLeaveTypeChange = async (
+        value: string,
+        fieldChange: (value: string) => void
+    ) => {
+        fieldChange(value);
+        fetchLeaveAvailability(value);
+    };
 
     const handleFormSubmit = async (values: CreateLeaveInputs) => {
         try {
-            await leaveService.createLeave(values);
-            openDialog("Create Leave Successful!", onConfirm);
-        } catch (error) {
+            if (isEditMode) {
+                await leaveService.updateLeave(id!, values);
+                openDialog("Update Leave Successful!", onConfirm);
+            } else {
+                await leaveService.createLeave(values);
+                openDialog("Create Leave Successful!", onConfirm);
+            }
+        } catch (error: any) {
             console.error("Error saving leave:", error);
-            setErrMsg(error.message)
+            try {
+                const errorJson = JSON.parse(error.message);
+                if (errorJson.message) {
+                    setErrMsg(errorJson.message);
+                } else {
+                    setErrMsg(error.message);
+                }
+            } catch (parseError) {
+                setErrMsg(error.message);
+            }
         }
     };
 
@@ -112,15 +138,15 @@ export default function LeaveForm() {
     return (
         <div className="flex-1 p-6 bg-natural-100">
             <h2 className="page-title mb-3">
-                Leave Create
+                {isEditMode ? "Leave Edit" : "Leave Create"}
             </h2>
             <span className="">
                 {errMsg && (
-                          <div className="mb-4 flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
-                            <AlertCircle className="w-4 h-4" />
-                            <span>{errMsg}</span>
-                          </div>
-                        )}
+                    <div className="mb-4 flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
+                        <AlertCircle className="w-4 h-4" />
+                        <span>{errMsg}</span>
+                    </div>
+                )}
             </span>
             <Form {...form}>
                 <form
@@ -163,6 +189,9 @@ export default function LeaveForm() {
                                             <SelectItem value="MaternityLeave">
                                                 Maternity Leave
                                             </SelectItem>
+                                            <SelectItem value="WorkFromHome">
+                                                Work From Home
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -184,10 +213,10 @@ export default function LeaveForm() {
                                             <SelectValue placeholder="Select full or half day" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-gray-50">
-                                            <SelectItem value="FullLeave">
+                                            <SelectItem value="FullDay">
                                                 Full Day
                                             </SelectItem>
-                                            <SelectItem value="HalfLeave">
+                                            <SelectItem value="HalfDay">
                                                 Half Day
                                             </SelectItem>
                                         </SelectContent>

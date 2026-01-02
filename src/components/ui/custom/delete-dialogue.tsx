@@ -40,7 +40,7 @@ export function DeleteDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={() => onOpenChange} className="cancel-btn">
+          <AlertDialogCancel onClick={() => onOpenChange(false)} className="cancel-btn">
             CANCEL
           </AlertDialogCancel>
           <AlertDialogAction

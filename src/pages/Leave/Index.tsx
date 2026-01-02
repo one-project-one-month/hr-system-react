@@ -122,6 +122,16 @@ export default function LeaveList() {
       type: "EarnLeave",
       label: "Earn Leave",
       id: 4
+    },
+    {
+        type: "MaternityLeave",
+        label: "Maternity Leave",
+        id: 5,
+    },
+    {
+      type: "WorkFromHome",
+      label: "Work From Home",
+      id: 6,
     }
   ]
 
