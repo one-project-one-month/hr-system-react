@@ -15,14 +15,11 @@ import {
   Check,
   X,
   Plus,
-  Search,
-  CircleX,
 } from "lucide-react";
 import { leaveService } from "@/services/leaveService";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import type { Leave, LeaveList, leaveType } from "@/types/leave";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function LeaveList() {
@@ -31,7 +28,6 @@ export default function LeaveList() {
   const [data, setData] = useState({ totalCount: 0 });
   const [leaves, setLeaves] = useState<Leave[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectLeave, setSelectLeaveType] = useState("")
   const [status, setStatus] = useState("")
   const [debouncedFilters, setDebouncedFilters] = useState({
@@ -83,7 +79,7 @@ export default function LeaveList() {
     useEffect(() => {
       const handler = setTimeout(() => {
         setDebouncedFilters({
-          Query: searchQuery,
+          Query: "",
           PageNo: currentPage,
           PageSize: rowsPerPage,
           LeaveType: selectLeave
@@ -91,7 +87,7 @@ export default function LeaveList() {
       }, 400); // 700ms delay
   
       return () => clearTimeout(handler);
-    }, [searchQuery, selectLeave, currentPage, rowsPerPage]);
+    }, [selectLeave, currentPage, rowsPerPage]);
   
 
   const totalRows = data?.totalCount || 0;
@@ -140,26 +136,6 @@ export default function LeaveList() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-5">
         <p className="font-bold text-black">Leave</p>
         <div className="flex flex-col md:flex-row md:items-center gap-2 w-full md:w-auto">
-          {/* Search */}
-          <div className="relative w-full md:w-auto text-primary-800">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
-            <Input
-              type="text"
-              value={searchQuery}
-              placeholder="Search..."
-              onInput={(e) => setSearchQuery(e.target.value)}
-              className="border-primary-700 bg-natural-50 focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9 text-primary-400"
-            />
-            {searchQuery ? (
-              <CircleX
-                onClick={() => setSearchQuery("")}
-                className="cursor-pointer absolute absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4"
-              />
-            ) : (
-              ""
-            )}
-          </div>
-
           <div className="flex text-primary-700 bg-natural-50 w-full">
             <Select onValueChange={(value) => setSelectLeaveType(value)}>
               <SelectTrigger className="text-primary-400 w-full">
