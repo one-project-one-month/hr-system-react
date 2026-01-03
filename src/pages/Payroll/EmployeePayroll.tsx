@@ -23,7 +23,7 @@ import type { PayrollSummaryEmployee } from "@/types/payroll";
 import { downloadFile, formatDate, toLocalISOString } from "@/lib/utils";
 import { exportReport } from "@/services/reportService";
 import type { exportType } from "@/types/excelExport";
-import { ExportDateDialog } from "@/components/ui/custom/date-picker";
+import { ExportDateDialog } from "@/components/ui/custom/export-date-dialog";
 
 export default function PayrollList() {
   const [data, setData] = useState<PayrollSummaryEmployee[]>([]);

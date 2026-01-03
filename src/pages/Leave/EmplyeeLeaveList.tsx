@@ -35,6 +35,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import type { ApiResponse } from "@/types/api";
 import { DeleteDialog } from "@/components/ui/custom/delete-dialogue";
+import { DatePicker } from "@/components/ui/custom/date-picker";
 
 export default function EmployeeLeaveList() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -44,6 +45,8 @@ export default function EmployeeLeaveList() {
     const [displayedLeaves, setDisplayedLeaves] = useState<EmployeeLeave[]>([]);
     const [loading, setLoading] = useState(false);
     const [selectLeave, setSelectLeaveType] = useState("all");
+    const [fromDate, setFromDate] = useState<Date | undefined>();
+    const [toDate, setToDate] = useState<Date | undefined>();
     const navigate = useNavigate();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [selectedLeaveCode, setSelectedLeaveCode] = useState<string | null>(
@@ -77,9 +80,22 @@ export default function EmployeeLeaveList() {
                 (leave) => leave.leaveType === selectLeave
             );
         }
+
+        if (fromDate) {
+            filtered = filtered.filter(
+                (leave) => new Date(leave.fromDate) >= fromDate
+            );
+        }
+
+        if (toDate) {
+            filtered = filtered.filter(
+                (leave) => new Date(leave.toDate) <= toDate
+            );
+        }
+
         setFilteredLeaves(filtered);
         setCurrentPage(1);
-    }, [allLeaves, selectLeave]);
+    }, [allLeaves, selectLeave, fromDate, toDate]);
 
     useEffect(() => {
         const startIndex = (currentPage - 1) * rowsPerPage;
@@ -89,6 +105,8 @@ export default function EmployeeLeaveList() {
 
     const totalRows = filteredLeaves.length;
     const totalPages = Math.ceil(totalRows / rowsPerPage);
+    const startRow = (currentPage - 1) * rowsPerPage + 1;
+    const endRow = Math.min(currentPage * rowsPerPage, totalRows);
 
     const goPrev = () => setCurrentPage((p) => Math.max(p - 1, 1));
     const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
@@ -98,7 +116,9 @@ export default function EmployeeLeaveList() {
     const handleDelete = async () => {
         if (selectedLeaveCode) {
             try {
-                const response = await leaveService.deleteLeave(selectedLeaveCode);
+                const response = await leaveService.deleteLeave(
+                    selectedLeaveCode
+                );
                 if (response && response.isSuccess) {
                     fetchLeaves();
                     setIsDeleteDialogOpen(false);
@@ -147,6 +167,18 @@ export default function EmployeeLeaveList() {
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 mb-5">
                 <p className="font-bold text-black">My Leaves</p>
                 <div className="flex flex-col md:flex-row md:items-center gap-2 w-full md:w-auto">
+                    <div className="flex flex-row items-center gap-2">
+                        <DatePicker
+                            date={fromDate}
+                            setDate={setFromDate}
+                            placeholder="From Date"
+                        />
+                        <DatePicker
+                            date={toDate}
+                            setDate={setToDate}
+                            placeholder="To Date"
+                        />
+                    </div>
                     <div className="flex text-primary-700 bg-natural-50 w-full">
                         <Select
                             value={selectLeave}
@@ -263,7 +295,9 @@ export default function EmployeeLeaveList() {
                                             variant="ghost"
                                             size="icon"
                                             onClick={() => {
-                                                setSelectedLeaveCode(leave.leaveCode);
+                                                setSelectedLeaveCode(
+                                                    leave.leaveCode
+                                                );
                                                 setIsDeleteDialogOpen(true);
                                             }}
                                         >
@@ -284,82 +318,80 @@ export default function EmployeeLeaveList() {
                     )}
                 </TableBody>
             </Table>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-2 text-primary-500 p-2 text-sm">
-                <p>
-                    Showing{" "}
-                    <strong>
-                        {Math.min(
-                            (currentPage - 1) * rowsPerPage + 1,
-                            totalRows
-                        )}
-                    </strong>{" "}
-                    to{" "}
-                    <strong>
-                        {Math.min(currentPage * rowsPerPage, totalRows)}
-                    </strong>{" "}
-                    of <strong>{totalRows}</strong> entries
-                </p>
-
-                <div className="flex items-center space-x-2">
-                    <p className="font-medium">Rows per page</p>
-                    <Select
-                        value={`${rowsPerPage}`}
-                        onValueChange={(value) => {
-                            setRowsPerPage(Number(value));
-                        }}
-                    >
-                        <SelectTrigger className="h-8 w-[70px]">
-                            <SelectValue placeholder={`${rowsPerPage}`} />
-                        </SelectTrigger>
-                        <SelectContent side="top">
-                            {[10, 20, 30, 40, 50].map((pageSize) => (
-                                <SelectItem
-                                    key={pageSize}
-                                    value={`${pageSize}`}
-                                >
-                                    {pageSize}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+            {/* Paginations */}
+            <div className="flex flex-col md:flex-row gap-2 items-center justify-between p-4 border-t">
+                {/* Left: Showing rows */}
+                <div className="text-sm text-muted-foreground">
+                    {startRow}–{endRow} of {totalRows}
                 </div>
 
-                <div className="flex items-center space-x-2">
-                    <Button
-                        variant="outline"
-                        className="hidden h-8 w-8 p-0 lg:flex"
+                {/* Middle: Page buttons */}
+
+                <div className="flex space-x-1">
+                    <button
                         onClick={goToFirst}
                         disabled={currentPage === 1}
+                        className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
                     >
-                        <ChevronsLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        className="h-8 w-8 p-0"
+                        <ChevronsLeft />
+                    </button>
+                    <button
                         onClick={goPrev}
                         disabled={currentPage === 1}
+                        className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
                     >
-                        <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <p>
-                        Page {currentPage} of {totalPages}
-                    </p>
-                    <Button
-                        variant="outline"
-                        className="h-8 w-8 p-0"
+                        <ChevronLeft />
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (page) => (
+                            <button
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`px-3 py-1 rounded ${
+                                    page === currentPage
+                                        ? "bg-primary-500 text-natural-50"
+                                        : "bg-natural-50 text-black hover:bg-gray-200"
+                                }`}
+                            >
+                                {page}
+                            </button>
+                        )
+                    )}
+                    <button
                         onClick={goNext}
                         disabled={currentPage === totalPages}
+                        className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
                     >
-                        <ChevronRight className="h-4 w-4" />
-                    </Button>
-                    <Button
-                        variant="outline"
-                        className="hidden h-8 w-8 p-0 lg:flex"
+                        <ChevronRight />
+                    </button>
+                    <button
                         onClick={goToLast}
                         disabled={currentPage === totalPages}
+                        className="px-2 py-1 rounded pagination-btn disabled:opacity-50"
                     >
-                        <ChevronsRight className="h-4 w-4" />
-                    </Button>
+                        <ChevronsRight />
+                    </button>
+                </div>
+
+                {/* Right: Rows per page */}
+                <div className="flex items-center space-x-2">
+                    <span className="text-sm text-muted-foreground">
+                        Rows/page:
+                    </span>
+                    <select
+                        value={rowsPerPage}
+                        onChange={(e) => {
+                            setRowsPerPage(Number(e.target.value));
+                            setCurrentPage(1); // reset page
+                        }}
+                        className="border rounded px-2 py-1 text-sm p-3"
+                    >
+                        {[10, 20, 30, 50].map((n) => (
+                            <option key={n} value={n}>
+                                {n}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             </div>
             {isDeleteDialogOpen && (
