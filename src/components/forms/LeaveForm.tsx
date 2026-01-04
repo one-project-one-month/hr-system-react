@@ -68,23 +68,28 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
 
     const form = useForm<CreateLeaveInputs>({
         resolver: zodResolver(createLeaveSchema),
-        defaultValues: isEditMode && data ? data : {
-            leaveType: "",
-            fromDate: "",
-            toDate: "",
-            fullOrHalf: "",
-            reason: "",
-        },
+        defaultValues:
+            isEditMode && data
+                ? data
+                : {
+                      leaveType: "",
+                      fromDate: "",
+                      toDate: "",
+                      fullOrHalf: "",
+                      reason: "",
+                  },
     });
 
     const fetchLeaveAvailability = async (leaveType: string) => {
         if (leaveType) {
             try {
-                const response =
-                    await leaveService.checkLeaveAvailability(leaveType);
+                const response = await leaveService.checkLeaveAvailability(
+                    leaveType
+                );
                 setLeaveAvailability(response.data);
             } catch (err: any) {
-                setErrMsg(err.message);
+                console.log(JSON.parse(err.message).message);
+                setErrMsg(JSON.parse(err.message).message);
                 setLeaveAvailability(null);
             }
         } else {
@@ -112,21 +117,12 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
                 await leaveService.updateLeave(id!, values);
                 openDialog("Update Leave Successful!", onConfirm);
             } else {
+                console.log(values);
                 await leaveService.createLeave(values);
                 openDialog("Create Leave Successful!", onConfirm);
             }
         } catch (error: any) {
-            console.error("Error saving leave:", error);
-            try {
-                const errorJson = JSON.parse(error.message);
-                if (errorJson.message) {
-                    setErrMsg(errorJson.message);
-                } else {
-                    setErrMsg(error.message);
-                }
-            } catch (parseError) {
-                setErrMsg(error.message);
-            }
+            setErrMsg(JSON.parse(error.message).message);
         }
     };
 
@@ -213,11 +209,11 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
                                             <SelectValue placeholder="Select full or half day" />
                                         </SelectTrigger>
                                         <SelectContent className="bg-gray-50">
-                                            <SelectItem value="FullDay">
-                                                Full Day
+                                            <SelectItem value="FullLeave">
+                                                Full Leave
                                             </SelectItem>
-                                            <SelectItem value="HalfDay">
-                                                Half Day
+                                            <SelectItem value="HalfLeave">
+                                                Half Leave
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -266,13 +262,6 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
                             </Table>
                         </div>
                     )}
-                    {leaveAvailability === null && errMsg && (
-                        <div className="py-4">
-                            <h1 className="text-red-800 text-medium">
-                                {errMsg}
-                            </h1>
-                        </div>
-                    )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <FormField
                             control={form.control}
@@ -311,11 +300,7 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
                                                     onSelect={(date) =>
                                                         field.onChange(
                                                             date
-                                                                ? date
-                                                                      .toISOString()
-                                                                      .split(
-                                                                          "T"
-                                                                      )[0]
+                                                                ? date.toISOString()
                                                                 : ""
                                                         )
                                                     }
@@ -366,11 +351,7 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
                                                     onSelect={(date) =>
                                                         field.onChange(
                                                             date
-                                                                ? date
-                                                                      .toISOString()
-                                                                      .split(
-                                                                          "T"
-                                                                      )[0]
+                                                                ? date.toISOString()
                                                                 : ""
                                                         )
                                                     }

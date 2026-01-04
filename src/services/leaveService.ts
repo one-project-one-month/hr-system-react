@@ -2,13 +2,21 @@ import { useDataStore } from "@/stores/useDataStore";
 import type { CreateLeaveInputs } from "@/schema/leave";
 import type { LeaveList } from "@/types/leave";
 
+const formatAndWrapPayload = (data: CreateLeaveInputs) => {
+  const formattedData = {
+    ...data,
+    fromDate: new Date(data.fromDate).toISOString().split("T")[0],
+    toDate: new Date(data.toDate).toISOString().split("T")[0],
+  };
+
+  return formattedData;
+};
+
 export const leaveService = {
   getLeaves: async (LeaveFilter: LeaveList) => {
-    return await useDataStore
-      .getState()
-      .fetchData({
-        endPoint: `/Leave/list?Query=${LeaveFilter.Query}&LeaveType=${LeaveFilter.LeaveType}&PageNo=${LeaveFilter.PageNo}&PageSize=${LeaveFilter.PageSize}`,
-      });
+    return await useDataStore.getState().fetchData({
+      endPoint: `/Leave/list?Query=${LeaveFilter.Query}&LeaveType=${LeaveFilter.LeaveType}&PageNo=${LeaveFilter.PageNo}&PageSize=${LeaveFilter.PageSize}`,
+    });
   },
 
   getEmployeeLeaves: async () => {
@@ -18,10 +26,11 @@ export const leaveService = {
   },
 
   createLeave: async (data: CreateLeaveInputs) => {
+    const payload = formatAndWrapPayload(data);
     return await useDataStore.getState().fetchData({
       endPoint: `/Leave/create`,
       method: "POST",
-      body: data,
+      body: payload,
     });
   },
 
@@ -50,10 +59,11 @@ export const leaveService = {
   },
 
   updateLeave: async (leaveCode: string, data: CreateLeaveInputs) => {
+    const payload = formatAndWrapPayload(data);
     return await useDataStore.getState().fetchData({
       endPoint: `/Leave/update/${leaveCode}`,
       method: "PUT",
-      body: data,
+      body: payload,
     });
   },
 
