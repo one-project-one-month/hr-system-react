@@ -199,7 +199,7 @@ export default function MenuGroupList() {
                 <TableHead className="text-center py-4">
                   Has Menu Item
                 </TableHead>
-                <TableHead className="text-center py-4">Action</TableHead>
+              {permissions.length && <TableHead className="text-center py-4">Action</TableHead>}
               </TableRow>
             </TableHeader>
 

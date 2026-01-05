@@ -272,7 +272,7 @@
   }
 
   .page-title {
-    @apply text-xl font-bold w-full
+    @apply text-xl font-bold w-full mb-4
   }
 
 }

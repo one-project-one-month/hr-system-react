@@ -36,10 +36,16 @@ import { MenuItemService } from "@/services/menuItemService";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { useAuthStore } from "@/stores/useAuthStore";
+import type { MenuGroupItem } from "@/types/menu-group";
 
 export default function MenuItemList() {
   const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
+  const { user } = useAuthStore();
+  const permissions = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "MENU")?.childMenus
+    ?.find(c => c.menuItemCode === 'MENU_ITEM').permissions ?? [];
+
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -185,14 +191,14 @@ export default function MenuItemList() {
             )}
           </div>
 
-          <div className="flex gap-2 text-primary-700 bg-natural-50 w-full md:w-auto">
+          {permissions.includes("CREATE") && <div className="flex gap-2 text-primary-700 bg-natural-50 w-full md:w-auto">
             <Link to="/menu-item/create" className="w-full">
               <Button className="primary-btn w-full">
                 <Plus className="h-4 w-4" />
                 New
               </Button>
             </Link>
-          </div>
+          </div>}
         </div>
       </div>
 
@@ -206,7 +212,7 @@ export default function MenuItemList() {
             <TableHead>Menu Name</TableHead>
             <TableHead>URL</TableHead>
             <TableHead>Icon</TableHead>
-            <TableHead>Action</TableHead>
+            {permissions.length && <TableHead>Action</TableHead>}
           </TableRow>
         </TableHeader>
 
@@ -237,16 +243,17 @@ export default function MenuItemList() {
                 <TableCell>{item.menuName}</TableCell>
                 <TableCell>{item.url}</TableCell>
                 <TableCell>{item.icon}</TableCell>
-                <TableCell className="flex gap-4 justify-center">
-                  <Edit
+                {permissions.length && <TableCell className="flex gap-4 justify-center">
+                  {permissions.includes("UPDATE") && (<Edit
                     className="h-4 w-4 text-primary-500 cursor-pointer"
                     onClick={() => handleEdit(item.menuCode)}
-                  />
-                  <Trash2
-                    className="h-4 w-4 text-error-400 cursor-pointer"
-                    onClick={(e) => handleDelete(e, item.menuCode)}
-                  />
-                </TableCell>
+                  />)}
+                  {permissions.includes("DELETE") && (
+                    <Trash2
+                      className="h-4 w-4 text-error-400 cursor-pointer"
+                      onClick={(e) => handleDelete(e, item.menuCode)}
+                    />)}
+                </TableCell>}
               </TableRow>
             ))
           ) : (

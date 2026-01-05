@@ -3,6 +3,7 @@
 import { DeleteDialog } from "@/components/ui/custom/delete-dialogue";
 import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { RoleService } from "@/services/roleService";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import type { Role } from "@/types/auth";
 import type { RoleItems } from "@/types/role";
@@ -23,7 +24,9 @@ import { Link, useNavigate } from "react-router-dom";
 const Role: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [roleToDelete, setRoleToDelete] = useState<string>("");
-
+  const {user} = useAuthStore()
+  const permissions = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "ROLE")?.childMenus[0]?.permissions ?? [];
   // --- PAGINATION STATE ---
   const [roleData, setRoleData] = useState<RoleItems[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -140,13 +143,13 @@ const Role: React.FC = () => {
           <h1 className="page-title">
             Role
           </h1>
-          <Link
+          {permissions.includes("CREATE") && <Link
             to="/role/create"
-            className="w-full md:w-auto flex items-center gap-2 text-white bg-[rgba(2,177,108,1)] py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
+            className="w-full md:w-auto flex items-center justify-center gap-2 text-white bg-[rgba(2,177,108,1)] py-2 px-4 rounded-lg hover:bg-green-700 transition-colors text-sm sm:text-base"
           >
             <Plus size={20} />
             New
-          </Link>
+          </Link>}
         </div>
 
         {/* Table Section */}
@@ -156,7 +159,7 @@ const Role: React.FC = () => {
               <tr className="bg-[#55CB9D] font-bold text-m text-black-800">
                 <th className="py-3 px-6 text-center">No</th>
                 <th className="py-3 px-6 text-center">Role Name</th>
-                <th className="py-3 px-6 text-right">Action</th>
+              {permissions.length && <th className="py-3 px-6 text-right">Action</th>}
               </tr>
             </thead>
             <tbody>
@@ -172,14 +175,14 @@ const Role: React.FC = () => {
                   </td>
                   <td className="py-4 px-6">
                     <div className="flex justify-end items-center gap-3 sm:gap-4">
-                      <Edit
-                        className="h-4 w-4 text-primary-500 cursor-pointer hover:text-primary-500"
-                        onClick={() => handleEdit(role.roleCode)}
-                      />
-                      <Trash2
-                        className="h-4 w-4 text-error-400 cursor-pointer hover:text-red-500"
-                        onClick={() => handleDeleteModal(role.roleCode)}
-                      />
+                    {permissions.includes("UPDATE") && <Edit
+                      className="h-4 w-4 text-primary-500 cursor-pointer hover:text-primary-500"
+                      onClick={() => handleEdit(role.roleCode)}
+                    />}
+                    {permissions.includes("DELETE") && <Trash2
+                      className="h-4 w-4 text-error-400 cursor-pointer hover:text-red-500"
+                      onClick={() => handleDeleteModal(role.roleCode)}
+                    />}
                     </div>
                   </td>
                 </tr>
