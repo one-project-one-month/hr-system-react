@@ -24,15 +24,19 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   menuGroupService,
-  type MenuGroupItem,
 } from "@/services/menuGroupService";
 import { useDataStore } from "@/stores/useDataStore";
 import { useAuthStore } from "@/stores/useAuthStore";
+import type { MenuGroupItem } from "@/types/menu-group";
 
 export default function MenuGroupList() {
   const [data, setData] = useState<MenuGroupItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuthStore();
+  const permissions = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "MENU")?.childMenus
+    ?.find(c => c.menuItemCode === 'MENU_GROUP').permissions ?? [];
 
   const token = useAuthStore((s) => s.token);
   const authHeaders = useMemo(
@@ -172,11 +176,11 @@ export default function MenuGroupList() {
               />
             </div>
 
-            <Button asChild className="bg-primary-500 text-white w-full md:w-auto">
+            {permissions && permissions.includes("CREATE") &&<Button asChild className="bg-primary-500 text-white w-full md:w-auto">
               <Link to="/menu-group/create">
                 <Plus /> New
               </Link>
-            </Button>
+            </Button>}
           </div>
         </div>
 
@@ -265,8 +269,9 @@ export default function MenuGroupList() {
                     </TableCell>
 
                     {/* Action */}
+
                     <TableCell className="flex justify-center gap-2">
-                      <Button
+                      {permissions && permissions.includes("UPDATE") && (<Button
                         asChild
                         className="text-primary-500 cursor-pointer"
                       >
@@ -276,13 +281,14 @@ export default function MenuGroupList() {
                         >
                           <Edit className="h-4 w-4" />
                         </Link>
-                      </Button>
-                      <Button
-                        className="text-error-400 cursor-pointer"
-                        onClick={(e) => handleDelete(e, item.menuGroupCode)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      </Button>)}
+                      {permissions && permissions.includes("DELETE") && (
+                        <Button
+                          className="text-error-400 cursor-pointer"
+                          onClick={(e) => handleDelete(e, item.menuGroupCode)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>)}
                     </TableCell>
                   </TableRow>
                 ))}

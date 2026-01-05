@@ -19,6 +19,7 @@ import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 import { SpinnerCustom } from "@/components/ui/spinner";
 import { companyRulesService } from "@/services/companyRulesService";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface CompanyRule {
   companyRuleId: string;
@@ -35,6 +36,12 @@ export function CompanyRulesList() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const { description, onConfirm, closeDialog } = useSuccessDialogStore();
+
+  const { user } = useAuthStore();
+  const permissions = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "COMPANY_RULES")?.childMenus?.[0]?.permissions ?? [];
+  
+  const canUpdate = permissions.includes("UPDATE");
 
   const totalPages = companyRulesList
     ? Math.ceil(companyRulesList.length / rowsPerPage)
@@ -107,7 +114,7 @@ export function CompanyRulesList() {
                   <TableHead className="w-[60px]">No.</TableHead>
                   <TableHead className="text-center">Description</TableHead>
                   <TableHead className="text-center">Value</TableHead>
-                  <TableHead className="text-center">Action</TableHead>
+                {canUpdate && <TableHead className="text-center">Action</TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -120,9 +127,9 @@ export function CompanyRulesList() {
                     <TableCell>{startIndex + index + 1}</TableCell>
                     <TableCell>{items.description}</TableCell>
                     <TableCell>{items.value}</TableCell>
-                    <TableCell className="flex justify-center gap-2">
-                      <Edit className="text-primary-500 cursor-pointer" onClick={(e) => handleEditClick(e, items)} />
-                    </TableCell>
+                    {canUpdate && <TableCell className="flex justify-center gap-2">
+                       <Edit className="text-primary-500 cursor-pointer" onClick={(e) => handleEditClick(e, items)} />
+                    </TableCell> }
                   </TableRow>
                 ))}
               </TableBody>

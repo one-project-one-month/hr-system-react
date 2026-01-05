@@ -44,13 +44,13 @@ export function MenuGroupForm({
 
   return (
     <form
-      className="flex flex-col w-full bg-white p-10 rounded-lg shadow-sm"
+      className="flex flex-col w-full p-10 rounded-lg"
       onSubmit={(e) => {
         e.preventDefault();
         onSubmit(values);
       }}
     >
-      <h2 className="page-title">
+      <h2 className="page-title mb-4">
         {mode === "create" ? "Menu Group Information" : "Edit Menu Group"}
       </h2>
 

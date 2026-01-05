@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -55,6 +55,9 @@ export function AttendanceList() {
   const navigate = useNavigate()
   const { error } = useDataStore()
   const { user } = useAuthStore()
+  const menuGroup = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "ATTENDANCE")?.childMenus
+    .find(mg => mg.menuItemCode === "ATTENDANCE")
 
   const [attendanceList, setAttendanceList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -78,7 +81,6 @@ export function AttendanceList() {
   const formatDateTime = (datetime: string) => datetime ? format(new Date(datetime), "yyyy-MM-dd HH:mm") : "-";
   const formatDate = (dateStr: string) => dateStr ? format(new Date(dateStr), "yyyy-MM-dd") : "-";
   const [searchName, setSearchName] = useState("");
-
 
   const totalPages = attendanceList
     ? Math.ceil(attendanceList.length / rowsPerPage)
@@ -332,14 +334,14 @@ export function AttendanceList() {
                     <TableCell>{user.status}</TableCell>
 
                     <TableCell className="flex justify-center gap-2">
-                      <Edit
+                      { menuGroup && menuGroup?.permissions.includes("UPDATE") && <Edit
                         className="text-primary-500 cursor-pointer"
                         onClick={(e) => updateAttendance(e, user.attendanceCode)}
-                      />
-                      <Trash2
+                      /> }
+                      { menuGroup && menuGroup?.permissions.includes("DELETE") && <Trash2
                         className="text-error-400 cursor-pointer"
                         onClick={(e) => handleDelete(e, user.attendanceCode)}
-                      />
+                      />}
                     </TableCell>
                   </TableRow>
                 ))

@@ -154,7 +154,8 @@ const ParentMenu = ({
       <div>
         {menuGroup.menuGroupCode !== "DASHBOARD"
           && menuGroup.menuGroupCode !== "PAYROLL"
-          && menuGroup.menuGroupCode !== "ROLE_MENU_PERMISSION" ? (
+          && menuGroup.menuGroupCode !== "ROLE_MENU_PERMISSION"
+          && menuGroup.menuGroupCode !== "LEAVE" ? (
           isOpen ? (
             <MinusCircle
               className="text-primary-700 mt-3 cursor-pointer"

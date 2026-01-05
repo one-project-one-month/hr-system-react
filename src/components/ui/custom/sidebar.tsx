@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Briefcase, Calendar, Clock, DollarSign, LayoutDashboardIcon, LayoutTemplate, ListCheck, LogOut, Map, Menu, PanelTopOpen, UserRound, UsersRound } from "lucide-react";
+import { Book, Briefcase, Calendar, Clock, DollarSign, LayoutDashboardIcon, LayoutTemplate, ListCheck, LogOut, Map, Menu, PanelTopOpen, UserRound, UsersRound } from "lucide-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RoleService } from "@/services/roleService";
 import { SidebarMenuItem } from "./sidebar-menuitems";
@@ -58,7 +58,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
                 { label: "Menu Item", icon: <PanelTopOpen />, path: "/menu-item", menuGroupCode: "MENU", }],
         },
         { label: "Role & Menu Permission", icon: <UserRound />, menuGroupCode: "ROLE_MENU_PERMISSION", path: "/role-menu-permission", },
-        { label: "Company Rules", icon: <UserRound />, menuGroupCode: "COMPANY_RULES", path: "/company-rules", },
+        { label: "Company Rules", icon: <Book />, menuGroupCode: "COMPANY_RULES", path: "/company-rules", },
         { label: "Employee", icon: <UsersRound />, menuGroupCode: "EMPLOYEE", path: "/employee", },
         {
             label: "Backlog Module", icon: <LayoutTemplate />, menuGroupCode: "BACKLOG",
