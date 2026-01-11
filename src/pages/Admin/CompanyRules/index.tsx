@@ -38,6 +38,7 @@ export function CompanyRulesList() {
   const { description, onConfirm, closeDialog } = useSuccessDialogStore();
 
   const { user } = useAuthStore();
+
   const permissions = user?.menuTree?.menuTree
     .find(mg => mg.menuGroupCode === "COMPANY_RULES")?.childMenus?.[0]?.permissions ?? [];
   

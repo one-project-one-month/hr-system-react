@@ -313,6 +313,7 @@ const { open, description, onConfirm, closeDialog, openDialog } =
     setSaving(true);
     try {
       await roleMenuPermissionService.savePermissions(newPermissions);
+      console.log (newPermissions)
       openDialog("Save menu permissions successful!", onConfirm);
     } catch (err) {
       setError(err.message);

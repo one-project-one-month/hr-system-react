@@ -36,6 +36,10 @@ export default function Location() {
   const navigate = useNavigate();
   const { data, loading, error } = useDataStore();
 
+  const menuGroup = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "LOCATION")?.childMenus
+    .find(mg => mg.menuItemCode === "LOCATION")
+
   // Search state
   const { user } = useAuthStore()
   const [exporting, setExporting] = useState(false)
@@ -55,9 +59,8 @@ export default function Location() {
   const loadLocations = async () => {
     try {
       await LocationService.fetchLocations(searchInput, currentPage, rowsPerPage);
-      console.log (data)
-    }catch (error)
-    {
+      console.log(data)
+    } catch (error) {
       throw error
     }
   };
@@ -153,11 +156,11 @@ export default function Location() {
   };
 
   const handleExport = async (exportType: exportType) => {
-    
-   user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin") 
-        || user.roleName.toLowerCase().includes("hr") 
-          ? exportType.type = "admin"
-          :exportType.type = "employee"
+
+    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin")
+      || user.roleName.toLowerCase().includes("hr")
+      ? exportType.type = "admin"
+      : exportType.type = "employee"
 
     if (!exportType.from || !exportType.to) return;
 
@@ -186,10 +189,11 @@ export default function Location() {
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     const t = setTimeout(() => setDebouncedSearch(searchInput), 300);
     return () => clearTimeout(t);
   }, [searchInput]);
+
   return (
     <div className="p-6 w-full flex-1 bg-[#f0f3f1]">
       <div className="flex justify-between flex-col md:flex-row mb-4">
@@ -205,9 +209,9 @@ export default function Location() {
               placeholder="Search by location name..."
               value={searchInput}
               onInput={(e) => {
-              setSearchInput(e.target.value);
-              setCurrentPage(1);
-            }}/>
+                setSearchInput(e.target.value);
+                setCurrentPage(1);
+              }} />
             {searchInput ? (
               <CircleX
                 onClick={() => setSearchInput("")}
@@ -216,7 +220,7 @@ export default function Location() {
             ) : (
               ""
             )}
-           
+
           </div>
 
           {/* buttons */}
@@ -276,22 +280,25 @@ export default function Location() {
                 <TableCell>{location.radius}</TableCell>
 
                 <TableCell className="flex justify-center">
-                  <Edit
-                    className="text-emerald-500 cursor-pointer hover:text-emerald-700 mr-4"
-                    size={22}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      goToEditForm(location.locationCode);
-                    }}
-                  />
-                  <Trash2
-                    className="text-red-500 cursor-pointer hover:text-red-700"
-                    size={22}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openDeleteDialog(location.locationCode);
-                    }}
-                  />
+                  { menuGroup && menuGroup?.permissions.includes("UPDATE") &&
+                    <Edit
+                      className="text-emerald-500 cursor-pointer hover:text-emerald-700 mr-4"
+                      size={22}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        goToEditForm(location.locationCode);
+                      }}
+                    />}
+                  { menuGroup && menuGroup?.permissions.includes("DELETE") &&
+                    <Trash2
+                      className="text-red-500 cursor-pointer hover:text-red-700"
+                      size={22}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(location.locationCode);
+                      }}
+                    />
+                    }
                 </TableCell>
               </TableRow>
             ))}

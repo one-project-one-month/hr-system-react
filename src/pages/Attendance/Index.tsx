@@ -50,14 +50,18 @@ import { ExportDateDialog } from "@/components/ui/custom/export-date-dialog";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useDataStore } from "@/stores/useDataStore";
 import { exportReport } from "@/services/reportService";
+import type { exportType } from "@/types/excelExport";
 
 export function AttendanceList() {
   const navigate = useNavigate()
   const { error } = useDataStore()
   const { user } = useAuthStore()
+
   const menuGroup = user?.menuTree?.menuTree
     .find(mg => mg.menuGroupCode === "ATTENDANCE")?.childMenus
     .find(mg => mg.menuItemCode === "ATTENDANCE")
+
+  console.log (menuGroup)
 
   const [attendanceList, setAttendanceList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -165,15 +169,22 @@ export function AttendanceList() {
       setLoading(true);
       await attendanceService.deleteAttendanceRecord(attendanceToDelete);
       // Refresh list with current paging
-      const data = await attendanceService.fetchAttendanceRecords(searchName, date, currentPage, rowsPerPage);
+      const data = await attendanceService
+        .fetchAttendanceRecords(searchName, date, currentPage, rowsPerPage);
+
       setAttendanceList(data);
       openDialog("Delete Attendance successful!", onConfirm);
+
     } catch (error) {
+
       console.log(error);
+
     } finally {
+
       setLoading(false);
       setDeleteDialogOpen(false);
       setAttendanceToDelete("");
+
     }
   };
 
@@ -183,11 +194,11 @@ export function AttendanceList() {
   };
 
   const handleExport = async (exportType: exportType) => {
-    
-    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin") 
-        || user.roleName.toLowerCase().includes("hr") 
-          ? exportType.type = "admin"
-          :exportType.type = "employee"
+
+    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin")
+      || user.roleName.toLowerCase().includes("hr")
+      ? exportType.type = "admin"
+      : exportType.type = "employee"
 
     if (!exportType.from || !exportType.to) return;
 
@@ -208,7 +219,10 @@ export function AttendanceList() {
 
     try {
       setExporting(true)
-      const { blob, contentDisposition } = await exportReport(requestPayload);
+      const {
+        blob,
+        contentDisposition
+      } = await exportReport(requestPayload);
       downloadFile(blob, contentDisposition);
       setExporting(false)
     } catch (err) {
@@ -334,14 +348,19 @@ export function AttendanceList() {
                     <TableCell>{user.status}</TableCell>
 
                     <TableCell className="flex justify-center gap-2">
-                      { menuGroup && menuGroup?.permissions.includes("UPDATE") && <Edit
-                        className="text-primary-500 cursor-pointer"
-                        onClick={(e) => updateAttendance(e, user.attendanceCode)}
-                      /> }
-                      { menuGroup && menuGroup?.permissions.includes("DELETE") && <Trash2
-                        className="text-error-400 cursor-pointer"
-                        onClick={(e) => handleDelete(e, user.attendanceCode)}
-                      />}
+                      {
+                        menuGroup && menuGroup?.permissions.includes("UPDATE") &&
+                        <Edit
+                          className="text-primary-500 cursor-pointer"
+                          onClick={(e) => updateAttendance(e, user.attendanceCode)}
+                        />}
+                      {
+                        menuGroup && menuGroup?.permissions.includes("DELETE") && 
+                        <Trash2
+                          className="text-error-400 cursor-pointer"
+                          onClick={(e) => handleDelete(e, user.attendanceCode)}
+                        />
+                      }
                     </TableCell>
                   </TableRow>
                 ))
