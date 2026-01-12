@@ -153,10 +153,10 @@ export default function () {
                         <div className="relative me-4">
                             <select
                                 className="
-                p-2 pr-8 bg-primary-50 text-primary-600 rounded 
-                focus:outline-none focus:ring-2 focus:ring-primary-300
-                appearance-none cursor-pointer
-              "
+                                    p-2 pr-8 bg-primary-50 text-primary-600 rounded 
+                                    focus:outline-none focus:ring-2 focus:ring-primary-300
+                                    appearance-none cursor-pointer
+                                "
                                 onChange={(e) =>
                                     setDataView(Number(e.target.value))
                                 }

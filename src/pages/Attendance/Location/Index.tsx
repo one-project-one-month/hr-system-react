@@ -35,13 +35,12 @@ import { useAuthStore } from "@/stores/useAuthStore";
 export default function Location() {
   const navigate = useNavigate();
   const { data, loading, error } = useDataStore();
-
+  const { user } = useAuthStore()
   const menuGroup = user?.menuTree?.menuTree
     .find(mg => mg.menuGroupCode === "LOCATION")?.childMenus
     .find(mg => mg.menuItemCode === "LOCATION")
 
   // Search state
-  const { user } = useAuthStore()
   const [exporting, setExporting] = useState(false)
   const [open, setOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");

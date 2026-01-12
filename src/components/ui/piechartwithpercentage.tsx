@@ -1,4 +1,6 @@
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
+import { projectService } from "@/services/projectService";
+import { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
 const DEFAULT_COLORS = [
@@ -9,14 +11,35 @@ const DEFAULT_COLORS = [
   "#A78BFA", // violet-400
 ];
 
+type projectOverview = {
+  percentage: number;
+  projectStatus: string;
+  statusCount: number;
+}
+
+
 export default function PieChartWithPercentage({
   data = [
-    { name: "Completed Project", value: 300 },
     { name: "Ongoing Project", value: 125 },
     { name: "Pending", value: 50 },
   ],
   colors = DEFAULT_COLORS,
 }) {
+  const [projectOverview, setProjectOverview] = useState()
+
+  const fetchProjectOverview = async () => {
+    const response = await projectService.fetchProjectOverview()
+    const formattedData = response.map((item) => ({
+      name: item.projectStatus,
+      value: item.percentage, // or item.statusCount
+    }));
+
+    setProjectOverview(formattedData)
+  }
+
+  useEffect(() => {
+    fetchProjectOverview()
+  }, [])
   return (
     <Card className="w-full bg-natural-50 border-none py-0 gap-2">
       <div className="flex justify-between pt-3 px-2">
@@ -31,7 +54,7 @@ export default function PieChartWithPercentage({
           <ResponsiveContainer width="90%" height="100%">
             <PieChart>
               <Pie
-                data={data}
+                data={projectOverview}
                 dataKey="value"
                 nameKey="name"
                 cx="40%"

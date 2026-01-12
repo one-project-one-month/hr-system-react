@@ -16,6 +16,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
 
     const leaveRoutes = {
         Employee: "/leave/employee",
+        Administrator: "/leave/hr",
         HR: "/leave/hr",
         "HR Specialist": "/leave/hr",
     };

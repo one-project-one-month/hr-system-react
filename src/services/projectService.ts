@@ -93,4 +93,12 @@ export const projectService = {
 
     return asApi<boolean>(useDataStore.getState().data as unknown);
   },
+
+  fetchProjectOverview: async () => {
+    await useDataStore.getState().fetchData({
+      endPoint: `/Project/overview`,
+      method: "GET",
+    });
+    return asApi<boolean>(useDataStore.getState().data.data.projectOverview ?? null);
+  }
 };
