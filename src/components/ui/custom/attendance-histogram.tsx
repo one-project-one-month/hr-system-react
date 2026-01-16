@@ -40,9 +40,9 @@ type Props = {
 
 export function AttendanceHistogram({ yearOptions }: Props) {
   const [attendanceData, setAttendanceData] = useState<AttendanceApiData[]>()
-  const [year, setYear] = useState(yearOptions[0])
+  const currentYear = new Date().getFullYear();
+  const [year, setYear] = useState( yearOptions.includes(currentYear) ? currentYear : yearOptions[0])
   const { user } = useAuthStore()
-
   useEffect(() => {
     (async () => {
       try {
