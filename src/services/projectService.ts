@@ -25,6 +25,25 @@ export const projectService = {
     return asApi<ListData>(useDataStore.getState().data as unknown);
   },
 
+  fetchProjectsByCode: async (
+    empCode:string | undefined,
+    params: ListParams,
+    headers?: Record<string, string>
+  ): Promise<ApiEnvelope<ListData>> => {
+    const qs = new URLSearchParams({
+      pageNo: String(params.pageNo),
+      pageSize: String(params.pageSize),
+      ...(params.search ? { ProjectName: params.search } : {}),
+    }).toString();
+
+    await useDataStore.getState().fetchData({
+      endPoint: `/Project/list/${empCode}?${qs}`,
+      headers,
+    });
+
+    return asApi<ListData>(useDataStore.getState().data as unknown);
+  },
+
   // GET /Project/edit/:code
   fetchProjectById: async (
     code: string,

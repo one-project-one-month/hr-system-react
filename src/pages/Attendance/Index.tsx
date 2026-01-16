@@ -102,6 +102,7 @@ export function AttendanceList() {
   useEffect(() => {
     const loadData = async () => {
       try {
+        console.log (user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase())
         setLoading(true);
         if (user?.roleName !== 'Administrator'
           && !user?.roleName.toLocaleLowerCase().includes('hr')) {
@@ -282,11 +283,12 @@ export function AttendanceList() {
                   numberOfMonths={2}
                 />
               </PopoverContent>
+              
             </Popover>
           </div>
           {
-            user?.roleName === 'Administrator'
-            && user?.roleName.toLocaleLowerCase().includes('hr') &&
+            (user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+            || user?.roleName.toLocaleLowerCase().includes('hr')) &&
             (<div className="relative w-full md:w-[300px] text-primary-800">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
               <Input

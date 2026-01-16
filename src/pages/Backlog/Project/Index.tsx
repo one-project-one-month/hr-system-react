@@ -107,7 +107,14 @@ export default function ProjectListing() {
     setLoading(true);
     setError(null);
     try {
-      const res = await projectService.fetchProjects(listParams);
+      let res;
+      if (user?.roleName !== 'Administrator'
+        && !user?.roleName.toLocaleLowerCase().includes('hr')) {
+        res = await projectService.fetchProjectsByCode(user?.employeeCode, listParams)
+      }
+      else {
+        res = await projectService.fetchProjects(listParams);
+      }
 
       // unwrap flexible envelope or raw payload
       const payload: ListData | undefined = isApiEnvelope<ListData>(res)
@@ -183,10 +190,10 @@ export default function ProjectListing() {
   };
 
   const handleExport = async (exportType: exportType) => {
-    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin") 
-        || user.roleName.toLowerCase().includes("hr") 
-          ? exportType.type = "admin"
-          :exportType.type = "employee"
+    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin")
+      || user.roleName.toLowerCase().includes("hr")
+      ? exportType.type = "admin"
+      : exportType.type = "employee"
 
     if (!exportType.from || !exportType.to) return;
 
@@ -219,7 +226,8 @@ export default function ProjectListing() {
   return (
     <div className="p-6 w-full flex-1">
       {/* Header row */}
-      <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
+      {(user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+            || user?.roleName.toLocaleLowerCase().includes('hr')) && (<div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
         <p className="page-title">Project Listing</p>
         <div className="relative w-full md:w-[500px] text-primary-800 flex items-center justify-center">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
@@ -237,7 +245,7 @@ export default function ProjectListing() {
 
         <Button
           className="primary-btn cursor-pointer w-full md:w-auto"
-          onClick={() =>setOpen(true)}
+          onClick={() => setOpen(true)}
         >
           Export
         </Button>
@@ -264,7 +272,7 @@ export default function ProjectListing() {
             Remove Employee
           </Button>
         </Link>
-      </div>
+      </div>)}
 
       {/* Table */}
       <Table className="w-full overflow-auto shadow-sm rounded-md">
