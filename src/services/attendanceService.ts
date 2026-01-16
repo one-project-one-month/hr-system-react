@@ -22,6 +22,23 @@ export const attendanceService = {
     return useDataStore.getState().data?.data?.attendanceList ?? [];
   },
 
+  fetchByCode: async (empCode: string = "", date: dateFilter, pageNo: number = 1, pageSize: number = 100) => {
+    const param = new URLSearchParams({
+      "pageNo": pageNo.toString(),
+      "pageSize": pageSize.toString()
+    })
+
+    if (date.from && date.to) {
+      param.append("startDate", date.from.toDateString())
+      param.append("endDate", date.to.toDateString())
+    }
+
+    await useDataStore.getState().fetchData({
+      endPoint: `/Attendance/AttendanceList/${empCode}?${param.toString()}`,
+    });
+    return useDataStore.getState().data?.data?.attendanceList ?? [];
+  },
+
   createAttendanceRecord: async (data: any) => {
     await useDataStore.getState().fetchData({
       endPoint: `/Attendance/AttendanceCreate`,

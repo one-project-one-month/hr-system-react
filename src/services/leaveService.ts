@@ -79,4 +79,8 @@ export const leaveService = {
       endPoint: `/Leave/edit/${leaveCode}`,
     });
   },
+
+  getLeaveBalance: async () => {
+    
+  }
 };

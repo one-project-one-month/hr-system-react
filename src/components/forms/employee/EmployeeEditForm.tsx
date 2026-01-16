@@ -43,32 +43,36 @@ export default function EmployeeForm() {
   };
 
   const employeeSchema = z.object({
-    // employeeCode: z
-    //   .string()
-    //   .min(1, "EmployeeCode is required")
-    //   .max(15, "EmployeeCode must be at most 15 characters"),
     username: z
       .string()
       .min(3, "Username must be at least 3 characters")
-      .max(30, "Username must be at most 30 characters"),
+      .max(30, "Username must be at most 30 characters")
+      .trim(),
     salary: z
       .number()
       .positive("Salary must be a positive number")
       .max(10000000, "Salary too high"),
-    name: z.string().min(2, "Name is required").max(60, "Name too long"),
-    roleCode: z.string(),
-    email: z.string().email("Invalid email address"),
+    name: z.string().min(2, "Name is required").max(60, "Name too long").trim(),
+    roleCode: z.string().trim(),
+    email: z.string().email("Invalid email address").trim(),
     phoneNo: z
       .string()
-      .regex(/^[0-9]{9,11}$/, "Invalid phone number (must be 9–11 digits)"),
+      .transform((val) => val.replace(/[\s-]/g, ""))
+      .refine(
+        (val) =>
+          /^(09\d{7,9}|\+959\d{7,9})$/.test(val),
+        "Invalid Myanmar phone number"
+      ),
     startDate: z
       .string()
+      .trim()
       .refine(
         (val) => !isNaN(Date.parse(val)),
         "StartDate must be a valid date"
       ),
     resignDate: z
       .string()
+      .trim()
       .optional()
       .nullable()
       .refine(
@@ -139,6 +143,7 @@ export default function EmployeeForm() {
         ? new Date(values.resignDate).toISOString()
         : null,
     };
+    console.log(employeeData)
     try {
       if (code) {
         await EmployeeService.updateEmployee(code, employeeData);
@@ -168,19 +173,6 @@ export default function EmployeeForm() {
           className="space-y-3"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5  ">
-            {/* <FormField
-              control={form.control}
-              name="employeeCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Employee Code</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Employee Code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
 
             <FormField
               control={form.control}

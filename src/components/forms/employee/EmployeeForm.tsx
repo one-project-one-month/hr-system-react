@@ -264,22 +264,23 @@ export default function EmployeeForm() {
                                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                                     {field.value
                                                         ? format(
-                                                              new Date(
-                                                                  field.value
-                                                              ),
-                                                              "PPP"
-                                                          )
+                                                            new Date(
+                                                                field.value
+                                                            ),
+                                                            "PPP"
+                                                        )
                                                         : "Pick a date"}
                                                 </Button>
                                             </PopoverTrigger>
                                             <PopoverContent className="w-auto p-0 bg-white ">
                                                 <Calendar
+                                                    captionLayout="dropdown"
                                                     mode="single"
                                                     selected={
                                                         field.value
                                                             ? new Date(
-                                                                  field.value
-                                                              )
+                                                                field.value
+                                                            )
                                                             : undefined
                                                     }
                                                     onSelect={(date) =>
@@ -290,6 +291,9 @@ export default function EmployeeForm() {
                                                         )
                                                     }
                                                     initialFocus
+                                                    fromYear={2000}
+                                                    toYear={new Date().getFullYear() + 10}
+
                                                 />
                                             </PopoverContent>
                                         </Popover>
@@ -315,11 +319,11 @@ export default function EmployeeForm() {
                                                     <CalendarIcon className="mr-2 h-4 w-4" />
                                                     {field.value
                                                         ? format(
-                                                              new Date(
-                                                                  field.value
-                                                              ),
-                                                              "PPP"
-                                                          )
+                                                            new Date(
+                                                                field.value
+                                                            ),
+                                                            "PPP"
+                                                        )
                                                         : "Pick a date"}
                                                 </Button>
                                             </PopoverTrigger>
@@ -329,8 +333,8 @@ export default function EmployeeForm() {
                                                     selected={
                                                         field.value
                                                             ? new Date(
-                                                                  field.value
-                                                              )
+                                                                field.value
+                                                            )
                                                             : undefined
                                                     }
                                                     onSelect={(date) =>

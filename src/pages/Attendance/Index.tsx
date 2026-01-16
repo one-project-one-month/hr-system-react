@@ -61,7 +61,7 @@ export function AttendanceList() {
     .find(mg => mg.menuGroupCode === "ATTENDANCE")?.childMenus
     .find(mg => mg.menuItemCode === "ATTENDANCE")
 
-  console.log (menuGroup)
+  console.log(user)
 
   const [attendanceList, setAttendanceList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -103,6 +103,18 @@ export function AttendanceList() {
     const loadData = async () => {
       try {
         setLoading(true);
+        if (user?.roleName !== 'Administrator'
+          && !user?.roleName.toLocaleLowerCase().includes('hr')) {
+          const data = await attendanceService.fetchByCode(
+            user?.employeeCode,
+            date,
+            currentPage,
+            rowsPerPage
+          );
+          setAttendanceList(data);
+          return
+        }
+
         const data = await attendanceService.fetchAttendanceRecords(
           searchName,
           date,
@@ -355,7 +367,7 @@ export function AttendanceList() {
                           onClick={(e) => updateAttendance(e, user.attendanceCode)}
                         />}
                       {
-                        menuGroup && menuGroup?.permissions.includes("DELETE") && 
+                        menuGroup && menuGroup?.permissions.includes("DELETE") &&
                         <Trash2
                           className="text-error-400 cursor-pointer"
                           onClick={(e) => handleDelete(e, user.attendanceCode)}
