@@ -284,24 +284,27 @@ export function AttendanceList() {
               </PopoverContent>
             </Popover>
           </div>
-          <div className="relative w-full md:w-[300px] text-primary-800">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
-            <Input
-              type="text"
-              value={searchName}
-              placeholder="Search..."
-              onInput={(e) => setSearchName(e.target.value)}
-              className="border-primary-700 bg-natural-50 focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9 text-primary-400"
-            />
-            {searchName ? (
-              <CircleX
-                onClick={() => setSearchName("")}
-                className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4"
+          {
+            user?.roleName === 'Administrator'
+            && user?.roleName.toLocaleLowerCase().includes('hr') &&
+            (<div className="relative w-full md:w-[300px] text-primary-800">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
+              <Input
+                type="text"
+                value={searchName}
+                placeholder="Search..."
+                onInput={(e) => setSearchName(e.target.value)}
+                className="border-primary-700 bg-natural-50 focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9 text-primary-400"
               />
-            ) : (
-              ""
-            )}
-          </div>
+              {searchName ? (
+                <CircleX
+                  onClick={() => setSearchName("")}
+                  className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4"
+                />
+              ) : (
+                ""
+              )}
+            </div>)}
           {/* buttons */}
           <Button className="primary-btn w-full md:w-auto" onClick={() => setOpenExport(true)}>
             <FileUp />
