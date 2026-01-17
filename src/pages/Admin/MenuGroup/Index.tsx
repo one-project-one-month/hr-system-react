@@ -176,7 +176,7 @@ export default function MenuGroupList() {
               />
             </div>
 
-            {permissions && permissions.includes("CREATE") &&<Button asChild className="bg-primary-500 text-white w-full md:w-auto">
+            {permissions && permissions.includes("CREATE") && <Button asChild className="bg-primary-500 text-white w-full md:w-auto">
               <Link to="/menu-group/create">
                 <Plus /> New
               </Link>
@@ -195,11 +195,10 @@ export default function MenuGroupList() {
                 </TableHead>
                 <TableHead className="text-center py-4">Url</TableHead>
                 <TableHead className="text-center py-4">Icon</TableHead>
-                <TableHead className="text-center py-4">Sort Order</TableHead>
                 <TableHead className="text-center py-4">
                   Has Menu Item
                 </TableHead>
-              {permissions.length && <TableHead className="text-center py-4">Action</TableHead>}
+                {permissions.length && <TableHead className="text-center py-4">Action</TableHead>}
               </TableRow>
             </TableHeader>
 
@@ -253,11 +252,6 @@ export default function MenuGroupList() {
 
                     {/* Icon */}
                     <TableCell className="text-center">{item.icon}</TableCell>
-
-                    {/* Sort Order */}
-                    <TableCell className="text-center">
-                      {item.sortOrder}
-                    </TableCell>
 
                     {/* Has Menu Item (checkbox) */}
                     <TableCell className="text-center">

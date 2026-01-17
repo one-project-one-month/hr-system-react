@@ -53,7 +53,7 @@ export function LeaveProgressBar() {
                             <span>{leave.leaveType}</span>
                             {leave.leaveType === 'LeaveWithoutPay' ? 
                             (<span className="text-gray-600">
-                                {leave.taken < 0 ?? 0 } days
+                                {leave.taken < 0 || 0 } days
                             </span>)
                             
                             :(<span className="text-gray-600">

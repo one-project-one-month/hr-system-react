@@ -14,9 +14,11 @@ import { useEffect, useState } from "react";
 export default function RoleForm() {
     const { onConfirm, openDialog } =
         useSuccessDialogStore();
-    const navigate = useNavigate()
+    
+        const navigate = useNavigate()
     const [error, setError] = useState("")
     const { code } = useParams()
+
     const form = useForm<z.infer<typeof roleSchema>>({
         resolver: zodResolver(roleSchema),
         defaultValues: {
@@ -46,9 +48,7 @@ export default function RoleForm() {
         }
     }
 
-    const handleCancel = () => {
-        navigate("/role")
-    }
+    const handleCancel = () => navigate("/role")
 
     useEffect(() => {
         (async () => {
@@ -117,7 +117,7 @@ export default function RoleForm() {
                                 type="submit"
                                 className="primary-btn"
                             >
-                                Create
+                                {code ? 'Update' : 'Create'}
                             </Button>
                         </div>
                     </form>

@@ -31,8 +31,7 @@ export function SidebarMenuItem({
   if (!hasPermission) return null;
 
   const isActive =
-    item.path && location.pathname.startsWith(item.path);
-
+    item.path && location.pathname === item.path;
   if (item.children) {
     return (
       <div className="w-full">
