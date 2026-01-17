@@ -85,7 +85,7 @@ export default function ForgotPassword() {
             <Button
               type="button"
               asChild
-              className="w-full h-11 text-sm text-[#020906] mb-10 flex items-center justify-center gap-3"
+              className="w-full h-11 text-sm primary-btn mb-10 flex items-center justify-center gap-3"
             >
               <Link to="/">
                 <MoveLeft /> <span>Back to Login</span>

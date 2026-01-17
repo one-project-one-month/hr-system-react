@@ -71,7 +71,7 @@ export default function OtpVerification() {
   async function handleVerify() {
     if (!canContinue) return;
     try {
-      console.log ({email , code })
+      console.log({ email, code })
       const resetToken = await verifyCode(email ?? "", code)
       const token = resetToken?.data?.resetToken;
       setSubmitting(true);
@@ -94,7 +94,7 @@ export default function OtpVerification() {
   }
 
   return (
-    <Card className="w-full max-w-md px-8 pt-14 pb-10 shadow-lg border-0 rounded-2xl bg-[#CED7D3] backdrop-blur">
+    <Card className="w-full max-w-md shadow-lg border-0 rounded-2xl bg-[#CED7D3] backdrop-blur">
       <CardHeader className="space-y-2 text-center">
         <CardTitle className="text-2xl text-black fw-semibold mb-0">
           OTP verification
@@ -114,13 +114,11 @@ export default function OtpVerification() {
 
       <CardContent className="py-4 space-y-6">
         {/* OTP boxes */}
-        <div className="flex justify-center gap-3">
+        <div className="flex justify-center gap-2 sm:gap-3">
           {otp.map((val, i) => (
             <input
               key={i}
-              ref={(el) => {
-                inputsRef.current[i] = el;
-              }}
+              ref={(el) => (inputsRef.current[i] = el)}
               inputMode="numeric"
               pattern="[0-9]*"
               maxLength={1}
@@ -128,17 +126,16 @@ export default function OtpVerification() {
               onChange={(e) => handleChange(i, e.target.value)}
               onKeyDown={(e) => handleKeyDown(i, e)}
               onPaste={handlePaste}
-              className="h-12 w-12 rounded-md text-center text-lg font-medium
-                         bg-[#929996] text-[#FAFBFB] border border-transparent
-                         focus-visible:ring-0 focus-visible:border-transparent focus-visible:outline-none "
+              className="h-11 w-10 sm:h-12 sm:w-12 rounded-md text-center text-lg font-medium
+                 bg-[#929996] text-[#FAFBFB] border border-transparent
+                 focus-visible:ring-0 focus-visible:border-transparent focus-visible:outline-none"
             />
           ))}
         </div>
         {error && (
           <p
-            className={`text-sm text-red-600 text-center ${
-              error ? "opacity-100" : "opacity-0"
-            }`}
+            className={`text-sm text-red-600 text-center ${error ? "opacity-100" : "opacity-0"
+              }`}
           >
             {error || "placeholder"}
           </p>
@@ -170,7 +167,7 @@ export default function OtpVerification() {
         <Button
           type="button"
           asChild
-          className="w-full h-11 text-sm text-[#020906] flex items-center justify-center gap-3"
+          className="w-full h-11 text-sm primary-btn flex items-center justify-center gap-3"
         >
           <Link to="/">
             <MoveLeft />
