@@ -30,3 +30,10 @@ export interface BacklogFormProps {
     onSubmit: (values: z.infer<typeof formSchema>) => void;
     onCancel: () => void;
 }
+
+
+export interface ListFilter {
+    name: string;
+    pageNo: number;
+    pageSize: number;
+}

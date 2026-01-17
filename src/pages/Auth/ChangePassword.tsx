@@ -20,6 +20,7 @@ export default function ResetPassword() {
   const [pwd, setPwd] = useState("");
   const [cpwd, setCpwd] = useState("");
   const [show, setShow] = useState(false);
+  const [oldShow, setOldShow] = useState(false)
   const [cshow, setCshow] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +60,7 @@ export default function ResetPassword() {
               <div className="relative">
                 <Input
                   id="oldPassword"
-                  type={show ? "text" : "password"}
+                  type={oldShow ? "text" : "password"}
                   placeholder="Enter your Old password"
                   value={oldPswd}
                   onChange={(e) => setOldPwd(e.target.value)}
@@ -67,11 +68,11 @@ export default function ResetPassword() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShow((s) => !s)}
+                  onClick={() => setOldShow((s) => !s)}
                   className="absolute inset-y-0 right-2 flex items-center text-[#575A59]"
-                  aria-label={show ? "Hide password" : "Show password"}
+                  aria-label={oldShow ? "Hide password" : "Show password"}
                 >
-                  {show ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {oldShow ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               {pwdInvalid && (
@@ -101,7 +102,7 @@ export default function ResetPassword() {
                   className="absolute inset-y-0 right-2 flex items-center text-[#575A59]"
                   aria-label={show ? "Hide password" : "Show password"}
                 >
-                  {show ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {show ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               {pwdInvalid && (
@@ -132,7 +133,7 @@ export default function ResetPassword() {
                   className="absolute inset-y-0 right-2 flex items-center text-[#575A59]"
                   aria-label={cshow ? "Hide password" : "Show password"}
                 >
-                  {cshow ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {cshow ? <Eye size={18} /> : <EyeOff size={18} />}
                 </button>
               </div>
               {matchInvalid && (

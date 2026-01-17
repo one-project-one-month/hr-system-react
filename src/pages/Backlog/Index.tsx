@@ -45,8 +45,8 @@ export default function BacklogList() {
   const navigate = useNavigate();
 
   const menuGroup = user?.menuTree?.menuTree
-    .find(mg => mg.menuGroupCode === "ATTENDANCE")?.childMenus
-    .find(mg => mg.menuItemCode === "ATTENDANCE")
+    .find(mg => mg.menuGroupCode === "BACKLOG")?.childMenus
+    .find(mg => mg.menuItemCode === "BACKLOG")
 
   const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
   const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
@@ -137,7 +137,6 @@ export default function BacklogList() {
       const result = await backlogService.deleteTask(taskToDelete);
 
       if (result.isSuccess) {
-        // Refetch the latest list
         const updatedData = await backlogService.fetchTasks(
           debouncedSearch,
           currentPage,
@@ -174,13 +173,26 @@ export default function BacklogList() {
     const loadData = async () => {
       setLoading(true);
       try {
+
+        if (!ADMIN_HR) {
+          const result = await backlogService.fetchByEmpCode(user?.employeeCode ?? "",
+            {
+              name: searchTaskName,
+              pageNo: currentPage,
+              pageSize: rowsPerPage
+            }
+          );
+          setTasks(result.data?.tasks ?? []);
+          return
+        }
+
         const result = await backlogService.fetchTasks(
           debouncedSearch,
           currentPage,
           rowsPerPage
         );
-        // FIX: Access tasks from result.data.tasks
         setTasks(result.data?.tasks ?? []);
+
       } catch (error) {
         console.error("Error loading tasks:", error);
         console.error("Error details:", error.response?.data);
@@ -269,8 +281,8 @@ export default function BacklogList() {
                   {task.projectName || task.projectCode || "—"}
                 </TableCell>
 
-                {(CANUPDATE || CANDELETE ) && (<TableCell className="flex gap-2">
-                  { CANUPDATE && (<Edit
+                {(CANUPDATE || CANDELETE) && (<TableCell className="flex gap-2">
+                  {CANUPDATE && (<Edit
                     className="text-primary-500 cursor-pointer"
                     onClick={(e) => handleEdit(e, task.taskId)}
                   />)}

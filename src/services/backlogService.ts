@@ -1,4 +1,5 @@
 import { useDataStore } from "@/stores/useDataStore";
+import type { ListFilter } from "@/types/backlog";
 
 export const backlogService = {
   fetchTasks: async (name: string = "", pageNo: number, pageSize: number) => {
@@ -16,7 +17,21 @@ export const backlogService = {
     });
     return useDataStore.getState().data ?? {};
   },
+  fetchByEmpCode: async (empCode:string, listFilter: ListFilter) => {
+    const params = new URLSearchParams({
+      pageNo: listFilter.pageNo.toString(),
+      PageSize: listFilter.pageSize.toString(),
+    });
 
+    if (listFilter.name) {
+      params.append("TaskName", listFilter.name);
+    }
+
+    await useDataStore.getState().fetchData({
+      endPoint: `/Task/list/${empCode}?${params.toString()}`,
+    });
+    return useDataStore.getState().data ?? {};
+  },
 
   deleteTask: async (taskId: number) => {
     await useDataStore.getState().fetchData({
@@ -32,6 +47,7 @@ export const backlogService = {
     });
     return useDataStore.getState().data ?? { isSuccess: false, data: null };
   },
+  
   fetchEmployees: async (pageNo = 1, pageSize = 100) => {
     await useDataStore.getState().fetchData({
       endPoint: `/Employee/list?pageNo=${pageNo}&pageSize=${pageSize}`,
