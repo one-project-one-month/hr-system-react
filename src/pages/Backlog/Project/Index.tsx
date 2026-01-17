@@ -234,8 +234,7 @@ export default function ProjectListing() {
   return (
     <div className="p-6 w-full flex-1">
       {/* Header row */}
-      {(user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
-        || user?.roleName.toLocaleLowerCase().includes('hr')) && (<div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
+      {(ADMIN_HR) && (<div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
           <p className="page-title">Project Listing</p>
           <div className="relative w-full md:w-[500px] text-primary-800 flex items-center justify-center">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
