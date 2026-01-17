@@ -52,7 +52,8 @@ export default function BacklogList() {
   const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
   const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
 
-  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+  const ADMIN_HR = (user?.roleName && user?.roleName.toLocaleLowerCase() === 'admin' 
+    || user?.roleName.toLocaleLowerCase() === "administrator")
     || user?.roleName.toLocaleLowerCase().includes('hr')
 
   const [tasks, setTasks] = useState([]);

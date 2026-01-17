@@ -65,7 +65,8 @@ export function AttendanceList() {
   const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
   const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
 
-  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase() 
+    || user?.roleName.toLocaleLowerCase() === 'admin'.toLocaleLowerCase()
     || user?.roleName.toLocaleLowerCase().includes('hr')
 
   const [attendanceList, setAttendanceList] = useState([]);

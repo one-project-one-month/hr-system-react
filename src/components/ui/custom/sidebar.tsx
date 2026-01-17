@@ -9,6 +9,8 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
     const menuPermissions = authStore.user?.menuTree?.menuTree;
     const dashboardRoutes = {
         Administrator: "/admin/dashboard",
+        admin: "/admin/dashboard",
+        Admin: "/admin/dashboard",
         "HR Specialist": "/hr/dashboard",
         "HR": "/hr/dashboard",
         Employee: "/employee/dashboard",
@@ -16,6 +18,8 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
 
     const leaveRoutes = {
         Employee: "/leave/employee",
+        admin: "/leav/hr",
+        Admin: "/leav/hr",
         Administrator: "/leave/hr",
         HR: "/leave/hr",
         "HR Specialist": "/leave/hr",
@@ -24,6 +28,8 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
     const payrollRoutes = {
         Employee: "/payroll",
         Administrator: "/payrollSummary",
+        admin: "/payrollSummary",
+        Admin: "/payrollSummary",
         "HR Specialist": "/payrollSummary",
         "HR": "/payrollSummary",
         "HR Manager": "/payrollSummary"

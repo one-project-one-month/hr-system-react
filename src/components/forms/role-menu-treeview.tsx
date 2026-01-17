@@ -124,12 +124,12 @@ const ParentMenu = ({
       (mp.menuGroupCode === menuGroup.menuGroupCode && mp.isChecked)
   );
 
-  
-  
+
+
   const hasChildMenus = menuGroup.childMenus?.length > 0;
   const isOpen = openMenuGroup === menuGroup.menuGroupCode;
-  
-  
+
+
   // Filter permissions for special groups
   const getPermissionsForGroup = () => {
     if (hasChildMenus && menuGroup.menuGroupCode !== 'COMPANY_RULES') return []; // Handled by child menus
@@ -222,25 +222,25 @@ const ParentMenu = ({
           </div>
         )}
 
-        {hasChildMenus 
-          && menuGroup.menuGroupCode === 'COMPANY_RULES' 
-          && isOpen 
+        {hasChildMenus
+          && menuGroup.menuGroupCode === 'COMPANY_RULES'
+          && isOpen
           && (
-          <div className="flex gap-2 ms-6 mt-1">
-            {groupPermissions.map((p) => {
-              return (
-                <PermissionCheckbox
-                  key={p.permissionCode}
-                  menuItemCode={null}
-                  menuGroupCode={menuGroup.menuGroupCode}
-                  permissionCode={p.permissionCode}
-                  newPermissions={newPermissions}
-                  togglePermission={togglePermission}
-                />
-              );
-            })}
-          </div>
-        )}
+            <div className="flex gap-2 ms-6 mt-1">
+              {groupPermissions.map((p) => {
+                return (
+                  <PermissionCheckbox
+                    key={p.permissionCode}
+                    menuItemCode={null}
+                    menuGroupCode={menuGroup.menuGroupCode}
+                    permissionCode={p.permissionCode}
+                    newPermissions={newPermissions}
+                    togglePermission={togglePermission}
+                  />
+                );
+              })}
+            </div>
+          )}
       </div>
     </div>
   );
@@ -248,7 +248,7 @@ const ParentMenu = ({
 
 // --------------------- Main Component ---------------------
 export default function RoleMenuPermissionPanel() {
-const { open, description, onConfirm, closeDialog, openDialog } =
+  const { open, description, onConfirm, closeDialog, openDialog } =
     useSuccessDialogStore();
   const [roleMenuPermission, setRoleMenuPermission] = useState<any[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
@@ -313,7 +313,7 @@ const { open, description, onConfirm, closeDialog, openDialog } =
     setSaving(true);
     try {
       await roleMenuPermissionService.savePermissions(newPermissions);
-      console.log (newPermissions)
+      console.log(newPermissions)
       openDialog("Save menu permissions successful!", onConfirm);
     } catch (err) {
       setError(err.message);
@@ -465,11 +465,11 @@ const { open, description, onConfirm, closeDialog, openDialog } =
         </div>
       </div>
       <SuccessDialog
-              open={open}
-              onOpenChange={closeDialog}
-              onConfirm={handleSuccessConfirm}
-              description={description}
-            />
+        open={open}
+        onOpenChange={closeDialog}
+        onConfirm={handleSuccessConfirm}
+        description={description}
+      />
     </div>
   );
 }

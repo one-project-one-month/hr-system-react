@@ -29,7 +29,6 @@ export default function LeaveList() {
   const [leaves, setLeaves] = useState<Leave[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectLeave, setSelectLeaveType] = useState("")
-  const [status, setStatus] = useState("")
   const [debouncedFilters, setDebouncedFilters] = useState({
       LeaveType: "",
       Query: "",

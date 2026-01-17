@@ -45,6 +45,7 @@ export default function Location() {
   const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
 
   const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+    || user?.roleName.toLocaleLowerCase() === 'admin'.toLocaleLowerCase()
     || user?.roleName.toLocaleLowerCase().includes('hr')
 
   // Search state

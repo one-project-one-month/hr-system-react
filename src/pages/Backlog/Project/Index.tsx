@@ -63,10 +63,10 @@ export default function ProjectListing() {
     .find(mg => mg.menuItemCode === "PROJECT")
 
   const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
-  const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
   const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
 
-  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+  const ADMIN_HR = (user?.roleName && user?.roleName.toLocaleLowerCase() === 'admin' 
+    || user?.roleName.toLocaleLowerCase() === "administrator")
     || user?.roleName.toLocaleLowerCase().includes('hr')
   // UI state
   const [searchTerm, setSearchTerm] = useState("");
