@@ -108,9 +108,8 @@ export function AttendanceList() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        console.log(user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase())
         setLoading(true);
-        if (user?.roleName !== 'Administrator'
+        if ((user?.roleName.toLocaleLowerCase() !== 'administrator' || user?.roleName.toLocaleLowerCase() !== 'admin')
           && !user?.roleName.toLocaleLowerCase().includes('hr')) {
           const data = await attendanceService.fetchByCode(
             user?.employeeCode,
