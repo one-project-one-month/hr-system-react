@@ -80,7 +80,7 @@ export function AttendanceHistogram({ yearOptions }: Props) {
       <CardContent>
         <div className="h-[320px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={attendanceData}>
+            <BarChart data={attendanceData}   margin={{ top: 20, right: 20, left: 20, bottom: 20 }} >
               <XAxis
                 dataKey="month"
                 label={{
@@ -92,7 +92,7 @@ export function AttendanceHistogram({ yearOptions }: Props) {
 
               <YAxis allowDecimals={false}
                 label={{
-                  value: "Hours",
+                  value: "Days",
                   angle: -90,
                   position: "insideLeft",
                 }} />
@@ -117,14 +117,14 @@ export function AttendanceHistogram({ yearOptions }: Props) {
 
               <Bar
                 dataKey="present"
-                name="Present Hours"
+                name="Present Days"
                 fill="#02A162"
                 barSize={14}
                 radius={[8, 8, 0, 0]}
               />
               <Bar
                 dataKey="late"
-                name="Late Hours"
+                name="Late Days"
                 fill="#B1E7D1"
                 barSize={14}
                 radius={[8, 8, 0, 0]}

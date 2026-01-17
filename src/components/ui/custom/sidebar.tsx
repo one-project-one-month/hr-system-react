@@ -43,7 +43,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
 
     const leaveRoute = rawRole && leaveRoutes[rawRole as keyof typeof leaveRoutes]
         ? leaveRoutes[rawRole as keyof typeof leaveRoutes]
-        : "/leave/create";
+        : "/leave/employee";
 
     const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
     const menuConfig: MenuConfig[] =

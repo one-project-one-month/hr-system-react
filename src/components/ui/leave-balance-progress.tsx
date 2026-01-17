@@ -51,9 +51,14 @@ export function LeaveProgressBar() {
                         {/* Header */}
                         <div className="flex justify-between items-center text-sm font-medium text-gray-700">
                             <span>{leave.leaveType}</span>
-                            <span className="text-gray-600">
+                            {leave.leaveType === 'LeaveWithoutPay' ? 
+                            (<span className="text-gray-600">
+                                {leave.taken < 0 ?? 0 } days
+                            </span>)
+                            
+                            :(<span className="text-gray-600">
                                 {leave.taken} / {total} days
-                            </span>
+                            </span>)}
                         </div>
 
                         {/* Progress Bar */}
@@ -66,8 +71,9 @@ export function LeaveProgressBar() {
 
                         {/* Footer */}
                         <div className="flex justify-between text-xs text-gray-500">
-                            <span>Remaining: {leave.remaining} days</span>
-                            <span>{Math.round(percent)}%</span>
+                            {leave.leaveType !== 'LeaveWithoutPay' && 
+                            (<><span>Remaining: {leave.remaining} days</span>
+                            <span>{Math.round(percent)}%</span></>)}
                         </div>
                     </div>
                 );
