@@ -40,6 +40,13 @@ export default function Location() {
     .find(mg => mg.menuGroupCode === "LOCATION")?.childMenus
     .find(mg => mg.menuItemCode === "LOCATION")
 
+  const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
+  const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
+  const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
+
+  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+    || user?.roleName.toLocaleLowerCase().includes('hr')
+
   // Search state
   const [exporting, setExporting] = useState(false)
   const [open, setOpen] = useState(false);
@@ -198,7 +205,7 @@ export default function Location() {
       <div className="flex justify-between flex-col md:flex-row mb-4">
         <p className="page-title">Location</p>
 
-        <div className="flex gap-2 flex-col md:flex-row ">
+        <div className="flex gap-2 flex-col md:flex-row items-center">
           {/* search */}
           <div className="relative w-full md:w-[300px] text-primary-800">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-800 h-4 w-4" />
@@ -219,18 +226,17 @@ export default function Location() {
             ) : (
               ""
             )}
-
           </div>
 
           {/* buttons */}
-          <Button className="primary-btn" onClick={() => setOpen(true)}>
+          {ADMIN_HR && (<Button className="primary-btn" onClick={() => setOpen(true)}>
             <FolderUp />
             Export
-          </Button>
-          <Button className="primary-btn" onClick={goToCreateForm}>
+          </Button>)}
+          {CANCREATE && (<Button className="primary-btn" onClick={goToCreateForm}>
             <Plus />
             New
-          </Button>
+          </Button>)}
         </div>
       </div>
 
@@ -242,7 +248,7 @@ export default function Location() {
             <TableHead className="text-center">Latitude</TableHead>
             <TableHead className="text-center">Longitude</TableHead>
             <TableHead className="text-center">Radius</TableHead>
-            <TableHead className="text-center">Action</TableHead>
+            {(CANUPDATE || CANDELETE) && (<TableHead className="text-center">Action</TableHead>)}
           </TableRow>
         </TableHeader>
 
@@ -278,8 +284,8 @@ export default function Location() {
                 <TableCell>{location.longitude}</TableCell>
                 <TableCell>{location.radius}</TableCell>
 
-                <TableCell className="flex justify-center">
-                  { menuGroup && menuGroup?.permissions.includes("UPDATE") &&
+                {(CANUPDATE || CANDELETE) && (<TableCell className="flex justify-center">
+                  {CANUPDATE && (
                     <Edit
                       className="text-emerald-500 cursor-pointer hover:text-emerald-700 mr-4"
                       size={22}
@@ -287,18 +293,18 @@ export default function Location() {
                         e.stopPropagation();
                         goToEditForm(location.locationCode);
                       }}
-                    />}
-                  { menuGroup && menuGroup?.permissions.includes("DELETE") &&
-                    <Trash2
+                    />)}
+                  {CANDELETE &&
+                    (<Trash2
                       className="text-red-500 cursor-pointer hover:text-red-700"
                       size={22}
                       onClick={(e) => {
                         e.stopPropagation();
                         openDeleteDialog(location.locationCode);
                       }}
-                    />
-                    }
-                </TableCell>
+                    />)
+                  }
+                </TableCell>)}
               </TableRow>
             ))}
           </TableBody>

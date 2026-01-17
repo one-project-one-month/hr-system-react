@@ -61,7 +61,12 @@ export function AttendanceList() {
     .find(mg => mg.menuGroupCode === "ATTENDANCE")?.childMenus
     .find(mg => mg.menuItemCode === "ATTENDANCE")
 
-  console.log(user)
+  const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
+  const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
+  const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
+
+  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+    || user?.roleName.toLocaleLowerCase().includes('hr')
 
   const [attendanceList, setAttendanceList] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -102,7 +107,7 @@ export function AttendanceList() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        console.log (user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase())
+        console.log(user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase())
         setLoading(true);
         if (user?.roleName !== 'Administrator'
           && !user?.roleName.toLocaleLowerCase().includes('hr')) {
@@ -283,12 +288,11 @@ export function AttendanceList() {
                   numberOfMonths={2}
                 />
               </PopoverContent>
-              
+
             </Popover>
           </div>
           {
-            (user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
-            || user?.roleName.toLocaleLowerCase().includes('hr')) &&
+            (ADMIN_HR) &&
             (<div className="relative w-full md:w-[300px] text-primary-800">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
               <Input
@@ -308,14 +312,15 @@ export function AttendanceList() {
               )}
             </div>)}
           {/* buttons */}
-          <Button className="primary-btn w-full md:w-auto" onClick={() => setOpenExport(true)}>
-            <FileUp />
-            Export
-          </Button>
-          <Button className="primary-btn w-full md:w-auto" onClick={goToCreatForm}>
+          {(ADMIN_HR) &&
+            (<Button className="primary-btn w-full md:w-auto" onClick={() => setOpenExport(true)}>
+              <FileUp />
+              Export
+            </Button>)}
+          {CANCREATE && (<Button className="primary-btn w-full md:w-auto" onClick={goToCreatForm}>
             <Plus />
             New
-          </Button>
+          </Button>)}
         </div>
       </div>
       <>
@@ -331,7 +336,8 @@ export function AttendanceList() {
                 <TableHead className="text-center">Check Out Time</TableHead>
                 <TableHead className="text-center">Working Hour</TableHead>
                 <TableHead className="text-center">Status</TableHead>
-                <TableHead className="text-center">Action</TableHead>
+                {(CANUPDATE && CANDELETE)
+                  && (<TableHead className="text-center">Action</TableHead>)}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -364,21 +370,24 @@ export function AttendanceList() {
                     <TableCell>{user.workingHour?.toFixed(2)}</TableCell>
                     <TableCell>{user.status}</TableCell>
 
-                    <TableCell className="flex justify-center gap-2">
-                      {
-                        menuGroup && menuGroup?.permissions.includes("UPDATE") &&
-                        <Edit
-                          className="text-primary-500 cursor-pointer"
-                          onClick={(e) => updateAttendance(e, user.attendanceCode)}
-                        />}
-                      {
-                        menuGroup && menuGroup?.permissions.includes("DELETE") &&
-                        <Trash2
-                          className="text-error-400 cursor-pointer"
-                          onClick={(e) => handleDelete(e, user.attendanceCode)}
-                        />
-                      }
-                    </TableCell>
+                    {
+                      (CANUPDATE || CANDELETE) &&
+                      (<TableCell className="flex justify-center gap-2">
+                        {
+                          CANUPDATE &&
+                          <Edit
+                            className="text-primary-500 cursor-pointer"
+                            onClick={(e) => updateAttendance(e, user.attendanceCode)}
+                          />}
+                        {
+                          CANDELETE &&
+                          <Trash2
+                            className="text-error-400 cursor-pointer"
+                            onClick={(e) => handleDelete(e, user.attendanceCode)}
+                          />
+                        }
+                      </TableCell>
+                      )}
                   </TableRow>
                 ))
               ) : (

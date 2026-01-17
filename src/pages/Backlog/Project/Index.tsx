@@ -58,18 +58,23 @@ const toIsoEnd = (d: Date) => {
 
 export default function ProjectListing() {
   const navigate = useNavigate();
-  const roleName = useAuthStore((s) => s.user?.roleName);
+  const { user } = useAuthStore()
+
+  const roleName = user?.roleName;
   // UI state
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const menuGroup = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "PROJECT")?.childMenus
+    .find(mg => mg.menuItemCode === "PROJECT")
 
   // data state
   const [rows, setRows] = useState<Row[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuthStore()
   const [exporting, setExporting] = useState(false)
   const [open, setOpen] = useState(false);
   // delete state
@@ -227,52 +232,52 @@ export default function ProjectListing() {
     <div className="p-6 w-full flex-1">
       {/* Header row */}
       {(user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
-            || user?.roleName.toLocaleLowerCase().includes('hr')) && (<div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
-        <p className="page-title">Project Listing</p>
-        <div className="relative w-full md:w-[500px] text-primary-800 flex items-center justify-center">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
-          <Input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setCurrentPage(1);
-            }}
-            placeholder="Search..."
-            className="focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9"
-          />
-        </div>
+        || user?.roleName.toLocaleLowerCase().includes('hr')) && (<div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
+          <p className="page-title">Project Listing</p>
+          <div className="relative w-full md:w-[500px] text-primary-800 flex items-center justify-center">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+            <Input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              placeholder="Search..."
+              className="focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9"
+            />
+          </div>
 
-        <Button
-          className="primary-btn cursor-pointer w-full md:w-auto"
-          onClick={() => setOpen(true)}
-        >
-          Export
-        </Button>
-
-        <Link to="/projects/new" className="w-full md:w-auto">
           <Button
-            className="primary-btn cursor-pointer w-full"
+            className="primary-btn cursor-pointer w-full md:w-auto"
+            onClick={() => setOpen(true)}
           >
-            <Plus />
-            New
+            Export
           </Button>
-        </Link>
 
-        {/**Add Employee */}
-        <Link to="/projects/add-employee" className="w-full md:w-auto">
-          <Button className="primary-btn w-full">
-            <Plus />
-            Add Employee
-          </Button>
-        </Link>
-        <Link to="/projects/remove-employee" className="w-full md:w-auto">
-          <Button className="primary-btn w-full">
-            <Plus />
-            Remove Employee
-          </Button>
-        </Link>
-      </div>)}
+          <Link to="/projects/new" className="w-full md:w-auto">
+            <Button
+              className="primary-btn cursor-pointer w-full"
+            >
+              <Plus />
+              New
+            </Button>
+          </Link>
+
+          {/**Add Employee */}
+          <Link to="/projects/add-employee" className="w-full md:w-auto">
+            <Button className="primary-btn w-full">
+              <Plus />
+              Add Employee
+            </Button>
+          </Link>
+          <Link to="/projects/remove-employee" className="w-full md:w-auto">
+            <Button className="primary-btn w-full">
+              <Plus />
+              Remove Employee
+            </Button>
+          </Link>
+        </div>)}
 
       {/* Table */}
       <Table className="w-full overflow-auto shadow-sm rounded-md">
@@ -283,7 +288,7 @@ export default function ProjectListing() {
             <TableHead>Status</TableHead>
             <TableHead>Start Date</TableHead>
             <TableHead>End Date</TableHead>
-            <TableHead className="text-right pr-6">Action</TableHead>
+            { ( !menuGroup?.permissions.includes("UPDATE") &&  !menuGroup && !menuGroup?.permissions.includes("DELETE")) && (<TableHead className="text-right pr-6">Action</TableHead>)}
           </TableRow>
         </TableHeader>
 
@@ -322,7 +327,7 @@ export default function ProjectListing() {
                 <TableCell>{row.endDate}</TableCell>
                 <TableCell>
                   <div className="flex items-center justify-end gap-3">
-                    <button
+                    {menuGroup && menuGroup?.permissions.includes("UPDATE") && (<button
                       className="p-1 hover:bg-primary-300/50 rounded cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -331,7 +336,7 @@ export default function ProjectListing() {
                       title="Edit"
                     >
                       <Edit className="h-4 w-4 text-primary-500" />
-                    </button>
+                    </button>)}
                     <button
                       className="p-1 hover:bg-primary-300/50 rounded cursor-pointer"
                       onClick={(e) => {
@@ -342,7 +347,7 @@ export default function ProjectListing() {
                     >
                       <Eye className="h-4 w-4 text-primary-700" />
                     </button>
-                    <button
+                    {menuGroup && menuGroup?.permissions.includes("DELETE") && (<button
                       className="p-1 hover:bg-primary-300/50 rounded cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -352,6 +357,7 @@ export default function ProjectListing() {
                     >
                       <Trash2 className="h-4 w-4 text-error-400" />
                     </button>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
