@@ -37,7 +37,7 @@ export default function Location() {
   const { data, loading, error } = useDataStore();
   const { user } = useAuthStore()
   const menuGroup = user?.menuTree?.menuTree
-    .find(mg => mg.menuGroupCode === "LOCATION")?.childMenus
+    .find(mg => mg.menuGroupCode === "ATTENDANCE")?.childMenus
     .find(mg => mg.menuItemCode === "LOCATION")
 
   const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")

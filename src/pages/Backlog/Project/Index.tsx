@@ -59,7 +59,7 @@ export default function ProjectListing() {
   const navigate = useNavigate();
   const { user } = useAuthStore()
   const menuGroup = user?.menuTree?.menuTree
-    .find(mg => mg.menuGroupCode === "PROJECT")?.childMenus
+    .find(mg => mg.menuGroupCode === "BACKLOG")?.childMenus
     .find(mg => mg.menuItemCode === "PROJECT")
 
   const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
