@@ -100,9 +100,18 @@ export function MenuGroupForm({
             className="bg-gray-50 text-gray-700 border-gray-200 focus:ring-1"
           />
         </div>
-
+        <div className="mt-6 flex gap-2">
+          <label className="text-sm font-medium text-primary-700">
+            Has Menu Item
+          </label>
+          <Checkbox
+            checked={values.hasMenuItem}
+            onCheckedChange={(val) => update("hasMenuItem", !!val)}
+            disabled={submitting}
+          />
+        </div>
         {/* Sort Order */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <label className="text-sm font-medium text-primary-700">
             Sort Order
           </label>
@@ -117,20 +126,11 @@ export function MenuGroupForm({
             disabled={submitting}
             className="bg-gray-50 text-gray-700 border-gray-200 focus:ring-1"
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Has Menu Item */}
-      <div className="mt-6 flex flex-col gap-2">
-        <label className="text-sm font-medium text-primary-700">
-          Has Menu Item
-        </label>
-        <Checkbox
-          checked={values.hasMenuItem}
-          onCheckedChange={(val) => update("hasMenuItem", !!val)}
-          disabled={submitting}
-        />
-      </div>
+
 
       {/* Actions */}
       <div className="flex justify-end gap-4 pt-10">

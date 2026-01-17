@@ -23,6 +23,7 @@ export const employeeSchema = z.object({
     name: z.string().min(2, "Name is required").max(60, "Name too long").trim(),
     roleCode: z.string(),
     email: z.string().email("Invalid email address").trim(),
+    gender: z.string(),
     phoneNo: z
         .string()
         .transform((val) => val.replace(/[\s-]/g, ""))

@@ -63,6 +63,7 @@ export default function EmployeeForm() {
           /^(09\d{7,9}|\+959\d{7,9})$/.test(val),
         "Invalid Myanmar phone number"
       ),
+    gender: z.string(),
     startDate: z
       .string()
       .trim()
@@ -93,6 +94,7 @@ export default function EmployeeForm() {
       phoneNo: "",
       startDate: "",
       resignDate: "",
+      gender: ""
     },
   });
 
@@ -113,6 +115,7 @@ export default function EmployeeForm() {
       try {
         const employee = await EmployeeService.fetchEmployee(code);
         // Reset the form with fetched values
+        console.log(employee)
         reset({
           //   employeeCode: employee.employeeCode ?? "",
           username: employee.username ?? "",
@@ -123,6 +126,7 @@ export default function EmployeeForm() {
           phoneNo: employee.phoneNo ?? "",
           startDate: employee.startDate ?? "",
           resignDate: employee.resignDate ?? "",
+          gender: employee.gender ?? ""
         });
       } catch (err) {
         console.error(err);
@@ -143,7 +147,6 @@ export default function EmployeeForm() {
         ? new Date(values.resignDate).toISOString()
         : null,
     };
-    console.log(employeeData)
     try {
       if (code) {
         await EmployeeService.updateEmployee(code, employeeData);
@@ -231,33 +234,67 @@ export default function EmployeeForm() {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="roleCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Role</FormLabel>
-                  <FormControl>
-                    <Select
-                      value={field.value ?? ""}
-                      onValueChange={field.onChange}
-                    >
-                      <SelectTrigger className="border-natural-500 rounded-sm py-5">
-                        <SelectValue placeholder="Select role" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-50">
-                        {fetchRoles.map((role) => (
-                          <SelectItem id={role.roleId} value={role.roleCode}>
-                            {role.roleName}
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
+                name="roleCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value ?? ""}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="border-natural-500 rounded-sm py-5">
+                          <SelectValue placeholder="Select role" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-50">
+                          {fetchRoles.map((role) => (
+                            <SelectItem id={role.roleId} value={role.roleCode}>
+                              {role.roleName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Gender</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value ?? ""}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="border-natural-500 rounded-sm py-5">
+                          <SelectValue placeholder="Select Gender" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-50">
+                          <SelectItem id="male" value="Male"
+                          >
+                            Male
                           </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                          <SelectItem
+                            id="female"
+                            value="Female"
+                          >
+                            Female
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}

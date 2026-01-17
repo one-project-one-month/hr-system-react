@@ -78,7 +78,7 @@ export default function LoginForm() {
                 <FormLabel>Username</FormLabel>
                 <FormControl className="border-none placeholder:text-dark-50 bg-white">
                   <Input
-                    placeholder="you@example.com"
+                    placeholder="username"
                     {...field}
                     value={field.value ?? ""}
                     onChange={(e) => field.onChange(e.target.value)}
@@ -97,7 +97,7 @@ export default function LoginForm() {
                 <FormControl className="border-none bg-white">
                   <Input
                     type="password"
-                    placeholder="••••••••"
+                    placeholder="password"
                     {...field}
                     value={field.value ?? ""}
                     onChange={(e) => field.onChange(e.target.value)}

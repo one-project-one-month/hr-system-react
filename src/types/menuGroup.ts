@@ -1,3 +1,5 @@
+import type { MenuGroupItem } from "./menu-group";
+
 export type MenuGroupFormValues = {
   menuGroupCode: string;
   menuGroupName: string;
