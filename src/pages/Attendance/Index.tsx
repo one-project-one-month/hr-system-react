@@ -109,7 +109,7 @@ export function AttendanceList() {
     const loadData = async () => {
       try {
         setLoading(true);
-        if ((user?.roleName.toLocaleLowerCase() !== 'administrator' || user?.roleName.toLocaleLowerCase() !== 'admin')
+        if ((user?.roleName.toLocaleLowerCase() !== 'administrator' && user?.roleName.toLocaleLowerCase() !== 'admin')
           && !user?.roleName.toLocaleLowerCase().includes('hr')) {
           const data = await attendanceService.fetchByCode(
             user?.employeeCode,
