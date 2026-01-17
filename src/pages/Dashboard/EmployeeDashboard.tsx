@@ -2,25 +2,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
+
 import { cn } from "@/lib/utils";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { PayrollBarChart } from "@/components/ui/payroll-bar-chart";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useCheckInStore } from "@/stores/useCheckInStore";
 import { AttendanceHistogram } from "@/components/ui/custom/attendance-histogram";
-
-const leaveTypeData = [
-    { name: "Annual", value: 80, color: "#017E4D" },
-    { name: "Sick Leave", value: 15, color: "#8BDBBB" },
-    { name: "Emergency Leave", value: 5, color: "#FB2C36" },
-];
+import { LeaveProgressBar } from "@/components/ui/leave-balance-progress";
 
 export default function EmployeeDashboard() {
     const [period, setPeriod] = useState<"weekly" | "monthly">("monthly");
@@ -32,12 +20,14 @@ export default function EmployeeDashboard() {
         ],
         []
     );
-    
+
+
+
     return (
         <div className="min-h-screen bg-[#F5F7F8] px-4 pb-6 pt-12 md:px-8 md:pb-8 md:pt-12">
             <div className="grid gap-4.5 md:grid-cols-2">
                 <CheckInOutCard />
-                <LeaveTypeBreakdownCard />
+                <LeaveProgressBar />
             </div>
 
             {/* bottom row: bar chart */}
@@ -127,123 +117,123 @@ function CheckInOutCard() {
     );
 }
 
-function LeaveTypeBreakdownCard() {
-    const RADIAN = Math.PI / 180;
+// function LeaveTypeBreakdownCard() {
+//     const RADIAN = Math.PI / 180;
 
-    const renderCustomizedLabel = (props: any) => {
-        const { cx, cy, midAngle, outerRadius, percent } = props;
-        if (!percent) return null;
+//     const renderCustomizedLabel = (props: any) => {
+//         const { cx, cy, midAngle, outerRadius, percent } = props;
+//         if (!percent) return null;
 
-        const radius = outerRadius + 14; // outside the ring
-        const x = cx + radius * Math.cos(-midAngle * RADIAN);
-        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+//         const radius = outerRadius + 14; // outside the ring
+//         const x = cx + radius * Math.cos(-midAngle * RADIAN);
+//         const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-        return (
-            <text
-                x={x}
-                y={y}
-                fill="#111827"
-                fontSize={11}
-                fontWeight={600}
-                textAnchor={x >= cx ? "start" : "end"}
-                dominantBaseline="central"
-            >
-                {(percent * 100).toFixed(0)}%
-            </text>
-        );
-    };
+//         return (
+//             <text
+//                 x={x}
+//                 y={y}
+//                 fill="#111827"
+//                 fontSize={11}
+//                 fontWeight={600}
+//                 textAnchor={x >= cx ? "start" : "end"}
+//                 dominantBaseline="central"
+//             >
+//                 {(percent * 100).toFixed(0)}%
+//             </text>
+//         );
+//     };
 
-    return (
-        <Card className="h-full rounded-[20px] border border-natural-200 bg-background shadow-sm gap-0 py-5 px-2.5 overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between pb-3 px-0">
-                <CardTitle className="text-2xl font-medium leading-8">
-                    Leave Type Breakdown
-                </CardTitle>
+//     return (
+//         <Card className="h-full rounded-[20px] border border-natural-200 bg-background shadow-sm gap-0 py-5 px-2.5 overflow-hidden">
+//             <CardHeader className="flex flex-row items-center justify-between pb-3 px-0">
+//                 <CardTitle className="text-2xl font-medium leading-8">
+//                     Leave Type Breakdown
+//                 </CardTitle>
 
-                <Select defaultValue="2025">
-                    <SelectTrigger className="h-8 w-24 rounded-sm border-none bg-primary-500 px-4 py-1 text-xs font-semibold text-natural-50 shadow-sm hover:bg-primary-600 focus:ring-0">
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="2025">2025</SelectItem>
-                        <SelectItem value="2024">2024</SelectItem>
-                        <SelectItem value="2023">2023</SelectItem>
-                        <SelectItem value="2022">2022</SelectItem>
-                    </SelectContent>
-                </Select>
-            </CardHeader>
+//                 <Select defaultValue="2025">
+//                     <SelectTrigger className="h-8 w-24 rounded-sm border-none bg-primary-500 px-4 py-1 text-xs font-semibold text-natural-50 shadow-sm hover:bg-primary-600 focus:ring-0">
+//                         <SelectValue />
+//                     </SelectTrigger>
+//                     <SelectContent>
+//                         <SelectItem value="2025">2025</SelectItem>
+//                         <SelectItem value="2024">2024</SelectItem>
+//                         <SelectItem value="2023">2023</SelectItem>
+//                         <SelectItem value="2022">2022</SelectItem>
+//                     </SelectContent>
+//                 </Select>
+//             </CardHeader>
 
-            <CardContent className="flex items-center justify-between gap-6 pb-4 pt-1">
-                {/* Donut chart area */}
-                <div className="flex-1">
-                    {/* wider box so left label has room */}
-                    <div className="h-[180px] w-[210px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart
-                                margin={{
-                                    top: 8,
-                                    right: 35,
-                                    bottom: 8,
-                                    left: 1,
-                                }}
-                            >
-                                <Pie
-                                    data={leaveTypeData}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    innerRadius={60}
-                                    outerRadius={78}
-                                    startAngle={20}
-                                    endAngle={-360}
-                                    paddingAngle={0}
-                                    stroke="none"
-                                    cx="58%"
-                                    cy="50%"
-                                    label={renderCustomizedLabel}
-                                    labelLine={false}
-                                >
-                                    {leaveTypeData.map((item) => (
-                                        <Cell
-                                            key={item.name}
-                                            fill={item.color}
-                                        />
-                                    ))}
-                                </Pie>
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
+//             <CardContent className="flex items-center justify-between gap-6 pb-4 pt-1">
+//                 {/* Donut chart area */}
+//                 <div className="flex-1">
+//                     {/* wider box so left label has room */}
+//                     <div className="h-[180px] w-[210px]">
+//                         <ResponsiveContainer width="100%" height="100%">
+//                             <PieChart
+//                                 margin={{
+//                                     top: 8,
+//                                     right: 35,
+//                                     bottom: 8,
+//                                     left: 1,
+//                                 }}
+//                             >
+//                                 <Pie
+//                                     data={leaveTypeData}
+//                                     dataKey="value"
+//                                     nameKey="name"
+//                                     innerRadius={60}
+//                                     outerRadius={78}
+//                                     startAngle={20}
+//                                     endAngle={-360}
+//                                     paddingAngle={0}
+//                                     stroke="none"
+//                                     cx="58%"
+//                                     cy="50%"
+//                                     label={renderCustomizedLabel}
+//                                     labelLine={false}
+//                                 >
+//                                     {leaveTypeData.map((item) => (
+//                                         <Cell
+//                                             key={item.name}
+//                                             fill={item.color}
+//                                         />
+//                                     ))}
+//                                 </Pie>
+//                             </PieChart>
+//                         </ResponsiveContainer>
+//                     </div>
+//                 </div>
 
-                {/* Legend area */}
-                <div className="flex flex-1 flex-col gap-6">
-                    <LeaveLegendItem
-                        label="Annual"
-                        colorClass="bg-primary-700"
-                    />
-                    <LeaveLegendItem
-                        label="Sick Leave"
-                        colorClass="bg-primary-200"
-                    />
-                    <LeaveLegendItem
-                        label="Emergency Leave"
-                        colorClass="bg-[#FB2C36]"
-                    />
-                </div>
-            </CardContent>
-        </Card>
-    );
-}
+//                 {/* Legend area */}
+//                 <div className="flex flex-1 flex-col gap-6">
+//                     <LeaveLegendItem
+//                         label="Annual"
+//                         colorClass="bg-primary-700"
+//                     />
+//                     <LeaveLegendItem
+//                         label="Sick Leave"
+//                         colorClass="bg-primary-200"
+//                     />
+//                     <LeaveLegendItem
+//                         label="Emergency Leave"
+//                         colorClass="bg-[#FB2C36]"
+//                     />
+//                 </div>
+//             </CardContent>
+//         </Card>
+//     );
+// }
 
-type LeaveLegendItemProps = {
-    label: string;
-    colorClass: string;
-};
+// type LeaveLegendItemProps = {
+//     label: string;
+//     colorClass: string;
+// };
 
-function LeaveLegendItem({ label, colorClass }: LeaveLegendItemProps) {
-    return (
-        <div className="flex items-center gap-3">
-            <span className={cn("h-7 w-7 border border-black/5", colorClass)} />
-            <span className="text-text leading-6 ">{label}</span>
-        </div>
-    );
-}
+// function LeaveLegendItem({ label, colorClass }: LeaveLegendItemProps) {
+//     return (
+//         <div className="flex items-center gap-3">
+//             <span className={cn("h-7 w-7 border border-black/5", colorClass)} />
+//             <span className="text-text leading-6 ">{label}</span>
+//         </div>
+//     );
+// }

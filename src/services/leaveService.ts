@@ -80,7 +80,9 @@ export const leaveService = {
     });
   },
 
-  getLeaveBalance: async () => {
-    
+  getLeaveBalance: async (year: number) => {
+      return await useDataStore.getState().fetchData({
+        endPoint: `/Leave/leave-balance/${year}`
+      })
   }
 };
