@@ -41,7 +41,19 @@ import { downloadFile, toLocalISOString } from "@/lib/utils";
 import { exportReport } from "@/services/reportService";
 
 export default function BacklogList() {
+  const { user } = useAuthStore()
   const navigate = useNavigate();
+
+  const menuGroup = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "ATTENDANCE")?.childMenus
+    .find(mg => mg.menuItemCode === "ATTENDANCE")
+
+  const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
+  const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
+  const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
+
+  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+    || user?.roleName.toLocaleLowerCase().includes('hr')
 
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -51,7 +63,6 @@ export default function BacklogList() {
   const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
   const [searchTaskName, setSearchTaskName] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const { user } = useAuthStore()
   const [error, setError] = useState("")
   const [exporting, setExporting] = useState(false)
   const [open, setOpen] = useState(false);
@@ -84,11 +95,11 @@ export default function BacklogList() {
   };
 
   const handleExport = async (exportType: exportType) => {
-    
-    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin") 
-        || user.roleName.toLowerCase().includes("hr") 
-          ? exportType.type = "admin"
-          :exportType.type = "employee"
+
+    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin")
+      || user.roleName.toLowerCase().includes("hr")
+      ? exportType.type = "admin"
+      : exportType.type = "employee"
 
     if (!exportType.from || !exportType.to) return;
 
@@ -188,7 +199,7 @@ export default function BacklogList() {
         <p className="page-title">Backlog</p>
 
         {/* Search Bar */}
-        <div className="relative w-full md:w-[200px] text-primary-800">
+        <div className="relative flex w-full md:w-[200px] text-primary-800 items-center">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
           <Input
             type="text"
@@ -206,17 +217,17 @@ export default function BacklogList() {
         </div>
 
         {/* Action Buttons */}
-        <Button
+        {ADMIN_HR && (<Button
           className="primary-btn cursor-pointer w-full md:w-auto"
           onClick={() => setOpen(true)}
         >
           <FolderUp /> Export
-        </Button>
-        <Link to="/backlog/create" className="w-full md:w-auto">
+        </Button>)}
+        {CANCREATE && (<Link to="/backlog/create" className="w-full md:w-auto">
           <Button className="primary-btn w-full">
             <Plus /> New
           </Button>
-        </Link>
+        </Link>)}
       </div>
 
       {/* Table */}
@@ -228,7 +239,7 @@ export default function BacklogList() {
             <TableHead>Task Name</TableHead>
             <TableHead>Assignee</TableHead>
             <TableHead>Project Name</TableHead>
-            <TableHead>Action</TableHead>
+            {(CANUPDATE || CANDELETE) && (<TableHead>Action</TableHead>)}
           </TableRow>
         </TableHeader>
 
@@ -258,16 +269,16 @@ export default function BacklogList() {
                   {task.projectName || task.projectCode || "—"}
                 </TableCell>
 
-                <TableCell className="flex gap-2">
-                  <Edit
+                {(CANUPDATE || CANDELETE ) && (<TableCell className="flex gap-2">
+                  { CANUPDATE && (<Edit
                     className="text-primary-500 cursor-pointer"
                     onClick={(e) => handleEdit(e, task.taskId)}
-                  />
-                  <Trash2
+                  />)}
+                  {CANDELETE && (<Trash2
                     className="text-error-400 hover:text-destructive cursor-pointer"
                     onClick={(e) => handleDelete(e, task.taskId)}
-                  />
-                </TableCell>
+                  />)}
+                </TableCell>)}
               </TableRow>
             ))
           ) : (

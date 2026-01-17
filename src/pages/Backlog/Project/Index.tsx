@@ -34,7 +34,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { projectService } from "@/services/projectService";
-import { useExcelExport, type ExcelColumn } from "@/hooks/useExcelExport";
 import type { ApiEnvelope, ListData, Row } from "@/types/project";
 import { ExportDateDialog } from "@/components/ui/custom/export-date-dialog";
 import type { exportType } from "@/types/excelExport";
@@ -59,18 +58,22 @@ const toIsoEnd = (d: Date) => {
 export default function ProjectListing() {
   const navigate = useNavigate();
   const { user } = useAuthStore()
+  const menuGroup = user?.menuTree?.menuTree
+    .find(mg => mg.menuGroupCode === "PROJECT")?.childMenus
+    .find(mg => mg.menuItemCode === "PROJECT")
 
-  const roleName = user?.roleName;
+  const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
+  const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
+  const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
+
+  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
+    || user?.roleName.toLocaleLowerCase().includes('hr')
   // UI state
   const [searchTerm, setSearchTerm] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const menuGroup = user?.menuTree?.menuTree
-    .find(mg => mg.menuGroupCode === "PROJECT")?.childMenus
-    .find(mg => mg.menuItemCode === "PROJECT")
-
-  // data state
+    // data state
   const [rows, setRows] = useState<Row[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -288,7 +291,7 @@ export default function ProjectListing() {
             <TableHead>Status</TableHead>
             <TableHead>Start Date</TableHead>
             <TableHead>End Date</TableHead>
-            { ( !menuGroup?.permissions.includes("UPDATE") &&  !menuGroup && !menuGroup?.permissions.includes("DELETE")) && (<TableHead className="text-right pr-6">Action</TableHead>)}
+            {(CANDELETE || CANUPDATE) && (<TableHead className="text-right pr-6">Action</TableHead>)}
           </TableRow>
         </TableHeader>
 
@@ -325,9 +328,9 @@ export default function ProjectListing() {
                 <TableCell>{row.status}</TableCell>
                 <TableCell>{row.startDate}</TableCell>
                 <TableCell>{row.endDate}</TableCell>
-                <TableCell>
+                { (CANUPDATE || CANDELETE) && (<TableCell>
                   <div className="flex items-center justify-end gap-3">
-                    {menuGroup && menuGroup?.permissions.includes("UPDATE") && (<button
+                    { CANUPDATE && (<button
                       className="p-1 hover:bg-primary-300/50 rounded cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -337,17 +340,7 @@ export default function ProjectListing() {
                     >
                       <Edit className="h-4 w-4 text-primary-500" />
                     </button>)}
-                    <button
-                      className="p-1 hover:bg-primary-300/50 rounded cursor-pointer"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/projects/${row.id}`);
-                      }}
-                      title="View"
-                    >
-                      <Eye className="h-4 w-4 text-primary-700" />
-                    </button>
-                    {menuGroup && menuGroup?.permissions.includes("DELETE") && (<button
+                    { CANDELETE && (<button
                       className="p-1 hover:bg-primary-300/50 rounded cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -359,7 +352,7 @@ export default function ProjectListing() {
                     </button>
                     )}
                   </div>
-                </TableCell>
+                </TableCell>)}
               </TableRow>
             ))
           )}
