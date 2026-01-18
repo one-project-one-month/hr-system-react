@@ -14,7 +14,6 @@ export async function sendVerificationMail(email: string) {
   const data: ApiResponse<unknown> = await res.json();
   return data;
 }
-
 export async function verifyCode(email: string, code: string) {
   const res = await fetch("/api/Verification/verify-code", {
     method: "POST",

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { MoveLeft } from "lucide-react";
-import { verifyCode } from "@/services/verificationService";
+import { verifyCode, sendVerificationMail } from "@/services/verificationService";
 const BOXES = 6;
 
 export default function OtpVerification() {
@@ -22,7 +22,7 @@ export default function OtpVerification() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const email = state?.email as string | undefined;
-
+  console.log (email)
   useEffect(() => {
     inputsRef.current[0]?.focus();
   }, []);
@@ -89,6 +89,9 @@ export default function OtpVerification() {
     setSeconds(60);
     setOtp(Array(BOXES).fill(""));
     inputsRef.current[0]?.focus();
+    console.log ('resending to here',email)
+
+    sendVerificationMail(email);
     setError("");
   }
 
