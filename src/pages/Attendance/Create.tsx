@@ -23,8 +23,8 @@ export function CreateAttendance() {
       employeeName: values.employeeName,
       checkinLocation: values.checkinLocation,
       checkoutLocation: values.checkoutLocation,
-      checkinTime: combineDateTime(values.date, values.checkinTime),
-      checkoutTime: combineDateTime(values.date, values.checkoutTime),
+      checkinTime:  values.checkinTime ? values.checkinTime.toISOString() : null,
+      checkoutTime: values.checkoutTime ? values.checkoutTime.toISOString() : null,
       // send date as yyyy-mm-dd
       date: toDatePart(values.date),
       workingHour: values.workingHour,
@@ -35,8 +35,8 @@ export function CreateAttendance() {
       ...payload,
       name: values.employeeName,
       attendanceDate: toDatePart(values.date),
-      checkInTime: combineDateTime(values.date, values.checkinTime),
-      checkOutTime: combineDateTime(values.date, values.checkoutTime),
+      checkInTime: values.checkinTime ? values.checkinTime.toISOString() : null,
+      checkoutTime: values.checkoutTime ? values.checkoutTime.toISOString() : null,
       workingHour: values.workingHour,
     };
     await attendanceService.createAttendanceRecord(payloadWithListKeys);
