@@ -13,6 +13,7 @@ import { AlertCircle, Calendar1Icon } from "lucide-react";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 
 type ProjectFormValues = {
   code: string;
@@ -75,34 +76,38 @@ export function ProjectForm({ mode, initialValues, submitting = false, serverErr
         <h2 className="page-title">{mode === "create" ? "Create Project" : "Edit Project"}</h2>
       </div>
       {serverError && (
-          <div className="flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
-            <AlertCircle className="w-4 h-4" />
-            <span>{serverError}</span>
-          </div>
-        )}
+        <div className="flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
+          <AlertCircle className="w-4 h-4" />
+          <span>{serverError}</span>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
         {/* Name */}
-        <div className="space-y-1">
-          <label className="text-sm font-medium">Name</label>
-          <Input
-            placeholder="Enter Name"
-            {...register("name")}
-            disabled={submitting}
-          />
-          {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>}
-        </div>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <div className="space-y-1">
+              <label className="text-sm font-medium">Name</label>
+              <Input {...field} placeholder="Enter Name" disabled={submitting} />
+              {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>}
+            </div>
+          )}
+        />
 
         {/* Description */}
-        <div className="space-y-1 md:col-span-2">
-          <label className="text-sm font-medium">Description</label>
-          <Textarea
-            placeholder="Enter Description"
-            {...register("description")}
-            rows={4}
-            disabled={submitting}
-          />
-          {errors.description && <p className="text-red-600 text-xs mt-1">{errors.description.message}</p>}
-        </div>
+        <Controller
+          name="description"
+          control={control}
+          render={({ field }) => (
+            <div className="space-y-1 md:col-span-2">
+              <label className="text-sm font-medium">Description</label>
+              <Textarea {...field} placeholder="Enter Description" rows={4} disabled={submitting} />
+              {errors.description && <p className="text-red-600 text-xs mt-1">{errors.description.message}</p>}
+            </div>
+          )}
+        />
+
 
         {/* Status */}
         <div className="space-y-1">
