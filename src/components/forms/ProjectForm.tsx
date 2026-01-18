@@ -125,7 +125,7 @@ export function ProjectForm({
             <SelectTrigger>
               <SelectValue placeholder="Select Status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-natural-50">
               <SelectItem value="Planned">Planned</SelectItem>
               <SelectItem value="Active">Active</SelectItem>
               <SelectItem value="Completed">Completed</SelectItem>
