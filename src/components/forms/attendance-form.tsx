@@ -87,8 +87,8 @@ export default function AttendanceForm({
       employeeName: initialValues.employeeName ?? initialValues.name ?? "",
       checkinLocation: initialValues.checkinLocation ?? initialValues.checkInLocation ?? "",
       checkoutLocation: initialValues.checkoutLocation ?? initialValues.checkOutLocation ?? "",
-      checkinTime: extractTime(initialValues.checkinTime ?? initialValues.checkInTime ?? initialValues.checkInTime),
-      checkoutTime: extractTime(initialValues.checkoutTime ?? initialValues.checkOutTime ?? initialValues.checkOutTime),
+      checkinTime: initialValues.checkinTime ?? new Date(),
+      checkoutTime: initialValues.checkoutTime ?? new Date(),
       workingHour: Number(initialValues.workingHour ?? 0),
       status: initialValues.status ?? "",
       date: parseDate(initialValues.date ?? initialValues.attendanceDate ?? initialValues.attendanceDate),
@@ -120,11 +120,7 @@ export default function AttendanceForm({
         form.clearErrors("employeeCode");
       } catch (error: any) {
         const message = "employee not found";
-
-        console.log (error.message.data)
-
         form.setValue("employeeName", "");
-
         form.setError("employeeCode", {
           type: "manual",
           message,

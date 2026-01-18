@@ -65,7 +65,7 @@ export function AttendanceList() {
   const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
   const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
 
-  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase() 
+  const ADMIN_HR = user?.roleName.toLocaleLowerCase() === 'Administrator'.toLocaleLowerCase()
     || user?.roleName.toLocaleLowerCase() === 'admin'.toLocaleLowerCase()
     || user?.roleName.toLocaleLowerCase().includes('hr')
 
@@ -109,7 +109,8 @@ export function AttendanceList() {
     const loadData = async () => {
       try {
         setLoading(true);
-        if ((user?.roleName.toLocaleLowerCase() !== 'administrator' && user?.roleName.toLocaleLowerCase() !== 'admin')
+        if ((user?.roleName.toLocaleLowerCase() !== 'administrator'
+          && user?.roleName.toLocaleLowerCase() !== 'admin')
           && !user?.roleName.toLocaleLowerCase().includes('hr')) {
           const data = await attendanceService.fetchByCode(
             user?.employeeCode,
@@ -259,26 +260,23 @@ export function AttendanceList() {
               <PopoverTrigger asChild>
                 <Button
                   className={cn(
-                    "justify-between text-left font-normal w-[250px] primary-btn font-semibold",
+                    "justify-between text-left font-normal w-[250px] border border-natural-500",
                     !date && "text-muted-foreground"
                   )}
                 >
-                  {date?.from ? (
-                    date.to ? (
-                      <>
-                        {format(date.from, "LLL dd, y")}/
-                        {format(date.to, "LLL dd, y")}
-                      </>
-                    ) : (
-                      format(date.from, "LLL dd, y")
-                    )
-                  ) : (
-                    <span>Pick a date range</span>
-                  )}
+                  {date?.from
+                    ? date.to
+                      ? `${format(date.from, "LLL dd, y")} / ${format(date.to, "LLL dd, y")}`
+                      : format(date.from, "LLL dd, y")
+                    : "Pick a date range"}
                   <Calendar1Icon className="mr-2 h-4 w-4" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 bg-natural-50" align="start">
+
+              <PopoverContent
+                className="w-auto p-4 bg-natural-50 border !border-natural-500"
+                align="start"
+              >
                 <Calendar
                   mode="range"
                   selected={date}
@@ -286,10 +284,26 @@ export function AttendanceList() {
                     setDate({ from: dateRange?.from, to: dateRange?.to })
                   }
                   numberOfMonths={2}
+                  dayClassName={(day) => {
+                    if (!date.from) return "";
+
+                    const time = day.getTime();
+                    const from = date.from.getTime();
+                    const to = date.to?.getTime() ?? from;
+
+                    // start or end
+                    if (time === from || time === to)
+                      return "!bg-primary-500 !text-white rounded-full";
+
+                    // in between
+                    if (time > from && time < to) return "!bg-primary-200 !text-white";
+
+                    return "";
+                  }}
                 />
               </PopoverContent>
-
             </Popover>
+
           </div>
           {
             (ADMIN_HR) &&

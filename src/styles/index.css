@@ -151,25 +151,40 @@
 }
 
 .rdp-root {
-  /* accent color used for selected days / range */
-  --rdp-accent-color: var(--natural-50);
-  /* text color on selected day */
+  --rdp-accent-color: white;
   --rdp-accent-background-color: var(--primary-600);
-  /* background for selected day */
-  --rdp-accent-hover-background-color: var(--primary-700);
-  /* optionally tweak cell size, radius, etc. */
+  --rdp-accent-hover-background-color: var(--primary-500);
   --rdp-cell-size: 40px;
 }
 
-.rdp-root .rdp-day_selected {
-  background-color: #10B981;
-  /* emerald */
-  color: white;
-  border-radius: .5rem;
-  /* make circle or pill */
-  box-shadow: none;
+/* Reset background for all calendar cells */
+.rdp-root .rdp-day {
+  background-color: white;
+  color: var(--text);
 }
 
+/* Range styles */
+.rdp-root .rdp-day_selected_start {
+  border-radius: 9999px 0 0 9999px;
+  background-color: var(--primary-600);
+  color: white;
+}
+
+.rdp-root .rdp-day_selected_end {
+  border-radius: 0 9999px 9999px 0;
+  background-color: var(--primary-600);
+  color: white;
+}
+
+.rdp-root .rdp-day_selected_between {
+  border-radius: 0;
+  background-color: var(--primary-200);
+  color: var(--primary-700);
+}
+
+.rdp-root .rdp-day:hover {
+  background-color: var(--primary-100);
+}
 
 @layer base {
 
@@ -275,12 +290,39 @@
     @apply text-xl font-bold w-full mb-4
   }
 
+  /* Single selected day */
+  [data-selected-single="true"] {
+    @apply !bg-primary-500 text-primary-foreground;
+  }
+
+  /* Start of range */
+  [data-range-start="true"] {
+    @apply !bg-primary-500 text-primary-foreground rounded-l-md;
+  }
+
+  /* Middle of range */
+  [data-range-middle="true"] {
+    @apply !bg-primary-200 text-primary-700 rounded-none;
+  }
+
+  /* End of range */
+  [data-range-end="true"] {
+    @apply !bg-primary-500 text-primary-foreground rounded-r-md;
+  }
+
+  .group-data-[focused=true]/day {
+    @apply ring-1 ring-primary-500;
+  }
+
+
+
+
 }
 
 /* 🌿 Thin custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
-  height:6px;
+  height: 6px;
   /* scrollbar width */
 }
 
