@@ -69,8 +69,10 @@ export default function PayrollList() {
       setError("")
       setLoading(true)
       const resp = await PayrollService.processPayroll({ payrollMonth: cleanMonthYear(monthYear) })
-      if (!resp.isSuccess)
+      if (!resp.isSuccess){
         setError(resp.message)
+        return
+      }
 
       setSuccessDialogOpen(true)
       navigate("/payrollSummary", { state: { refetch: true } })
