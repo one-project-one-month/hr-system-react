@@ -21,6 +21,7 @@ import { SpinnerCustom } from "@/components/ui/spinner";
 import type { Leave, LeaveList, leaveType } from "@/types/leave";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function LeaveList() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -207,15 +208,11 @@ export default function LeaveList() {
                 <TableCell>{new Date(leave.toDate).toLocaleDateString()}</TableCell>
                 <TableCell>{leave.totalHours}</TableCell>
                 <TableCell>{leave.status}</TableCell>
-                <TableCell className="flex gap-4 justify-center">
-                  { leave.status === "Pending" ? (<><Check
-                    className="h-4 w-4 text-green-500 cursor-pointer hover:text-green-700"
-                    onClick={() => handleApprove(leave.leaveCode!)}
-                  />
-                  <X
-                    className="h-4 w-4 text-error-400 cursor-pointer hover:text-red-500"
-                    onClick={() => handleReject(leave.leaveCode!)}
-                  /></>): (<></>)}
+                <TableCell className="flex gap-4 justify-center p-2">
+                  {(<>
+                    <Button className="primary-btn" disabled={leave.status !== "Pending"}  onClick={() => handleApprove(leave.leaveCode!)}>Approve</Button>
+                    <Button className="cancel-btn" disabled={leave.status !== "Pending"}  onClick={() => handleReject(leave.leaveCode!)}>Reject</Button>
+                  </>)}
                 </TableCell>
               </TableRow>
             ))

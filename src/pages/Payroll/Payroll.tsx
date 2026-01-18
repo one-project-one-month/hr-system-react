@@ -171,7 +171,7 @@ export default function PayrollList() {
               Total Employees
             </TableHead>
             <TableHead >
-              total Working Hours
+              Total Working Hours
             </TableHead>
             <TableHead >
               Total Leave Hours

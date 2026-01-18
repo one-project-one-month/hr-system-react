@@ -84,7 +84,7 @@ export default function CompanyRulesForm({
   const isViewMode = mode === "detail";
 
   return (
-    <div className="p-6 md:p-8 w-full flex-1 bg-gray-50">
+    <div className="p-6 md:p-8 w-full flex-1">
       <div className="mb-8">
         <h1 className="page-title">{title}</h1>
       </div>

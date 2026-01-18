@@ -24,6 +24,7 @@ import { EmployeeService } from "@/services/employeeService";
 import { useNavigate, useParams } from "react-router-dom";
 import { SuccessDialog } from "../ui/custom/success-dialogue";
 import { formSchema } from "@/schema/attendance";
+import { DateTimePicker } from "../ui/custom/date-time-picker";
 
 type AttendanceFormValues = z.infer<typeof formSchema>;
 
@@ -46,8 +47,8 @@ export default function AttendanceForm({
       employeeName: "",
       checkinLocation: "",
       checkoutLocation: "",
-      checkinTime: "",
-      checkoutTime: "",
+      checkinTime: new Date(),
+      checkoutTime: new Date(),
       workingHour: 0,
       status: "",
       date: new Date(),
@@ -67,18 +68,18 @@ export default function AttendanceForm({
       return dt instanceof Date && !isNaN(dt.getTime()) ? dt : new Date();
     };
 
-    const extractTime = (dtOrTime: any) => {
-      if (!dtOrTime) return "";
-      if (typeof dtOrTime === "string") {
-        if (dtOrTime.includes("T")) {
-          const t = new Date(dtOrTime);
-          return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
-        }
-        if (/^\d{2}:\d{2}/.test(dtOrTime)) return dtOrTime.slice(0, 5);
-      }
-      if (dtOrTime instanceof Date) return `${pad(dtOrTime.getHours())}:${pad(dtOrTime.getMinutes())}`;
-      return "";
-    };
+    // const extractTime = (dtOrTime: any) => {
+    //   if (!dtOrTime) return "";
+    //   if (typeof dtOrTime === "string") {
+    //     if (dtOrTime.includes("T")) {
+    //       const t = new Date(dtOrTime);
+    //       return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+    //     }
+    //     if (/^\d{2}:\d{2}/.test(dtOrTime)) return dtOrTime.slice(0, 5);
+    //   }
+    //   if (dtOrTime instanceof Date) return `${pad(dtOrTime.getHours())}:${pad(dtOrTime.getMinutes())}`;
+    //   return "";
+    // };
 
     const vals: AttendanceFormValues = {
       employeeCode: initialValues.employeeCode ?? initialValues.employeeCode ?? "",
@@ -114,12 +115,12 @@ export default function AttendanceForm({
     return () => clearTimeout(t);
   }, [employeeCode]);
 
-  const title = mode === "create" 
-    ? "Add New Attendance" 
-    : mode === "edit" 
-      ? "Edit Attendance" 
+  const title = mode === "create"
+    ? "Add New Attendance"
+    : mode === "edit"
+      ? "Edit Attendance"
       : "Attendance Detail";
-      
+
   const handleSuccessConfirm = () => {
     setSuccessDialogOpen(false);
     navigate("/attendance");
@@ -191,6 +192,7 @@ export default function AttendanceForm({
                     </FormLabel>
                     <FormControl>
                       <Input
+
                         {...field}
                         className="bg-natural-50 border-natural-500 h-10 text-natural-800"
                         placeholder="Enter location"
@@ -287,39 +289,18 @@ export default function AttendanceForm({
                     <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
                       Check-in Time
                     </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <div className="relative">
-                          <Input
-                            value={field.value || ""}
-                            readOnly
-                            className="pr-8 cursor-pointer bg-natural-50 border-natural-500 h-10 text-natural-800"
-                            placeholder="Select time"
-                            disabled={mode === "view"}
-
-                          />
-                          <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        </div>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto p-4 bg-white"
-                        align="start"
-                      >
-                        <input
-                          type="time"
-                          value={field.value || ""}
-                          onChange={(e) => field.onChange(e.target.value)}
-                          className="border rounded-md p-2"
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <DateTimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled={mode === "view"}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
               {/* Check-out Time */}
-              <FormField
+              <FormField  
                 control={form.control}
                 name="checkoutTime"
                 render={({ field }) => (
@@ -327,34 +308,11 @@ export default function AttendanceForm({
                     <FormLabel className="block text-sm font-medium text-gray-700 mb-2">
                       Check-out Time
                     </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <div className="relative">
-                          <Input
-                            value={field.value || ""}
-                            readOnly
-                            className="pr-8 cursor-pointer bg-natural-50 border-natural-500 h-10 text-natural-800"
-                            placeholder="Select time"
-                            disabled={mode === "view"}
-
-                          />
-                          <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        </div>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto p-4 bg-white"
-                        align="start"
-                      >
-                        <input
-                          type="time"
-                          value={field.value || ""}
-                          onChange={(e) => field.onChange(e.target.value)}
-                          className="border rounded-md p-2"
-                          disabled={mode === "view"}
-
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <DateTimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled={mode === "view"}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}

@@ -4,8 +4,10 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { RoleService } from "@/services/roleService";
 import { SidebarMenuItem } from "./sidebar-menuitems";
 import type { MenuConfig } from "@/types/role-menu-permission";
+import { LogoutConfirm } from "./logout-confirm";
 export default function Sidebar({ onClose }: { onClose: () => void }) {
     const authStore = useAuthStore();
+    const [openLogoutConfirm, setOpenLogoutConfirm] = useState(false)
     const menuPermissions = authStore.user?.menuTree?.menuTree;
     const dashboardRoutes = {
         Administrator: "/admin/dashboard",
@@ -87,7 +89,11 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
         setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
     }, []);
 
-    const logOut = useCallback(() => {
+    const logoutConfirm = () => {
+        setOpenLogoutConfirm(true)
+    }
+
+    const logOut = useCallback(async () => {
         authStore.logout();
     }, [authStore]);
 
@@ -114,9 +120,10 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
                 />
             ))}
 
-            <button onClick={logOut} className="sidebar-btn">
+            <button onClick={logoutConfirm} className="sidebar-btn">
                 <LogOut /> Logout
             </button>
+            <LogoutConfirm open={openLogoutConfirm} onConfirm={logOut}/>
         </div>
     );
 }

@@ -54,27 +54,38 @@ export function handleUnauthorized() {
 }
 
 export const downloadFile = (
-    blob: Blob,
-    contentDisposition?: string | null
-  ) => {
-    let filename = "download.xlsx";
+  blob: Blob,
+  contentDisposition?: string | null
+) => {
+  let filename = "download.xlsx";
 
-    if (contentDisposition) {
-      const match =
-        contentDisposition.match(/filename\*=UTF-8''(.+)/) ||
-        contentDisposition.match(/filename="?([^"]+)"?/);
+  if (contentDisposition) {
+    const match =
+      contentDisposition.match(/filename\*=UTF-8''(.+)/) ||
+      contentDisposition.match(/filename="?([^"]+)"?/);
 
-      if (match?.[1]) {
-        filename = decodeURIComponent(match[1]);
-      }
+    if (match?.[1]) {
+      filename = decodeURIComponent(match[1]);
     }
+  }
 
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
-  };
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+};
+
+export const formatDateTime = (date?: Date) => {
+  if (!date) return "";
+  return date.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};

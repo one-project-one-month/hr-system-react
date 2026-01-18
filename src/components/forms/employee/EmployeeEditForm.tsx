@@ -179,6 +179,7 @@ export default function EmployeeForm() {
 
             <FormField
               control={form.control}
+              disabled
               name="username"
               render={({ field }) => (
                 <FormItem>

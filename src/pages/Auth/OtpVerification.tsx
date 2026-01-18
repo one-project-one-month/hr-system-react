@@ -167,7 +167,7 @@ export default function OtpVerification() {
         <Button
           type="button"
           asChild
-          className="w-full h-11 text-sm primary-btn flex items-center justify-center gap-3"
+          className="w-full h-11 text-sm hover:text-primary-500 flex items-center justify-center gap-3"
         >
           <Link to="/">
             <MoveLeft />
