@@ -123,7 +123,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
             <button onClick={logoutConfirm} className="sidebar-btn">
                 <LogOut /> Logout
             </button>
-            <LogoutConfirm open={openLogoutConfirm} onConfirm={logOut}/>
+            <LogoutConfirm open={openLogoutConfirm} onConfirm={logOut} onOpenChange={setOpenLogoutConfirm}/>
         </div>
     );
 }
