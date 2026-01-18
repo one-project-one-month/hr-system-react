@@ -93,7 +93,7 @@ export default function PayrollList() {
 
   const handleExport = async (exportType: exportType) => {
     user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin")
-      || user.roleName.toLowerCase().includes("hr")
+      || user?.roleName.toLowerCase().includes("hr")
       ? exportType.type = "admin"
       : exportType.type = "employee"
 
