@@ -1,12 +1,13 @@
 import { useDataStore } from "@/stores/useDataStore";
 import type { CreateLeaveInputs } from "@/schema/leave";
 import type { LeaveList } from "@/types/leave";
+import { toDateOnly } from "@/lib/utils";
 
 const formatAndWrapPayload = (data: CreateLeaveInputs) => {
   const formattedData = {
     ...data,
-    fromDate: new Date(data.fromDate).toISOString().split("T")[0],
-    toDate: new Date(data.toDate).toISOString().split("T")[0],
+    fromDate: toDateOnly(data.fromDate),
+    toDate: toDateOnly(data.toDate),
   };
 
   return formattedData;

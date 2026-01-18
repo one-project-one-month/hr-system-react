@@ -36,6 +36,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { ApiResponse } from "@/types/api";
 import { DeleteDialog } from "@/components/ui/custom/delete-dialogue";
 import { DatePicker } from "@/components/ui/custom/date-picker";
+import { formatDate } from "@/lib/utils";
 
 export default function EmployeeLeaveList() {
     const [currentPage, setCurrentPage] = useState(1);
@@ -266,16 +267,8 @@ export default function EmployeeLeaveList() {
                                 </TableCell>
                                 <TableCell>{leave.leaveCode}</TableCell>
                                 <TableCell>{leave.leaveType}</TableCell>
-                                <TableCell>
-                                    {new Date(
-                                        leave.fromDate
-                                    ).toLocaleDateString()}
-                                </TableCell>
-                                <TableCell>
-                                    {new Date(
-                                        leave.toDate
-                                    ).toLocaleDateString()}
-                                </TableCell>
+                                <TableCell>{formatDate(leave.fromDate)}</TableCell>
+                                                <TableCell>{formatDate(leave.toDate)}</TableCell>
                                 <TableCell>{leave.totalHours}</TableCell>
                                 <TableCell>{leave.status}</TableCell>
                                 <TableCell>

@@ -22,6 +22,8 @@ import type { Leave, LeaveList, leaveType } from "@/types/leave";
 import { useSuccessDialogStore } from "@/stores/useSuccessDialogStore";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import { formatDate, formatDateTime } from "@/lib/utils";
 
 export default function LeaveList() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -204,8 +206,8 @@ export default function LeaveList() {
                 <TableCell>{leave.employeeCode}</TableCell>
                 <TableCell>{leave.leaveType}</TableCell>
                 <TableCell>{leave.reason}</TableCell>
-                <TableCell>{new Date(leave.fromDate).toLocaleDateString()}</TableCell>
-                <TableCell>{new Date(leave.toDate).toLocaleDateString()}</TableCell>
+                <TableCell>{formatDate(leave.fromDate)}</TableCell>
+                <TableCell>{formatDate(leave.toDate)}</TableCell>
                 <TableCell>{leave.totalHours}</TableCell>
                 <TableCell>{leave.status}</TableCell>
                 <TableCell className="flex gap-4 justify-center p-2">

@@ -70,7 +70,11 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
         resolver: zodResolver(createLeaveSchema),
         defaultValues:
             isEditMode && data
-                ? data
+                ? {
+                    ...data,
+                    fromDate: data.fromDate ? new Date(data.fromDate) : null ,
+                    toDate: data.toDate ? new Date(data.toDate) : null 
+                }
                 : {
                       leaveType: "",
                       fromDate: "",
@@ -113,16 +117,24 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
 
     const handleFormSubmit = async (values: CreateLeaveInputs) => {
         try {
+            console.log ('leaves',values)
             if (isEditMode) {
-                await leaveService.updateLeave(id!, values);
-                openDialog("Update Leave Successful!", onConfirm);
+                const resp = await leaveService.updateLeave(id!, values);
+                if(resp.isSuccess)
+                    openDialog("Update Leave Successful!", onConfirm);
+                
+                setErrMsg(resp.message)
             } else {
                 console.log(values);
-                await leaveService.createLeave(values);
-                openDialog("Create Leave Successful!", onConfirm);
+                const resp = await leaveService.createLeave(values);
+                if(resp.isSuccess)
+                    openDialog("Create Leave Successful!", onConfirm);
+
+                setErrMsg(resp.message)
             }
         } catch (error: any) {
-            setErrMsg(JSON.parse(error.message).message);
+            setErrMsg(error?.message);
+            throw error;
         }
     };
 
@@ -184,9 +196,6 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
                                             </SelectItem>
                                             <SelectItem value="MaternityLeave">
                                                 Maternity Leave
-                                            </SelectItem>
-                                            <SelectItem value="WorkFromHome">
-                                                Work From Home
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
