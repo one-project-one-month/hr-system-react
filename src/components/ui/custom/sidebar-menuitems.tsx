@@ -21,29 +21,29 @@ export function SidebarMenuItem({
   onClose,
 }: Props) {
   const location = useLocation();
+
   const hasPermission = () => {
     if (!item.menuGroupCode) return true; // default allowed
 
-    // top-level group permission
-    if (menuPermissions?.some(m => m.menuGroupCode === item.menuGroupCode && !m.menuItemCode && m.isChecked)) {
-      return true;
-    }
+    const group = menuPermissions?.find(g => g.menuGroupCode === item.menuGroupCode);
+    if (!group) return false; // no permission → hide
 
-    // child menu permission
+    // If this menu has children
     if (item.children?.length) {
+      // Only show if at least one child is checked
       return item.children.some(child =>
-        menuPermissions?.some(m =>
-          m.menuGroupCode === item.menuGroupCode &&
-          m.menuItemCode === child.menuItemCode &&
-          m.isChecked
-        )
+        group.childMenus?.some(c => c.menuItemCode === child.menuItemCode && c.isChecked)
       );
     }
 
-    // single menu item (leaf)
-    return menuPermissions?.some(
-      m => m.menuGroupCode === item.menuGroupCode && m.menuItemCode === item.menuItemCode && m.isChecked
-    );
+    // Leaf menu (single item)
+    if (item.menuItemCode) {
+      // Only show if this specific menu item is checked
+      return group.childMenus?.some(c => c.menuItemCode === item.menuItemCode && c.isChecked);
+    }
+
+    // Menu group without children and without menuItemCode
+    return group.isChecked;
   };
 
   if (!hasPermission()) return null;

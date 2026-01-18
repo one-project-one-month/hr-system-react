@@ -40,8 +40,8 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
         {
             label: "Menu", icon: <LayoutDashboardIcon />, menuGroupCode: "MENU",
             children: [
-                { label: "Menu Group", icon: <Menu />, path: "/menu-group", menuGroupCode: "MENU", },
-                { label: "Menu Item", icon: <PanelTopOpen />, path: "/menu-item", menuGroupCode: "MENU", }],
+                { label: "Menu Group", icon: <Menu />, path: "/menu-group", menuGroupCode: "MENU", menuItemCode : "MENU_GROUP" },
+                { label: "Menu Item", icon: <PanelTopOpen />, path: "/menu-item", menuGroupCode: "MENU", menuItemCode : "MENU_ITEM" }],
         },
         { label: "Role & Menu Permission", icon: <UserRound />, menuGroupCode: "ROLE_MENU_PERMISSION", path: "/role-menu-permission", },
         { label: "Company Rules", icon: <Book />, menuGroupCode: "COMPANY_RULES", path: "/company-rules", },
@@ -49,14 +49,14 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
         {
             label: "Backlog Module", icon: <LayoutTemplate />, menuGroupCode: "BACKLOG",
             children: [
-                { label: "Backlog", icon: <ListCheck />, path: "/backlog", menuGroupCode: "BACKLOG", },
-                { label: "Project", icon: <Briefcase />, path: "/project", menuGroupCode: "PROJECT", }
+                { label: "Backlog", icon: <ListCheck />, path: "/backlog", menuGroupCode: "BACKLOG", menuItemCode : "BACKLOG"},
+                { label: "Project", icon: <Briefcase />, path: "/project", menuGroupCode: "BACKLOG", menuItemCode : "PROJECT" }
             ],
         }, {
             label: "Attendance Module", icon: <Clock />, menuGroupCode: "ATTENDANCE",
             children: [
-                { label: "Location", icon: <Map />, path: "/location", menuGroupCode: "ATTENDANCE" },
-                { label: "Attendance", icon: <Clock />, path: "/attendance", menuGroupCode: "LOCATION", }],
+                { label: "Location", icon: <Map />, path: "/location", menuGroupCode: "ATTENDANCE", menuItemCode: "LOCATION" },
+                { label: "Attendance", icon: <Clock />, path: "/attendance", menuGroupCode: "ATTENDANCE", menuItemCode: "ATTENDANCE" }],
         },
         { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: payrollRoute },
         { label: "Leave", icon: <Calendar />, menuGroupCode: "LEAVE", path: leaveRoute, }];
