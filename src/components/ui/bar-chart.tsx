@@ -83,7 +83,7 @@ export function BarChartCard({
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={attendanceList}
-              barCategoryGap={60} // spacing similar to design
+              barCategoryGap={20} // spacing similar to design
               margin={{ top: 10, right: 24, left: 0, bottom: 32 }}
             >
               <CartesianGrid
@@ -100,8 +100,8 @@ export function BarChartCard({
                 tickFormatter={(value) => {
                   if (period === 1) {
                     return new Date(value).toLocaleDateString("en-US", {
+                      day: "numeric",
                       month: "short",
-                      year: "numeric",
                     });
                   }
                   return shortMonth(value);
