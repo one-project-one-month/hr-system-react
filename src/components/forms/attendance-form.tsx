@@ -39,6 +39,7 @@ export default function AttendanceForm({
 }) {
   const { code } = useParams();
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [error, setError] = useState("")
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,18 +69,18 @@ export default function AttendanceForm({
       return dt instanceof Date && !isNaN(dt.getTime()) ? dt : new Date();
     };
 
-    // const extractTime = (dtOrTime: any) => {
-    //   if (!dtOrTime) return "";
-    //   if (typeof dtOrTime === "string") {
-    //     if (dtOrTime.includes("T")) {
-    //       const t = new Date(dtOrTime);
-    //       return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
-    //     }
-    //     if (/^\d{2}:\d{2}/.test(dtOrTime)) return dtOrTime.slice(0, 5);
-    //   }
-    //   if (dtOrTime instanceof Date) return `${pad(dtOrTime.getHours())}:${pad(dtOrTime.getMinutes())}`;
-    //   return "";
-    // };
+    const extractTime = (dtOrTime: any) => {
+      if (!dtOrTime) return "";
+      if (typeof dtOrTime === "string") {
+        if (dtOrTime.includes("T")) {
+          const t = new Date(dtOrTime);
+          return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
+        }
+        if (/^\d{2}:\d{2}/.test(dtOrTime)) return dtOrTime.slice(0, 5);
+      }
+      if (dtOrTime instanceof Date) return `${pad(dtOrTime.getHours())}:${pad(dtOrTime.getMinutes())}`;
+      return "";
+    };
 
     const vals: AttendanceFormValues = {
       employeeCode: initialValues.employeeCode ?? initialValues.employeeCode ?? "",
@@ -99,21 +100,40 @@ export default function AttendanceForm({
 
   // When employee code changes, fetch employee details and populate employeeName
   useEffect(() => {
-    if (!employeeCode) return;
-    // debounce to avoid many requests on fast typing
-    const t = setTimeout(async () => {
+    if (!employeeCode) {
+      form.clearErrors("employeeCode");
+      form.setValue("employeeName", "");
+      return;
+    }
+
+    const timer = setTimeout(async () => {
       try {
         const emp = await EmployeeService.fetchEmployee(employeeCode);
-        // EmployeeService returns an object with 'name' or 'employeeName'
+
         const name = emp?.name ?? emp?.employeeName ?? "";
-        if (name) form.setValue("employeeName", name);
-      } catch (err) {
-        // ignore fetch errors silently; user can still type name manually
-        console.warn("Failed to fetch employee for code", employeeCode, err);
+
+        if (!name) {
+          throw new Error("Employee not found");
+        }
+
+        form.setValue("employeeName", name);
+        form.clearErrors("employeeCode");
+      } catch (error: any) {
+        const message = "employee not found";
+
+        console.log (error.message.data)
+
+        form.setValue("employeeName", "");
+
+        form.setError("employeeCode", {
+          type: "manual",
+          message,
+        });
       }
     }, 350);
-    return () => clearTimeout(t);
-  }, [employeeCode]);
+
+    return () => clearTimeout(timer);
+  }, [employeeCode, form]);
 
   const title = mode === "create"
     ? "Add New Attendance"
@@ -300,7 +320,7 @@ export default function AttendanceForm({
               />
 
               {/* Check-out Time */}
-              <FormField  
+              <FormField
                 control={form.control}
                 name="checkoutTime"
                 render={({ field }) => (

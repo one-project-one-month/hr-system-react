@@ -354,35 +354,6 @@ export default function RoleMenuPermissionPanel() {
           return;
         }
 
-        // // DASHBOARD
-        // if (
-        //   group.menuGroupCode === "DASHBOARD" ||
-        //   group.menuGroupCode === "PAYROLL" ||
-        //   group.menuGroupCode === "ROLE_MENU_PERMISSION"
-        // ) {
-        //   flatPermissions.push({
-        //     menuGroupCode: group.menuGroupCode,
-        //     menuItemCode: null,
-        //     permissionCode: null,
-        //     isChecked: group.isChecked,
-        //   });
-        //   return;
-        // }
-
-        // // COMPANY_RULES → LIST + UPDATE
-        // if (["COMPANY_RULES"].includes(group.menuGroupCode)) {
-        //   ["LIST", "UPDATE"].forEach((code) => {
-        //     flatPermissions.push({
-        //       menuGroupCode: group.menuGroupCode,
-        //       menuItemCode: null,
-        //       permissionCode: code,
-        //       isChecked: group.isChecked,
-        //     });
-        //   });
-        //   return;
-        // }
-
-        // Default → all permissions
         (fetchedPermissions ?? []).forEach((p: any) => {
           flatPermissions.push({
             menuGroupCode: group.menuGroupCode,
