@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { useAuthStore } from "@/stores/useAuthStore";
+import type { UserRole } from "@/components/ui/custom/sidebar";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -88,4 +89,39 @@ export const formatDateTime = (date?: Date) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+};
+
+
+export const dashboardRoutes: Record<string, string> = {
+  administrator: "/admin/dashboard",
+  admin: "/admin/dashboard",
+  "hr specialist": "/hr/dashboard",
+  hr: "/hr/dashboard",
+  employee: "/employee/dashboard",
+};
+
+export const leaveRoutes: Record<string, string> = {
+  employee: "/leave/employee",
+  admin: "/leave/hr",
+  administrator: "/leave/hr",
+  hr: "/leave/hr",
+  "hr specialist": "/leave/hr",
+};
+
+export const payrollRoutes: Record<string, string> = {
+  employee: "/payroll",
+  admin: "/payrollSummary",
+  administrator: "/payrollSummary",
+  hr: "/payrollSummary",
+  "hr specialist": "/payrollSummary",
+  "hr manager": "/payrollSummary",
+};
+
+
+export const getRoute = (
+  role: string | undefined,
+  routes: Record<string, string>,
+  fallback: string
+) => {
+  return (role && routes[role]) || fallback;
 };

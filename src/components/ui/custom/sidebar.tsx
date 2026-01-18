@@ -5,54 +5,89 @@ import { RoleService } from "@/services/roleService";
 import { SidebarMenuItem } from "./sidebar-menuitems";
 import type { MenuConfig } from "@/types/role-menu-permission";
 import { LogoutConfirm } from "./logout-confirm";
+import { dashboardRoutes, getRoute, leaveRoutes, payrollRoutes } from "@/lib/utils";
+
+export type UserRole =
+    | "ADMIN"
+    | "HR"
+    | "EMPLOYEE";
+
+const ROLE_MAP: Record<string, AppRole> = {
+    // ADMIN
+    admin: "ADMIN",
+    administrator: "ADMIN",
+    superadmin: "ADMIN",
+
+    // HR
+    hr: "HR",
+    "hr specialist": "HR",
+    "hr manager": "HR",
+    recruiter: "HR",
+
+    // EMPLOYEE
+    employee: "EMPLOYEE",
+    staff: "EMPLOYEE",
+    intern: "EMPLOYEE",
+
+    // FINANCE
+    finance: "FINANCE",
+    accountant: "FINANCE",
+    payroll: "FINANCE",
+
+    // MANAGER
+    manager: "MANAGER",
+    supervisor: "MANAGER",
+    lead: "MANAGER",
+};
+
+export const ROUTES: Record<AppRole, {
+    dashboard: string;
+    leave: string;
+    payroll: string;
+}> = {
+    ADMIN: {
+        dashboard: "/admin/dashboard",
+        leave: "/leave/hr",
+        payroll: "/payrollSummary",
+    },
+    HR: {
+        dashboard: "/hr/dashboard",
+        leave: "/leave/hr",
+        payroll: "/payrollSummary",
+    },
+    EMPLOYEE: {
+        dashboard: "/employee/dashboard",
+        leave: "/leave/employee",
+        payroll: "/payroll",
+    },
+};
+
+
+
 export default function Sidebar({ onClose }: { onClose: () => void }) {
     const authStore = useAuthStore();
     const [openLogoutConfirm, setOpenLogoutConfirm] = useState(false)
     const menuPermissions = authStore.user?.menuTree?.menuTree;
-    const dashboardRoutes = {
-        Administrator: "/admin/dashboard",
-        admin: "/admin/dashboard",
-        Admin: "/admin/dashboard",
-        "HR Specialist": "/hr/dashboard",
-        "HR": "/hr/dashboard",
-        Employee: "/employee/dashboard",
-    } as const;
 
-    const leaveRoutes = {
-        Employee: "/leave/employee",
-        admin: "/leave/hr",
-        Admin: "/leave/hr",
-        Administrator: "/leave/hr",
-        HR: "/leave/hr",
-        "HR Specialist": "/leave/hr",
-    };
+    const role = authStore.user?.roleName?.toLowerCase();
 
-    const payrollRoutes = {
-        Employee: "/payroll",
-        Administrator: "/payrollSummary",
-        admin: "/payrollSummary",
-        Admin: "/payrollSummary",
-        "HR Specialist": "/payrollSummary",
-        "HR": "/payrollSummary",
-        "HR Manager": "/payrollSummary"
-    }
+    const dashboardRoute = getRoute(
+        role,
+        dashboardRoutes,
+        "/employee/dashboard"
+    );
 
+    const leaveRoute = getRoute(
+        role,
+        leaveRoutes,
+        "/leave/employee"
+    );
 
-    const rawRole = authStore.user?.roleName;
-    const dashboardRoute = rawRole
-        && dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
-        ? dashboardRoutes[rawRole as keyof typeof dashboardRoutes]
-        : "/employee/dashboard";
-
-    const payrollRoute = rawRole
-        && payrollRoutes[rawRole as keyof typeof payrollRoutes]
-        ? payrollRoutes[rawRole as keyof typeof payrollRoutes]
-        : "/payroll"
-
-    const leaveRoute = rawRole && leaveRoutes[rawRole as keyof typeof leaveRoutes]
-        ? leaveRoutes[rawRole as keyof typeof leaveRoutes]
-        : "/leave/employee";
-
+    const payrollRoute = getRoute(
+        role,
+        payrollRoutes,
+        "/payroll"
+    );
     const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
     const menuConfig: MenuConfig[] =
         [{
@@ -84,7 +119,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
         { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: payrollRoute },
         { label: "Leave", icon: <Calendar />, menuGroupCode: "LEAVE", path: leaveRoute, }];
 
-        
+
     const toggleMenu = useCallback((key: string) => {
         setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
     }, []);
@@ -123,7 +158,7 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
             <button onClick={logoutConfirm} className="sidebar-btn">
                 <LogOut /> Logout
             </button>
-            <LogoutConfirm open={openLogoutConfirm} onConfirm={logOut} onOpenChange={setOpenLogoutConfirm}/>
+            <LogoutConfirm open={openLogoutConfirm} onConfirm={logOut} onOpenChange={setOpenLogoutConfirm} />
         </div>
     );
 }
