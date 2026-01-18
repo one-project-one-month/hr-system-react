@@ -44,7 +44,7 @@ export function UpdateAttendance() {
       checkInLocation: values.checkinLocation,
       checkOutLocation: values.checkoutLocation,
       checkInTime: values.checkinTime ? values.checkinTime.toISOString() : null,
-      checkOutTime: values.checkinTime ? values.checkinTime.toISOString() : null,
+      checkOutTime: values.checkoutTime ? values.checkoutTime.toISOString() : null,
       attendanceDate: toDatePart(values.date),
       workingHour: values.workingHour,
       status: values.status,

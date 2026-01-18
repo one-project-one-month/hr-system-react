@@ -71,7 +71,6 @@ export default function OtpVerification() {
   async function handleVerify() {
     if (!canContinue) return;
     try {
-      console.log({ email, code })
       const resetToken = await verifyCode(email ?? "", code)
       const token = resetToken?.data?.resetToken;
       setSubmitting(true);

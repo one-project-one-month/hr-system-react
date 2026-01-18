@@ -21,13 +21,13 @@ export function SidebarMenuItem({
   onClose,
 }: Props) {
   const location = useLocation();
-
   const hasPermission =
     !item.menuGroupCode ||
     menuPermissions?.some(
       (m) => m.menuGroupCode === item.menuGroupCode && m.isChecked
     );
-
+  console.log ('menu Permissions', menuPermissions)
+  console.log ('item', item)
   if (!hasPermission) return null;
 
   const isActive =

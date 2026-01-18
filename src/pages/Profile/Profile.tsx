@@ -188,6 +188,7 @@ export default function Profile() {
                 Username
               </label>
               <Input
+                disabled
                 {...register("username")}
                 type="text"
                 className={`w-full px-4 py-2 border rounded-md bg-[#FAFBFB] ${errors.username ? "border-red-500" : "border-gray-300"
