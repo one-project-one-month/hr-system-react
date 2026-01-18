@@ -11,7 +11,6 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
     const authStore = useAuthStore();
     const [openLogoutConfirm, setOpenLogoutConfirm] = useState(false)
     const menuPermissions = authStore.user?.menuTree?.menuTree;
-
     const role = authStore.user?.roleName?.toLowerCase();
 
     const dashboardRoute = getRoute(

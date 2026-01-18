@@ -21,14 +21,32 @@ export function SidebarMenuItem({
   onClose,
 }: Props) {
   const location = useLocation();
-  const hasPermission =
-    !item.menuGroupCode ||
-    menuPermissions?.some(
-      (m) => m.menuGroupCode === item.menuGroupCode && m.isChecked
+  const hasPermission = () => {
+    if (!item.menuGroupCode) return true; // default allowed
+
+    // top-level group permission
+    if (menuPermissions?.some(m => m.menuGroupCode === item.menuGroupCode && !m.menuItemCode && m.isChecked)) {
+      return true;
+    }
+
+    // child menu permission
+    if (item.children?.length) {
+      return item.children.some(child =>
+        menuPermissions?.some(m =>
+          m.menuGroupCode === item.menuGroupCode &&
+          m.menuItemCode === child.menuItemCode &&
+          m.isChecked
+        )
+      );
+    }
+
+    // single menu item (leaf)
+    return menuPermissions?.some(
+      m => m.menuGroupCode === item.menuGroupCode && m.menuItemCode === item.menuItemCode && m.isChecked
     );
-  console.log ('menu Permissions', menuPermissions)
-  console.log ('item', item)
-  if (!hasPermission) return null;
+  };
+
+  if (!hasPermission()) return null;
 
   const isActive =
     item.path && location.pathname === item.path;
@@ -44,9 +62,8 @@ export function SidebarMenuItem({
           </span>
           <ChevronUp
             size={14}
-            className={`mt-2 transition-transform ${
-              openMenus[item.label] ? "rotate-180" : ""
-            }`}
+            className={`mt-2 transition-transform ${openMenus[item.label] ? "rotate-180" : ""
+              }`}
           />
         </div>
 
@@ -72,9 +89,8 @@ export function SidebarMenuItem({
     <Link
       to={item.path!}
       onClick={onClose}
-      className={`sidebar-btn ${
-        isActive ? "bg-primary-500 text-natural-50" : ""
-      }`}
+      className={`sidebar-btn ${isActive ? "bg-primary-500 text-natural-50" : ""
+        }`}
     >
       {item.icon} {item.label}
     </Link>
