@@ -116,7 +116,7 @@ export default function ProjectListing() {
     setError(null);
     try {
       let res;
-      if (user?.roleName !== 'Administrator'
+      if ((user?.roleName.toLocaleLowerCase() !== 'Administrator'.toLocaleLowerCase() && user?.roleName.toLocaleLowerCase() !== 'admin')
         && !user?.roleName.toLocaleLowerCase().includes('hr')) {
         res = await projectService.fetchProjectsByCode(user?.employeeCode, listParams)
       }
