@@ -300,8 +300,8 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
                                                     onSelect={(date) =>
                                                         field.onChange(
                                                             date
-                                                                ? date.toISOString()
-                                                                : ""
+                                                                ? date
+                                                                : null
                                                         )
                                                     }
                                                     initialFocus
@@ -351,8 +351,8 @@ export default function LeaveForm({ id, isEditMode, data }: LeaveFormProps) {
                                                     onSelect={(date) =>
                                                         field.onChange(
                                                             date
-                                                                ? date.toISOString()
-                                                                : ""
+                                                                ? date
+                                                                : null
                                                         )
                                                     }
                                                     initialFocus
