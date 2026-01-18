@@ -72,8 +72,8 @@ export default function AttendanceForm({
     const vals: AttendanceFormValues = {
       employeeCode: initialValues.employeeCode ?? "",
       employeeName: initialValues.employeeName ?? "",
-      checkinLocation: initialValues.checkinLocation ?? "",
-      checkoutLocation: initialValues.checkoutLocation ?? initialValues.checkOutLocation ?? "",
+      checkinLocation: initialValues.checkInLocation ?? "",
+      checkoutLocation: initialValues.checkOutLocation ?? "",
       checkinTime: parseDateTime(initialValues.checkInTime) ,
       checkoutTime:parseDateTime(initialValues.checkOutTime),
       workingHour: Number(initialValues.workingHour ?? 0),
