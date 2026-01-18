@@ -32,25 +32,27 @@ export const useDataStore = create<DataStore>((set) => ({
 
         try {
             const token = useAuthStore.getState().token;
+            const isFormData = body instanceof FormData;
 
             const options: RequestInit = {
                 method,
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
+                    ...(isFormData ? {} : { "Content-Type": "application/json" }),
                     ...headers,
                 },
-                ...(body ? { body: JSON.stringify(body) } : {}),
+                ...(body
+                    ? {
+                        body: isFormData ? body : JSON.stringify(body),
+                    }
+                    : {}),
             };
 
             const response = await fetch(`/api${endPoint}`, options);
 
             const data =
-                responseType === "blob"
-                    ? null
-                    : await response.json();
+                responseType === "blob" ? null : await response.json();
 
-            // ❌ do NOT throw — backend sends envelope
             if (!response.ok) {
                 set({
                     error: data?.message ?? "Request failed",
@@ -60,10 +62,8 @@ export const useDataStore = create<DataStore>((set) => ({
                 return data;
             }
 
-            // ✅ success
             set({ data, loading: false });
             return data;
-           
         } catch (err: any) {
             set({ error: err.message, loading: false });
             throw err;

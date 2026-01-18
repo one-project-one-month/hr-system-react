@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Camera, CircleUser } from "lucide-react";
+import { AlertCircle, Camera, CircleUser } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
@@ -24,7 +24,7 @@ type ProfileFormData = z.infer<typeof profileSchema>;
 export default function Profile() {
   const navigate = useNavigate();
   const { user } = useAuthStore();
-
+  const [error, setError] = useState("")
   const [profileImagePreview, setProfileImagePreview] = useState<string>("");
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const { open, description, onConfirm, closeDialog, openDialog } =
@@ -100,8 +100,15 @@ export default function Profile() {
       if (profileImageFile) {
         formData.append("ProfileImage", profileImageFile);
       }
-      await ProfileService.updateEmployee(formData);
-      openDialog("Update Profile successful!", onConfirm);
+      console.log(formData)
+      const resp = await ProfileService.updateEmployee(formData);
+      if (resp.isSuccess) {
+        setError("")
+        openDialog("Update Profile successful!", onConfirm);
+        return
+      }
+
+      setError(resp.message)
 
     } catch (err) {
       console.error("Failed to update profile:", err);
@@ -160,7 +167,12 @@ export default function Profile() {
         {/* ✅ Form Section */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
-
+          {error && (
+            <div className="flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
+              <AlertCircle className="w-4 h-4" />
+              <span>{error}</span>
+            </div>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-6">
             {/* Employee Code */}
             <div>

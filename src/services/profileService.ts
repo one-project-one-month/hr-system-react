@@ -12,21 +12,15 @@ export const ProfileService = {
     return useDataStore.getState().data ?? {};
   },
  updateEmployee: async (payload: FormData) => {
-  
-  const response = useDataStore.getState().fetchData({
+  const response = await useDataStore.getState().fetchData({
     endPoint: `/Employee/EditProfile`,
     method: "POST", 
-    body: payload,
-    headers: {
-      "Authorization": `Bearer ${token}`
-    },
+    body: payload
+    // headers: {
+    //   "Authorization": `Bearer ${token}`
+    // },
   });
-
-  if (!response.ok) {
-    throw new Error("Failed to update profile");
-  }
-
-  return await response.json();
+  return response
 }
 
 };
