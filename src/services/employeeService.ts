@@ -17,7 +17,7 @@ export const EmployeeService = {
   },
 
   createEmployee: async (payload: {}) => {
-    await useDataStore.getState().fetchData({
+    return await useDataStore.getState().fetchData({
       endPoint: "/Employee/create",
       method: "POST",
       body: payload,

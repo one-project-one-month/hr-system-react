@@ -60,7 +60,6 @@ export function AttendanceList() {
   const menuGroup = user?.menuTree?.menuTree
     .find(mg => mg.menuGroupCode === "ATTENDANCE")?.childMenus
     .find(mg => mg.menuItemCode === "ATTENDANCE")
-
   const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
   const CANCREATE = menuGroup && menuGroup?.permissions.includes("CREATE")
   const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")

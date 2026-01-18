@@ -24,7 +24,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { AlertCircle, CalendarIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -36,6 +36,7 @@ export default function EmployeeForm() {
     const navigate = useNavigate();
     const [roles, setRoles] = useState({});
     const fetchRoles = roles?.items || [];
+    const [error, setError] = useState("")
     const { onConfirm, openDialog } = useSuccessDialogStore();
     const handleCancel = () => {
         navigate("/employee");
@@ -76,9 +77,14 @@ export default function EmployeeForm() {
                 : null,
         };
         try {
-            await EmployeeService.createEmployee(employeeData);
-            openDialog("Create Employee Successful!", onConfirm);
-            navigate("/employee");
+            const resp = await EmployeeService.createEmployee(employeeData);
+            if (resp.isSuccess) {
+                openDialog("Create Employee Successful!", onConfirm);
+                navigate("/employee");
+            }
+
+            setError(resp.message)
+
         } catch (error) {
             console.error("Error saving employee:", error);
         }
@@ -101,6 +107,12 @@ export default function EmployeeForm() {
                     onReset={onReset}
                     className="space-y-3"
                 >
+                    {error && (
+                        <div className="flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
+                            <AlertCircle className="w-4 h-4" />
+                            <span>{error}</span>
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 
                         <FormField
