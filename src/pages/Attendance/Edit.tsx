@@ -13,7 +13,6 @@ export function UpdateAttendance() {
       try {
         const data = await attendanceService.editAttendanceRecord(code as string);
         const record = Array.isArray(data) ? data[0] : data;
-        console.log (data)
         setInitialValues(record.attendance);
       } catch (err) {
         console.error("Failed to load attendance record", err);
@@ -54,7 +53,6 @@ export function UpdateAttendance() {
       status: values.status,
       remark: values.remark,
     };
-console.log(payload)
     await attendanceService.updateAttendanceRecord(payload);
     // try {
     //   await attendanceService.fetchAttendanceRecords();

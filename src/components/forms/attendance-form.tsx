@@ -56,7 +56,6 @@ export default function AttendanceForm({
   useEffect(() => {
     if (!initialValues) return;
     const pad = (n: number) => n.toString().padStart(2, "0");
-
     const parseDate = (d: any) => {
       if (!d) return new Date();
       const dt = typeof d === "string" ? new Date(d) : d;
@@ -65,16 +64,18 @@ export default function AttendanceForm({
 
     const parseDateTime = (value?: string | Date) => {
       if (!value) return null;
+      console.log ('>>>>>>>>',value)
       const date = typeof value === "string" ? new Date(value) : value;
       return date instanceof Date && !isNaN(date.getTime()) ? date : null;
     };
+    console.log (initialValues)
     const vals: AttendanceFormValues = {
       employeeCode: initialValues.employeeCode ?? "",
       employeeName: initialValues.employeeName ?? "",
       checkinLocation: initialValues.checkinLocation ?? "",
       checkoutLocation: initialValues.checkoutLocation ?? initialValues.checkOutLocation ?? "",
-      checkinTime: initialValues.checkinTime ? parseDateTime(initialValues.checkinTime) : new Date(),
-      checkoutTime: initialValues.checkoutTime ? parseDateTime(initialValues.checkoutTime) : new Date(),
+      checkinTime: parseDateTime(initialValues.checkInTime) ,
+      checkoutTime:parseDateTime(initialValues.checkOutTime),
       workingHour: Number(initialValues.workingHour ?? 0),
       status: initialValues.status ?? "",
       date: parseDate(initialValues.date ?? initialValues.attendanceDate ?? initialValues.attendanceDate),
