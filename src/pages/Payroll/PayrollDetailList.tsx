@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -63,26 +63,39 @@ export default function PayrollList() {
   return (
     <div className="p-6 w-full flex-1">
       <div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
-        <p className="page-title">Payroll Detail</p>
+        <nav className="flex items-center text-sm text-muted-foreground">
+          <Link
+            to="/payrollSummary"
+            className="hover:text-primary-500 font-medium"
+          >
+            Payroll Summary
+          </Link>
+
+          <span className="mx-2">/</span>
+
+          <span className="text-foreground font-semibold">
+            Payroll Detail
+          </span>
+        </nav>
         {/* search */}
         <div className="relative w-full md:w-[200px] text-primary-800">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
-            <Input
-              type="text"
-              value={searchName}
-              placeholder="Search..."
-              onInput={(e) => setSearchName(e.target.value)}
-              className="border-primary-700 bg-natural-50 focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9 text-primary-400"
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
+          <Input
+            type="text"
+            value={searchName}
+            placeholder="Search..."
+            onInput={(e) => setSearchName(e.target.value)}
+            className="border-primary-700 bg-natural-50 focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9 text-primary-400"
+          />
+          {searchName ? (
+            <CircleX
+              onClick={() => setSearchName("")}
+              className="cursor-pointer absolute absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4"
             />
-            {searchName ? (
-              <CircleX
-                onClick={() => setSearchName("")}
-                className="cursor-pointer absolute absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4"
-              />
-            ) : (
-              ""
-            )}
-          </div>
+          ) : (
+            ""
+          )}
+        </div>
         {/* buttons
         <Button className="primary-btn">
           <FolderUp />
@@ -99,19 +112,19 @@ export default function PayrollList() {
               Employee Code
             </TableHead>
             <TableHead >
-              Employee Name 
+              Employee Name
             </TableHead>
             <TableHead >
-              Payroll Date 
+              Payroll Date
             </TableHead>
             <TableHead >
-              Status 
+              Status
             </TableHead>
             <TableHead >
-              Total Working Hours 
+              Total Working Hours
             </TableHead>
             <TableHead >
-              NetPay   
+              NetPay
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -121,12 +134,12 @@ export default function PayrollList() {
               <TableRow
                 key={index}
                 className="odd:bg-primary-100 even:bg-primary-50 hover:bg-primary-200 transition-colors border-none py-3"
-                // onClick={() => handleRowClick(payroll.payrollCode)}
+              // onClick={() => handleRowClick(payroll.payrollCode)}
               >
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{payroll.employeeCode}</TableCell>
                 <TableCell>{payroll.employeeName}</TableCell>
-                <TableCell>{payroll.payrollDate ? new Date(payroll.payrollDate).toLocaleDateString(): ""}</TableCell>
+                <TableCell>{payroll.payrollDate ? new Date(payroll.payrollDate).toLocaleDateString() : ""}</TableCell>
                 <TableCell>{payroll.status}</TableCell>
                 <TableCell>{payroll.totalWorkingHour}</TableCell>
                 <TableCell>{payroll.netPay}</TableCell>
