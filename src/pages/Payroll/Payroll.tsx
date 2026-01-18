@@ -52,7 +52,7 @@ export default function PayrollList() {
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const handleSuccessConfirm = () => {
     setSuccessDialogOpen(false);
-    navigate("/payroll");
+    navigate("/payrollSummary");
   };
   const handleRowClick = (payrollSummaryCode: string) => {
     const payroll = data.find((p) => p.payrollSummaryCode === payrollSummaryCode);
@@ -72,6 +72,7 @@ export default function PayrollList() {
       if (!resp.isSuccess)
         setError(resp.message)
 
+      setSuccessDialogOpen(true)
       navigate("/payrollSummary", { state: { refetch: true } })
       setLoading(false)
     } catch (error) {
@@ -130,7 +131,7 @@ export default function PayrollList() {
       try {
         const payrollSummary = await PayrollService.fetchPayrollSummary(
           {
-            MonthYear: cleanMonthYear(monthYear) ?? "",
+            MonthYear: "",
             PageNo: currentPage,
             PageSize: rowsPerPage
           }

@@ -39,8 +39,8 @@ export function PayrollBarChart({
   yearOptions,
   footer,
 }: PayrollBarChartProps) {
-  const [year, setYear] = useState("2025")
-    const [chartData, setChartData] = useState([]);
+  const [year, setYear] = useState("2026")
+  const [chartData, setChartData] = useState([]);
   useEffect(() => {
         (async () => {
             try {
