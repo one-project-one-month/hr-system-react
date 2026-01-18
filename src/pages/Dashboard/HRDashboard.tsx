@@ -77,7 +77,7 @@ export default function () {
         const handleCheckInOut = useCheckInStore((s) => s.handleCheckInOut);
 
         return (
-            <Card className="w-full md:w-[50%] rounded-[20px] border border-natural-200 bg-background shadow-sm gap-0 py-5 px-2.5">
+            <Card className="w-full rounded-[20px] border border-natural-200 bg-background shadow-sm gap-0 py-5 px-2.5">
                 <CardHeader className="pb-2 px-0">
                     <CardTitle className="text-2xl font-semibold text-slate-900">
                         Check In/Out
@@ -137,10 +137,12 @@ export default function () {
 
     return (
         <>
-            <div className="flex flex-col gap-2 p-3 h-auto mx-4">
+            <div className="flex flex-col gap-2 p-3 w-full mx-auto md:mx-4">
                 <div className="w-full flex flex-col md:flex-row gap-2">
-                    <CheckInOutCard />
-                    <div className="w-full md:w-[50%]">
+                    <div className="w-full md:w-1/2">
+                        <CheckInOutCard />
+                    </div>
+                    <div className="w-full md:w-1/2">
                         <PieChartWithPercentage />
                     </div>
                 </div>

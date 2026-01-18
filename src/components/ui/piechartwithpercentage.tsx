@@ -41,12 +41,9 @@ export default function PieChartWithPercentage({
     fetchProjectOverview()
   }, [])
   return (
-    <Card className="w-full bg-natural-50 border-none py-0 gap-2">
-      <div className="flex justify-between pt-3 px-2">
+    <Card className="w-full h-full bg-natural-50 border-none py-0 gap-2">
+      <div className="flex justify-between pt-3 px-2 w-full">
         <CardTitle className="text-xl">Project Overview</CardTitle>
-        <div className="bg-primary-50 rounded p-2">
-          <p className="text-primary-500">Monthly</p>
-        </div>
       </div>
 
       <CardContent className="flex justify-center items-center w-full p-2">
