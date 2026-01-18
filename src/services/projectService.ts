@@ -61,19 +61,13 @@ export const projectService = {
     payload: Payload,
     headers?: Record<string, string>
   ): Promise<ApiEnvelope<boolean> | null> => {
-    await useDataStore.getState().fetchData({
+    const resp = await useDataStore.getState().fetchData({
       endPoint: `/Project/create`,
       method: "POST",
       body: payload,
       headers,
     });
 
-    const resp = asApi<boolean>(useDataStore.getState().data as unknown);
-
-    if (resp?.isSuccess === false) {
-      useDataStore.setState({ error: resp.message || "Create failed" });
-      return null;
-    }
     return resp;
   },
 

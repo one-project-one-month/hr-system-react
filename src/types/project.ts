@@ -35,7 +35,7 @@ export type ProjectFormValues = {
     code: string;
     name: string;
     description: string;
-    status: "Active" | "Completed" | "Cancelled" | "Planned" | "";
+    status: "InProgress" | "Completed" | "Cancelled" | "Planned" | "";
     start: Date | null;
     due: Date | null;
 };
@@ -56,7 +56,7 @@ export type ApiProject = {
     projectDescription?: string | null;
     startDate?: string | null;
     endDate?: string | null;
-    projectStatus: "Active" | "Completed" | "Cancelled" | "Planned";
+    projectStatus: "InProgress" | "Completed" | "Cancelled" | "Planned";
 };
 
 export type Project = {

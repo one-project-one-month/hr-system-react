@@ -13,73 +13,47 @@ import type { ApiProject, ProjectFormValues } from "@/types/project";
 export function ProjectEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data, loading, error } = useDataStore();
+  const { loading, error } = useDataStore();
   const token = useAuthStore((s) => s.token);
   const authHeaders = useMemo(
     () => (token ? { Authorization: `Bearer ${token}` } : undefined),
     [token]
   );
+
+  const [project, setProject] = useState<ApiProject | null>(null);
   const [successOpen, setSuccessOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
-    projectService.fetchProjectById(id, authHeaders);
+
+    (async () => {
+      const resp = await projectService.fetchProjectById(id, authHeaders);
+      if (resp?.isSuccess && resp.data) {
+        setProject(resp.data);
+      }
+    })();
   }, [id, authHeaders]);
 
-  function isApiResponse<T>(x: unknown): x is { isSuccess: unknown; data: T } {
-    return (
-      typeof x === "object" && x !== null && "isSuccess" in x && "data" in x
-    );
+  if (loading && !project) {
+    return <div className="p-6 text-muted-foreground">Loading...</div>;
   }
 
-  const payload = isApiResponse<ApiProject>(data)
-    ? data.data
-    : (data as unknown as ApiProject | null);
-  const proj = (payload ?? null) as ApiProject | null;
-
-  if (loading && !proj) {
-    return (
-      <div className="p-6">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Edit Project</h2>
-          <Button variant="secondary" onClick={() => navigate(-1)}>
-            Back
-          </Button>
-        </div>
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
+  if (!project) {
+    return <div className="p-6">Project not found.</div>;
   }
-
-  if (error) {
-    return (
-      <div className="p-6">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Edit Project</h2>
-          <Button variant="secondary" onClick={() => navigate(-1)}>
-            Back
-          </Button>
-        </div>
-        <p className="text-red-500">Error: {error}</p>
-      </div>
-    );
-  }
-
-  if (!proj) return <div className="p-6">Project not found.</div>;
 
   const initialValues: Partial<ProjectFormValues> = {
-    code: proj.projectCode ?? "",
-    name: proj.projectName ?? "",
-    description: proj.projectDescription ?? "",
-    status: proj.projectStatus, // <-- direct
-    start: proj.startDate ? new Date(proj.startDate) : null,
-    due: proj.endDate ? new Date(proj.endDate) : null,
+    code: project.projectCode ?? "",
+    name: project.projectName ?? "",
+    description: project.projectDescription ?? "",
+    status: project.projectStatus,
+    start: project.startDate ? new Date(project.startDate) : null,
+    due: project.endDate ? new Date(project.endDate) : null,
   };
 
   return (
     <>
       <ProjectForm
-        key={proj.projectCode || String(id)}
         mode="edit"
         initialValues={initialValues}
         submitting={loading}
@@ -90,10 +64,10 @@ export function ProjectEdit() {
 
           const body = {
             projectName: vals.name,
-            projectDescription: vals.description || "",
-            startDate: vals.start ? vals.start.toISOString() : "",
-            endDate: vals.due ? vals.due.toISOString() : "",
-            projectStatus: vals.status, // <-- direct
+            projectDescription: vals.description,
+            startDate: vals.start?.toISOString(),
+            endDate: vals.due?.toISOString(),
+            projectStatus: vals.status,
           };
 
           const resp = await projectService.updateProject(
@@ -101,12 +75,10 @@ export function ProjectEdit() {
             body,
             authHeaders
           );
-          const latestErr = useDataStore.getState().error;
-          const ok =
-            !latestErr &&
-            (resp?.isSuccess === undefined || resp?.isSuccess === true);
 
-          if (ok) setSuccessOpen(true);
+          if (resp?.isSuccess) {
+            setSuccessOpen(true);
+          }
         }}
       />
 
@@ -115,10 +87,7 @@ export function ProjectEdit() {
         onOpenChange={setSuccessOpen}
         title="Project updated"
         description="Your changes have been saved successfully."
-        onConfirm={() => {
-          setSuccessOpen(false);
-          navigate("/project");
-        }}
+        onConfirm={() => navigate("/project")}
       />
     </>
   );

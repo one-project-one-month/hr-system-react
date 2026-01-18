@@ -9,9 +9,9 @@ import type { ProjectFormValues } from "@/types/project";
 
 export function ProjectCreate() {
   const navigate = useNavigate();
-  const { loading, error } = useDataStore();
+  const { loading } = useDataStore();
   const [successOpen, setSuccessOpen] = useState(false);
-
+  const [error, setError] = useState("")
   return (
     <>
       <ProjectForm
@@ -20,25 +20,27 @@ export function ProjectCreate() {
         serverError={error ?? undefined}
         onCancel={() => navigate(-1)}
         onSubmit={async (vals: ProjectFormValues) => {
-
-          const payload = {
+          
+          try {
+            const payload = {
             projectName: vals.name,
             projectDescription: vals.description || "",
             startDate: vals.start ? vals.start.toISOString() : "",
-            endDate: vals.due ? vals.due.toISOString() : "",
+            endDate: vals.due ? vals.due.toISOString() : null,
             projectStatus: vals.status, // "Planned" | "InProgress" | "DONE"
           };
-
-          const resp = await projectService.createProject(payload);
-
-          const latestErr = useDataStore.getState().error;
-          const ok =
-            !latestErr &&
-            (resp?.isSuccess === undefined || resp?.isSuccess === true);
-
-          if (ok) {
+            const resp = await projectService.createProject(payload);
+            console.log (resp?.message)
+          if (resp?.isSuccess) {
             setSuccessOpen(true);
+            return
           }
+          setError(resp?.message)
+
+          }catch (error) {
+            console.log (error.message)
+          }
+          
         }}
       />
 

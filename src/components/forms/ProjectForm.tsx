@@ -1,206 +1,189 @@
-// src/pages/projects/ProjectForm.tsx
-import { useEffect, useState } from "react";
+"use client";
+
+import { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Calendar1Icon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import type { ProjectFormProps, ProjectFormValues } from "@/types/project";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AlertCircle, Calendar1Icon } from "lucide-react";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
 
-export function ProjectForm({
-  mode,
-  initialValues,
-  submitting = false,
-  serverError,
-  onSubmit,
-  onCancel,
-}: ProjectFormProps) {
-  const [values, setValues] = useState<ProjectFormValues>({
-    code: initialValues?.code ?? "PJ1234",
-    name: initialValues?.name ?? "",
-    description: initialValues?.description ?? "",
-    status: (initialValues?.status as ProjectFormValues["status"]) ?? "",
-    start: initialValues?.start ?? null,
-    due: initialValues?.due ?? null,
+type ProjectFormValues = {
+  code: string;
+  name: string;
+  description: string;
+  status: "Planned" | "InProgress" | "Completed" | "Cancelled" | "";
+  start: Date | null;
+  due: Date | null;
+};
+
+const projectSchema = z.object({
+  code: z.string().optional(),
+  name: z.string().nonempty("Project name is required"),
+  description: z.string().nonempty("Description is required"),
+  status: z.enum(["Planned", "InProgress", "Completed", "Cancelled"], {
+    errorMap: () => ({ message: "Status is required" }),
+  }),
+  start: z.date(),
+  due: z.date(),
+});
+
+type ProjectFormProps = {
+  mode: "create" | "edit";
+  initialValues?: Partial<ProjectFormValues>;
+  submitting?: boolean;
+  serverError?: string;
+  onSubmit: (values: ProjectFormValues, event?: React.BaseSyntheticEvent) => void; // ✅ add event
+  onCancel: () => void;
+};
+
+
+
+export function ProjectForm({ mode, initialValues, submitting = false, serverError, onSubmit, onCancel }: ProjectFormProps) {
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm<ProjectFormValues>({
+    resolver: zodResolver(projectSchema),
+    defaultValues: {
+      code: initialValues?.code ?? "",
+      name: initialValues?.name ?? "",
+      description: initialValues?.description ?? "",
+      status: initialValues?.status ?? "Planned", // pick a valid enum
+      start: initialValues?.start ?? null,
+      due: initialValues?.due ?? null,
+    },
   });
-
-  // re-hydrate when editing once data arrives
+  // Reset form if initialValues change (editing)
   useEffect(() => {
-    if (!initialValues) return;
-    setValues((prev) => ({
-      ...prev,
-      code: initialValues.code ?? prev.code,
-      name: initialValues.name ?? prev.name,
-      description: initialValues.description ?? prev.description,
-      status:
-        (initialValues.status as ProjectFormValues["status"]) ?? prev.status,
-      start: initialValues.start ?? prev.start,
-      due: initialValues.due ?? prev.due,
-    }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    initialValues?.code,
-    initialValues?.name,
-    initialValues?.description,
-    initialValues?.status,
-    initialValues?.start?.toString(),
-    initialValues?.due?.toString(),
-  ]);
-
-  const update = <K extends keyof ProjectFormValues>(
-    key: K,
-    val: ProjectFormValues[K]
-  ) => setValues((v) => ({ ...v, [key]: val }));
+    if (initialValues) reset(initialValues);
+  }, [initialValues, reset]);
 
   const submitLabel = mode === "create" ? "Create" : "Update";
-
   return (
-    <form
-      className="p-6 w-full flex-1"
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(values);
-      }}
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="p-6 w-full flex-1">
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="page-title">
-          {mode === "create" ? "Create Project" : "Edit Project"}
-        </h2>
+        <h2 className="page-title">{mode === "create" ? "Create Project" : "Edit Project"}</h2>
       </div>
-
       {serverError && (
-        <div className="mb-4 rounded-md border border-red-300 bg-red-50 p-3 text-sm text-red-700">
-          {serverError}
-        </div>
-      )}
-
+          <div className="flex items-center gap-2 bg-red-50 border border-red-300 text-red-700 p-3 rounded-md text-sm">
+            <AlertCircle className="w-4 h-4" />
+            <span>{serverError}</span>
+          </div>
+        )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl">
-        
         {/* Name */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <label className="text-sm font-medium">Name</label>
           <Input
             placeholder="Enter Name"
-            value={values.name}
-            onChange={(e) => update("name", e.target.value)}
+            {...register("name")}
             disabled={submitting}
           />
+          {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>}
         </div>
 
         {/* Description */}
-        <div className="space-y-2 md:col-span-2">
+        <div className="space-y-1 md:col-span-2">
           <label className="text-sm font-medium">Description</label>
           <Textarea
             placeholder="Enter Description"
-            value={values.description}
-            onChange={(e) => update("description", e.target.value)}
+            {...register("description")}
             rows={4}
             disabled={submitting}
           />
+          {errors.description && <p className="text-red-600 text-xs mt-1">{errors.description.message}</p>}
         </div>
 
         {/* Status */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <label className="text-sm font-medium">Status</label>
-          <Select
-            value={values.status}
-            onValueChange={(v) =>
-              update("status", v as ProjectFormValues["status"])
-            }
-            disabled={submitting}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Status" />
-            </SelectTrigger>
-            <SelectContent className="bg-natural-50">
-              <SelectItem value="Planned">Planned</SelectItem>
-              <SelectItem value="Active">Active</SelectItem>
-              <SelectItem value="Completed">Completed</SelectItem>
-              <SelectItem value="Cancelled">Cancelled</SelectItem>
-            </SelectContent>
-          </Select>
+          <Controller
+            control={control}
+            name="status"
+            render={({ field }) => (
+              <Select value={field.value} onValueChange={field.onChange} disabled={submitting}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Status" />
+                </SelectTrigger>
+                <SelectContent className="bg-natural-50">
+                  <SelectItem value="Planned">Planned</SelectItem>
+                  <SelectItem value="InProgress">InProgress</SelectItem>
+                  <SelectItem value="Completed">Completed</SelectItem>
+                  <SelectItem value="Cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          />
+          {errors.status && <p className="text-red-600 text-xs mt-1">{errors.status.message}</p>}
         </div>
 
         {/* Start Date */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <label className="text-sm font-medium">Start Date</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                type="button"
-                className="relative w-full text-left pl-9 pr-3 py-2 rounded-md border bg-background"
-                disabled={submitting}
-              >
-                <Calendar1Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                {values.start ? (
-                  format(values.start, "M/d/yyyy")
-                ) : (
-                  <span className="text-muted-foreground">
-                    Enter Start date
-                  </span>
-                )}
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={values.start ?? undefined}
-                onSelect={(d) => update("start", d ?? null)}
-              />
-            </PopoverContent>
-          </Popover>
+          <Controller
+            control={control}
+            name="start"
+            render={({ field }) => (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="relative w-full text-left pl-9 pr-3 py-2 rounded-md border bg-background"
+                    disabled={submitting}
+                  >
+                    <Calendar1Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    {field.value ? format(field.value, "M/d/yyyy") : <span className="text-muted-foreground">Select Start date</span>}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar mode="single" selected={field.value ?? undefined} onSelect={(d) => field.onChange(d ?? null)} />
+                </PopoverContent>
+              </Popover>
+            )}
+          />
+          {errors.start && <p className="text-red-600 text-xs mt-1">{errors.start.message}</p>}
         </div>
 
         {/* Due Date */}
-        <div className="space-y-2 md:col-span-1">
+        <div className="space-y-1">
           <label className="text-sm font-medium">Due Date</label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                type="button"
-                className="relative w-full text-left pl-9 pr-3 py-2 rounded-md border bg-background"
-                disabled={submitting}
-              >
-                <Calendar1Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                {values.due ? (
-                  format(values.due, "M/d/yyyy")
-                ) : (
-                  <span className="text-muted-foreground">Enter Due date</span>
-                )}
-              </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={values.due ?? undefined}
-                onSelect={(d) => update("due", d ?? null)}
-              />
-            </PopoverContent>
-          </Popover>
+          <Controller
+            control={control}
+            name="due"
+            render={({ field }) => (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button
+                    type="button"
+                    className="relative w-full text-left pl-9 pr-3 py-2 rounded-md border bg-background"
+                    disabled={submitting}
+                  >
+                    <Calendar1Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    {field.value ? format(field.value, "M/d/yyyy") : <span className="text-muted-foreground">Select Due date</span>}
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar mode="single" selected={field.value ?? undefined} onSelect={(d) => field.onChange(d ?? null)} />
+                </PopoverContent>
+              </Popover>
+            )}
+          />
+          {errors.due && <p className="text-red-600 text-xs mt-1">{errors.due.message}</p>}
         </div>
       </div>
 
       <div className="mt-8 flex items-center gap-3 justify-end max-w-4xl">
-        <Button
-          variant="secondary"
-          type="button"
-          className="cancel-btn"
-          onClick={onCancel}
-          disabled={submitting}
-        >
+        <Button variant="secondary" type="button" className="cancel-btn" onClick={onCancel} disabled={submitting}>
           Cancel
         </Button>
         <Button type="submit" className="primary-btn" disabled={submitting}>

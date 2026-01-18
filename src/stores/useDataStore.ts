@@ -45,24 +45,25 @@ export const useDataStore = create<DataStore>((set) => ({
 
             const response = await fetch(`/api${endPoint}`, options);
 
+            const data =
+                responseType === "blob"
+                    ? null
+                    : await response.json();
+
+            // ❌ do NOT throw — backend sends envelope
             if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || `API Error ${response.status}`);
+                set({
+                    error: data?.message ?? "Request failed",
+                    loading: false,
+                    data,
+                });
+                return data;
             }
 
-            // ✅ HANDLE BLOB FIRST
-            if (responseType === "blob") {
-                const blob = await response.blob();
-                const contentDisposition = response.headers.get("content-disposition");
-
-                set({ loading: false });
-                return { blob, contentDisposition };
-            }
-
-            // ✅ HANDLE JSON
-            const data = await response.json();
+            // ✅ success
             set({ data, loading: false });
             return data;
+           
         } catch (err: any) {
             set({ error: err.message, loading: false });
             throw err;
