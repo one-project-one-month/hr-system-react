@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -26,15 +26,17 @@ import { ExportDateDialog } from "@/components/ui/custom/export-date-dialog";
 import { downloadFile, toLocalISOString } from "@/lib/utils";
 import type { exportType } from "@/types/excelExport";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { SuccessDialog } from "@/components/ui/custom/success-dialogue";
 
 export default function PayrollList() {
   const navigate = useNavigate();
-  const {user} = useAuthStore()
+  const { user } = useAuthStore()
   const [data, setData] = useState<PayrollSummary[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [monthYear, setMonthYear] = useState<Date | null>(null)
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
   const [exporting, setExporting] = useState(false)
   const totalPages = Math.ceil(data.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
@@ -47,7 +49,11 @@ export default function PayrollList() {
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
-
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const handleSuccessConfirm = () => {
+    setSuccessDialogOpen(false);
+    navigate("/payroll");
+  };
   const handleRowClick = (payrollSummaryCode: string) => {
     const payroll = data.find((p) => p.payrollSummaryCode === payrollSummaryCode);
     navigate(`/payrollDetailList/${payrollSummaryCode}`, { state: payroll });
@@ -59,14 +65,18 @@ export default function PayrollList() {
         setError("Please select month and year first!");
         return;
       }
+
       setError("")
+      setLoading(true)
       const resp = await PayrollService.processPayroll({ payrollMonth: cleanMonthYear(monthYear) })
-      if(!resp.isSuccess)
+      if (!resp.isSuccess)
         setError(resp.message)
-      
+
+      navigate("/payrollSummary", { state: { refetch: true } })
+      setLoading(false)
     } catch (error) {
       console.log(error)
-      console.log (error.message)
+      console.log(error.message)
       setError("Failed to process payroll");
     }
   }
@@ -79,12 +89,12 @@ export default function PayrollList() {
   }
 
   const handleExport = async (exportType: exportType) => {
-    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin") 
-        || user.roleName.toLowerCase().includes("hr") 
-          ? exportType.type = "admin"
-          :exportType.type = "employee"
-  
-    
+    user?.roleName && user?.roleName.toLocaleLowerCase().includes("admin")
+      || user.roleName.toLowerCase().includes("hr")
+      ? exportType.type = "admin"
+      : exportType.type = "employee"
+
+
     if (!exportType.from || !exportType.to) return;
 
     const requestPayload = {
@@ -112,6 +122,27 @@ export default function PayrollList() {
       setExporting(false)
     }
   };
+
+  const location = useLocation();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const payrollSummary = await PayrollService.fetchPayrollSummary(
+          {
+            MonthYear: cleanMonthYear(monthYear) ?? "",
+            PageNo: currentPage,
+            PageSize: rowsPerPage
+          }
+        )
+        setData(payrollSummary?.data?.items as PayrollSummary[] ?? [])
+      } catch (err) {
+        console.log(err)
+        setError("Failed to fetch payroll summary")
+      }
+
+    })()
+  }, [location.state])
 
   useEffect(() => {
     (async () => {
@@ -157,7 +188,7 @@ export default function PayrollList() {
           <FolderUp />
           Export
         </Button>
-        <Button className="primary-btn w-full md:w-auto" onClick={processPayroll}><BadgeDollarSign />Process Payroll</Button>
+        <Button disabled={loading} className="primary-btn w-full md:w-auto" onClick={processPayroll}><BadgeDollarSign />{loading ? 'processing...': 'Process Payroll'}</Button>
       </div>
       <Table className="w-full overflow-auto shadow-sm rounded-md">
         <TableHeader className="bg-primary-300">
@@ -303,10 +334,17 @@ export default function PayrollList() {
             from: range.from!,
             to: range.to!,
             format,
-            type : "admin",
-            name : "Payroll"
+            type: "admin",
+            name: "Payroll"
           });
         }}
+      />
+      <SuccessDialog
+        open={successDialogOpen}
+        onOpenChange={setSuccessDialogOpen}
+        onConfirm={handleSuccessConfirm}
+        title="Payroll Process"
+        description="Payroll processing completed"
       />
     </div>
   );
