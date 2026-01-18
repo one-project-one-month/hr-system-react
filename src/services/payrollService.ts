@@ -19,7 +19,7 @@ export const PayrollService = {
     },
     monthDetailList: async (payrollDetailFilter: PayrollDetailFilter) => {
         await useDataStore.getState().fetchData({
-            endPoint: `/Payroll/month-detail-list?PayrollSummaryCode=${payrollDetailFilter.PayrollSummaryCode}&EmployeeCode=${payrollDetailFilter.EmployeeName}&PageNo=${payrollDetailFilter.PageNo}&PageSize=${payrollDetailFilter.PageSize}`,
+            endPoint: `/Payroll/month-detail-list?PayrollSummaryCode=${payrollDetailFilter.PayrollSummaryCode}&EmployeeCode=${payrollDetailFilter.EmployeeCode}&PageNo=${payrollDetailFilter.PageNo}&PageSize=${payrollDetailFilter.PageSize}`,
             method: "GET",
         })
         return useDataStore.getState().data.data.items ?? []

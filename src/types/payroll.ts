@@ -6,7 +6,7 @@ export interface PayrollFilter {
 
 export interface PayrollDetailFilter {
     PayrollSummaryCode: string
-    EmployeeName: string;
+    EmployeeCode: string;
     PageNo: number;
     PageSize: number;
 }

@@ -29,7 +29,7 @@ export default function PayrollList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [monthYear, setMonthYear] = useState<Date | null>(null)
-  const [searchName, setSearchName] = useState("")
+  const [searchCode, setSearchCode] = useState("")
   const totalPages = Math.ceil(data.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
   const currentData = data.slice(startIndex, startIndex + rowsPerPage);
@@ -41,16 +41,13 @@ export default function PayrollList() {
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
 
-  // const handleRowClick = (payrollCode: string) => {
-  //   const payroll = data.find((p) => p.payrollCode === payrollCode);
-  //   navigate(`/payrollDetail/${payrollCode}`, { state: payroll });
-  // };
+ 
   useEffect(() => {
     (async () => {
       const monthDetailList = await PayrollService.monthDetailList(
         {
           PayrollSummaryCode: code ?? "",
-          EmployeeName: searchName,
+          EmployeeCode: searchCode,
           PageNo: currentPage,
           PageSize: rowsPerPage
         }
@@ -58,7 +55,7 @@ export default function PayrollList() {
       setData(monthDetailList as PayrollDetail[] ?? [])
     })()
 
-  }, [monthYear])
+  }, [monthYear, searchCode, currentPage, rowsPerPage])
 
   return (
     <div className="p-6 w-full flex-1">
@@ -77,19 +74,18 @@ export default function PayrollList() {
             Payroll Detail
           </span>
         </nav>
-        {/* search */}
         <div className="relative w-full md:w-[200px] text-primary-800">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary-400 h-6 w-6" />
           <Input
             type="text"
-            value={searchName}
-            placeholder="Search..."
-            onInput={(e) => setSearchName(e.target.value)}
+            value={searchCode}
+            placeholder="Search by code"
+            onInput={(e) => setSearchCode(e.target.value)}
             className="border-primary-700 bg-natural-50 focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9 text-primary-400"
           />
-          {searchName ? (
+          {searchCode ? (
             <CircleX
-              onClick={() => setSearchName("")}
+              onClick={() => setSearchCode("")}
               className="cursor-pointer absolute absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4"
             />
           ) : (
