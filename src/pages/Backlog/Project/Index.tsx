@@ -65,7 +65,7 @@ export default function ProjectListing() {
   const CANUPDATE = menuGroup && menuGroup?.permissions.includes("UPDATE")
   const CANDELETE = menuGroup && menuGroup?.permissions.includes("DELETE")
 
-  const ADMIN_HR = (user?.roleName && user?.roleName.toLocaleLowerCase() === 'admin' 
+  const ADMIN_HR = (user?.roleName && user?.roleName.toLocaleLowerCase() === 'admin'
     || user?.roleName.toLocaleLowerCase() === "administrator")
     || user?.roleName.toLocaleLowerCase().includes('hr')
   // UI state
@@ -73,7 +73,7 @@ export default function ProjectListing() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
-    // data state
+  // data state
   const [rows, setRows] = useState<Row[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -116,7 +116,8 @@ export default function ProjectListing() {
     setError(null);
     try {
       let res;
-      if ((user?.roleName.toLocaleLowerCase() !== 'Administrator'.toLocaleLowerCase() && user?.roleName.toLocaleLowerCase() !== 'admin')
+      if ((user?.roleName.toLocaleLowerCase() !== 'Administrator'.toLocaleLowerCase()
+        && user?.roleName.toLocaleLowerCase() !== 'admin')
         && !user?.roleName.toLocaleLowerCase().includes('hr')) {
         res = await projectService.fetchProjectsByCode(user?.employeeCode, listParams)
       }
@@ -235,51 +236,51 @@ export default function ProjectListing() {
     <div className="p-6 w-full flex-1">
       {/* Header row */}
       {(ADMIN_HR) && (<div className="flex justify-between flex-col md:flex-row gap-2 mb-4">
-          <p className="page-title">Project Listing</p>
-          <div className="relative w-full md:w-[500px] text-primary-800 flex items-center justify-center">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
-            <Input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              placeholder="Search..."
-              className="focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9"
-            />
-          </div>
+        <p className="page-title">Project Listing</p>
+        <div className="relative w-full md:w-[500px] text-primary-800 flex items-center justify-center">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+          <Input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            placeholder="Search..."
+            className="focus-visible:ring-[1px] focus-visible:ring-ring focus-visible:ring-offset-0 pl-9"
+          />
+        </div>
 
+        <Button
+          className="primary-btn cursor-pointer w-full md:w-auto"
+          onClick={() => setOpen(true)}
+        >
+          Export
+        </Button>
+
+        <Link to="/projects/new" className="w-full md:w-auto">
           <Button
-            className="primary-btn cursor-pointer w-full md:w-auto"
-            onClick={() => setOpen(true)}
+            className="primary-btn cursor-pointer w-full"
           >
-            Export
+            <Plus />
+            New
           </Button>
+        </Link>
 
-          <Link to="/projects/new" className="w-full md:w-auto">
-            <Button
-              className="primary-btn cursor-pointer w-full"
-            >
-              <Plus />
-              New
-            </Button>
-          </Link>
-
-          {/**Add Employee */}
-          <Link to="/projects/add-employee" className="w-full md:w-auto">
-            <Button className="primary-btn w-full">
-              <Plus />
-              Add Employee
-            </Button>
-          </Link>
-          <Link to="/projects/remove-employee" className="w-full md:w-auto">
-            <Button className="primary-btn w-full">
-              <Plus />
-              Remove Employee
-            </Button>
-          </Link>
-        </div>)}
+        {/**Add Employee */}
+        <Link to="/projects/add-employee" className="w-full md:w-auto">
+          <Button className="primary-btn w-full">
+            <Plus />
+            Add Employee
+          </Button>
+        </Link>
+        <Link to="/projects/remove-employee" className="w-full md:w-auto">
+          <Button className="primary-btn w-full">
+            <Plus />
+            Remove Employee
+          </Button>
+        </Link>
+      </div>)}
 
       {/* Table */}
       <Table className="w-full overflow-auto shadow-sm rounded-md">
@@ -327,9 +328,9 @@ export default function ProjectListing() {
                 <TableCell>{row.status}</TableCell>
                 <TableCell>{row.startDate}</TableCell>
                 <TableCell>{row.endDate}</TableCell>
-                { (CANUPDATE || CANDELETE) && (<TableCell>
+                {(CANUPDATE || CANDELETE) && (<TableCell>
                   <div className="flex items-center justify-end gap-3">
-                    { CANUPDATE && (<button
+                    {CANUPDATE && (<button
                       className="p-1 hover:bg-primary-300/50 rounded cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -339,7 +340,7 @@ export default function ProjectListing() {
                     >
                       <Edit className="h-4 w-4 text-primary-500" />
                     </button>)}
-                    { CANDELETE && (<button
+                    {CANDELETE && (<button
                       className="p-1 hover:bg-primary-300/50 rounded cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();

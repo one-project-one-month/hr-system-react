@@ -13,12 +13,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Clock } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@radix-ui/react-popover";
 import { useEffect, useState } from "react";
 import { EmployeeService } from "@/services/employeeService";
 import { useNavigate, useParams } from "react-router-dom";
@@ -69,26 +63,18 @@ export default function AttendanceForm({
       return dt instanceof Date && !isNaN(dt.getTime()) ? dt : new Date();
     };
 
-    const extractTime = (dtOrTime: any) => {
-      if (!dtOrTime) return "";
-      if (typeof dtOrTime === "string") {
-        if (dtOrTime.includes("T")) {
-          const t = new Date(dtOrTime);
-          return `${pad(t.getHours())}:${pad(t.getMinutes())}`;
-        }
-        if (/^\d{2}:\d{2}/.test(dtOrTime)) return dtOrTime.slice(0, 5);
-      }
-      if (dtOrTime instanceof Date) return `${pad(dtOrTime.getHours())}:${pad(dtOrTime.getMinutes())}`;
-      return "";
+    const parseDateTime = (value?: string | Date) => {
+      if (!value) return null;
+      const date = typeof value === "string" ? new Date(value) : value;
+      return date instanceof Date && !isNaN(date.getTime()) ? date : null;
     };
-
     const vals: AttendanceFormValues = {
-      employeeCode: initialValues.employeeCode ?? initialValues.employeeCode ?? "",
-      employeeName: initialValues.employeeName ?? initialValues.name ?? "",
-      checkinLocation: initialValues.checkinLocation ?? initialValues.checkInLocation ?? "",
+      employeeCode: initialValues.employeeCode ?? "",
+      employeeName: initialValues.employeeName ?? "",
+      checkinLocation: initialValues.checkinLocation ?? "",
       checkoutLocation: initialValues.checkoutLocation ?? initialValues.checkOutLocation ?? "",
-      checkinTime: initialValues.checkinTime ?? new Date(),
-      checkoutTime: initialValues.checkoutTime ?? new Date(),
+      checkinTime: initialValues.checkinTime ? parseDateTime(initialValues.checkinTime) : new Date(),
+      checkoutTime: initialValues.checkoutTime ? parseDateTime(initialValues.checkoutTime) : new Date(),
       workingHour: Number(initialValues.workingHour ?? 0),
       status: initialValues.status ?? "",
       date: parseDate(initialValues.date ?? initialValues.attendanceDate ?? initialValues.attendanceDate),
@@ -144,6 +130,7 @@ export default function AttendanceForm({
 
   const onSubmit = async (values: AttendanceFormValues) => {
     if (onSubmitExternal) {
+      console.log(values)
       try {
         await onSubmitExternal(values);
         setSuccessDialogOpen(true);

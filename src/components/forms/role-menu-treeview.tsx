@@ -312,6 +312,7 @@ export default function RoleMenuPermissionPanel() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      console.log(newPermissions)
       await roleMenuPermissionService.savePermissions(newPermissions);
       console.log(newPermissions)
       openDialog("Save menu permissions successful!", onConfirm);

@@ -13,6 +13,7 @@ export function UpdateAttendance() {
       try {
         const data = await attendanceService.editAttendanceRecord(code as string);
         const record = Array.isArray(data) ? data[0] : data;
+        console.log (data)
         setInitialValues(record.attendance);
       } catch (err) {
         console.error("Failed to load attendance record", err);
@@ -36,6 +37,9 @@ export function UpdateAttendance() {
     return `${datePart}T${timeStr}:00`;
   };
 
+  const localISO = (date: Date) =>
+  `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+
   const handleUpdate = async (values: any) => {
     const payload = {
       attendanceCode: code,
@@ -43,14 +47,14 @@ export function UpdateAttendance() {
       employeeName: values.employeeName,
       checkInLocation: values.checkinLocation,
       checkOutLocation: values.checkoutLocation,
-      checkInTime: values.checkinTime ? values.checkinTime.toISOString() : null,
-      checkOutTime: values.checkoutTime ? values.checkoutTime.toISOString() : null,
+      checkInTime: values.checkinTime ? localISO(values.checkinTime) : null,
+      checkOutTime: values.checkoutTime ? localISO(values.checkoutTime) : null,
       attendanceDate: toDatePart(values.date),
       workingHour: values.workingHour,
       status: values.status,
       remark: values.remark,
     };
-
+console.log(payload)
     await attendanceService.updateAttendanceRecord(payload);
     // try {
     //   await attendanceService.fetchAttendanceRecords();

@@ -18,13 +18,16 @@ export function CreateAttendance() {
       return `${datePart}T${timeStr}:00`;
     };
 
+    const localISO = (date: Date) =>
+      `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+
     const payload = {
       employeeCode: values.employeeCode,
       employeeName: values.employeeName,
       checkinLocation: values.checkinLocation,
       checkoutLocation: values.checkoutLocation,
-      checkinTime:  values.checkinTime ? values.checkinTime.toISOString() : null,
-      checkoutTime: values.checkoutTime ? values.checkoutTime.toISOString() : null,
+      checkinTime: values.checkinTime ? localISO(values.checkinTime) : null,
+      checkoutTime: values.checkoutTime ? localISO(values.checkoutTime) : null,
       // send date as yyyy-mm-dd
       date: toDatePart(values.date),
       workingHour: values.workingHour,
@@ -35,10 +38,11 @@ export function CreateAttendance() {
       ...payload,
       name: values.employeeName,
       attendanceDate: toDatePart(values.date),
-      checkInTime: values.checkinTime ? values.checkinTime.toISOString() : null,
-      checkoutTime: values.checkoutTime ? values.checkoutTime.toISOString() : null,
+      checkInTime: values.checkinTime ? localISO(values.checkinTime) : null,
+      checkoutTime: values.checkoutTime ? localISO(values.checkoutTime) : null,
       workingHour: values.workingHour,
     };
+    console.log(payloadWithListKeys)
     await attendanceService.createAttendanceRecord(payloadWithListKeys);
     try {
       await attendanceService.fetchAttendanceRecords();
