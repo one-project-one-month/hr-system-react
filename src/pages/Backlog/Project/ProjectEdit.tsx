@@ -51,9 +51,9 @@ export function ProjectEdit() {
     due: project.endDate ? new Date(project.endDate) : null,
   };
 
-  return (
-    <>
-      <ProjectForm
+  return (<>
+      {project && (
+        <ProjectForm
         mode="edit"
         initialValues={initialValues}
         submitting={loading}
@@ -61,7 +61,7 @@ export function ProjectEdit() {
         onCancel={() => navigate(-1)}
         onSubmit={async (vals) => {
           useDataStore.setState({ error: null });
-
+          console.log (vals)
           const body = {
             projectName: vals.name,
             projectDescription: vals.description,
@@ -69,6 +69,7 @@ export function ProjectEdit() {
             endDate: vals.due?.toISOString(),
             projectStatus: vals.status,
           };
+        console.log (body)
 
           const resp = await projectService.updateProject(
             id!,
@@ -80,7 +81,7 @@ export function ProjectEdit() {
             setSuccessOpen(true);
           }
         }}
-      />
+      />)}
 
       <SuccessDialog
         open={successOpen}
@@ -89,6 +90,4 @@ export function ProjectEdit() {
         description="Your changes have been saved successfully."
         onConfirm={() => navigate("/project")}
       />
-    </>
-  );
-}
+    </>)}

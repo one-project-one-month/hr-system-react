@@ -60,9 +60,12 @@ export default function PayrollList() {
         return;
       }
       setError("")
-      await PayrollService.processPayroll({ payrollMonth: cleanMonthYear(monthYear) })
+      const resp = await PayrollService.processPayroll({ payrollMonth: cleanMonthYear(monthYear) })
+      if(!resp.isSuccess)
+        setError(resp.message)
     } catch (error) {
       console.log(error)
+      console.log (error.message)
       setError("Failed to process payroll");
     }
   }
