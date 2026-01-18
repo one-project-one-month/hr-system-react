@@ -7,63 +7,6 @@ import type { MenuConfig } from "@/types/role-menu-permission";
 import { LogoutConfirm } from "./logout-confirm";
 import { dashboardRoutes, getRoute, leaveRoutes, payrollRoutes } from "@/lib/utils";
 
-export type UserRole =
-    | "ADMIN"
-    | "HR"
-    | "EMPLOYEE";
-
-const ROLE_MAP: Record<string, AppRole> = {
-    // ADMIN
-    admin: "ADMIN",
-    administrator: "ADMIN",
-    superadmin: "ADMIN",
-
-    // HR
-    hr: "HR",
-    "hr specialist": "HR",
-    "hr manager": "HR",
-    recruiter: "HR",
-
-    // EMPLOYEE
-    employee: "EMPLOYEE",
-    staff: "EMPLOYEE",
-    intern: "EMPLOYEE",
-
-    // FINANCE
-    finance: "FINANCE",
-    accountant: "FINANCE",
-    payroll: "FINANCE",
-
-    // MANAGER
-    manager: "MANAGER",
-    supervisor: "MANAGER",
-    lead: "MANAGER",
-};
-
-export const ROUTES: Record<AppRole, {
-    dashboard: string;
-    leave: string;
-    payroll: string;
-}> = {
-    ADMIN: {
-        dashboard: "/admin/dashboard",
-        leave: "/leave/hr",
-        payroll: "/payrollSummary",
-    },
-    HR: {
-        dashboard: "/hr/dashboard",
-        leave: "/leave/hr",
-        payroll: "/payrollSummary",
-    },
-    EMPLOYEE: {
-        dashboard: "/employee/dashboard",
-        leave: "/leave/employee",
-        payroll: "/payroll",
-    },
-};
-
-
-
 export default function Sidebar({ onClose }: { onClose: () => void }) {
     const authStore = useAuthStore();
     const [openLogoutConfirm, setOpenLogoutConfirm] = useState(false)
@@ -108,13 +51,13 @@ export default function Sidebar({ onClose }: { onClose: () => void }) {
             label: "Backlog Module", icon: <LayoutTemplate />, menuGroupCode: "BACKLOG",
             children: [
                 { label: "Backlog", icon: <ListCheck />, path: "/backlog", menuGroupCode: "BACKLOG", },
-                { label: "Project", icon: <Briefcase />, path: "/project", menuGroupCode: "BACKLOG", }
+                { label: "Project", icon: <Briefcase />, path: "/project", menuGroupCode: "PROJECT", }
             ],
         }, {
             label: "Attendance Module", icon: <Clock />, menuGroupCode: "ATTENDANCE",
             children: [
                 { label: "Location", icon: <Map />, path: "/location", menuGroupCode: "ATTENDANCE" },
-                { label: "Attendance", icon: <Clock />, path: "/attendance", menuGroupCode: "ATTENDANCE", }],
+                { label: "Attendance", icon: <Clock />, path: "/attendance", menuGroupCode: "LOCATION", }],
         },
         { label: "Payroll", icon: <DollarSign />, menuGroupCode: "PAYROLL", path: payrollRoute },
         { label: "Leave", icon: <Calendar />, menuGroupCode: "LEAVE", path: leaveRoute, }];
