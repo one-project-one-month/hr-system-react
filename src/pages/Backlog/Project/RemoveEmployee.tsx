@@ -75,7 +75,7 @@ export function RemoveEmployee() {
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
   const goToLast = () => setCurrentPage(totalPages);
   const goToFirst = () => setCurrentPage(1);
-const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const toggleEmployee = (employeeCode: string, checked: boolean) => {
     if (checked) {
@@ -107,27 +107,27 @@ const [alertDialogOpen, setAlertDialogOpen] = useState(false);
     }
   };
 
-    const handleRemoveSelected = async () => {
-      const selectedData = EmployeeData.filter((emp) =>
-        selectedEmployees.includes(emp.employeeCode)).map(e => (e.employeeCode));
-      try {
-        await EmployeeService.removeEmployeesFromProjects(selectedProject, {
-          employeeCodes: selectedData
-        });
-        openDialog("Remove Employee to the project Successful!", onConfirm);
-      } catch (error) {
-        setAlertMessage("Failed to remove employees to the project. Please try again.");
-        setAlertDialogOpen(true);
-        return;
-      }
-  
-      navigate("/projects/remove-employee", {
-        state: {
-          project: selectedProject,
-          employees: selectedData,
-        },
+  const handleRemoveSelected = async () => {
+    const selectedData = EmployeeData.filter((emp) =>
+      selectedEmployees.includes(emp.employeeCode)).map(e => (e.employeeCode));
+    try {
+      await EmployeeService.removeEmployeesFromProjects(selectedProject, {
+        employeeCodes: selectedData
       });
-    };
+      openDialog("Remove Employee to the project Successful!",  () => navigate("/projects/remove-employee", { state: { refetch: true }}))
+    } catch (error) {
+      setAlertMessage("Failed to remove employees to the project. Please try again.");
+      setAlertDialogOpen(true);
+      return;
+    }
+
+    navigate("/projects/remove-employee", {
+      state: {
+        project: selectedProject,
+        employees: selectedData,
+      },
+    });
+  };
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
@@ -146,11 +146,22 @@ const [alertDialogOpen, setAlertDialogOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const assignedEmp = await EmployeeService.getAssignedEmployees(selectedProject,currentPage,rowsPerPage)
-      const filtered = EmployeeData.filter(emp => assignedEmp.some(asemp => asemp.employeeCode === emp.employeeCode) )
+      const assignedEmp = await EmployeeService.getAssignedEmployees(selectedProject, currentPage, rowsPerPage)
+      const filtered = EmployeeData.filter(emp => assignedEmp.some(asemp => asemp.employeeCode === emp.employeeCode))
       setFilteredData(filtered as Employee[] ?? [])
     })()
   }, [selectedProject])
+
+
+    const location = useLocation();
+
+useEffect(() => {
+  (async () => {
+      const assignedEmp = await EmployeeService.getAssignedEmployees(selectedProject, currentPage, rowsPerPage)
+      const filtered = EmployeeData.filter(emp => assignedEmp.some(asemp => asemp.employeeCode === emp.employeeCode))
+      setFilteredData(filtered as Employee[] ?? [])
+    })()
+  }, [location.state])
 
   useEffect(() => {
     (async () => {
@@ -167,8 +178,8 @@ const [alertDialogOpen, setAlertDialogOpen] = useState(false);
         search: "",
       });
       setProjects(projectsData?.data?.items as Project[] ?? [])
-      
-      if(projectsData?.data?.items.length)
+
+      if (projectsData?.data?.items.length)
         setSelectedProject(projectsData?.data?.items[0].projectCode)
 
       setEmployeeData(EmployeeData?.items as Employee[] ?? [])
@@ -367,7 +378,7 @@ const [alertDialogOpen, setAlertDialogOpen] = useState(false);
       <div className="flex justify-end mt-6 gap-3">
         <Button
           className="cancel-btn"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/project")}
         >
           Cancel
         </Button>
@@ -386,28 +397,28 @@ const [alertDialogOpen, setAlertDialogOpen] = useState(false);
         description={description}
       />
       <AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
-              <AlertDialogContent className="bg-secondary-50 text-black">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="text-md">
-                    <div className="flex gap-3 items-center">
-                      <AlertTriangle className="h-6 w-6 text-secondary-500" />
-                      Alert!
-                    </div>
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="whitespace-pre-line">
-                    {alertMessage}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogAction
-                    onClick={() => setAlertDialogOpen(false)}
-                    className="bg-primary-600 hover:bg-primary-700 text-white"
-                  >
-                    OK
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+        <AlertDialogContent className="bg-secondary-50 text-black">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-md">
+              <div className="flex gap-3 items-center">
+                <AlertTriangle className="h-6 w-6 text-secondary-500" />
+                Alert!
+              </div>
+            </AlertDialogTitle>
+            <AlertDialogDescription className="whitespace-pre-line">
+              {alertMessage}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => setAlertDialogOpen(false)}
+              className="bg-primary-600 hover:bg-primary-700 text-white"
+            >
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

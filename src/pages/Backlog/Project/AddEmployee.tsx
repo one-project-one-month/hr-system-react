@@ -38,7 +38,7 @@ import {
   Search,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { roleMenuPermissionService } from "@/services/roleMenuPermissionService";
 import type { Project } from "@/types/project";
 import { projectService } from "@/services/projectService";
@@ -128,19 +128,17 @@ export function AddEmployee() {
       await EmployeeService.addEmployeeToProjects(selectedProject, {
         employeeCodes: selectedData
       });
-      openDialog("Add Employee to the project Successful!", onConfirm);
+      openDialog(
+        "Employees added to the project successfully!",
+        () => navigate("/projects/add-employee", { state: { refetch: true } }) // ✅ navigate on confirm
+      );
+      setSelectedEmployees([])
     } catch (error) {
       setAlertMessage("Failed to add employees to the project. Please try again.");
       setAlertDialogOpen(true);
       return;
     }
 
-    navigate("/projects/remove-employee", {
-      state: {
-        project: selectedProject,
-        employees: selectedData,
-      },
-    });
   };
 
   useEffect(() => {
@@ -157,8 +155,8 @@ export function AddEmployee() {
         pageSize: 10,
         search: "",
       });
-      setProjects(projectsData?.data?.items as Project [] ?? [])
-      if(projectsData?.data?.items.length) {
+      setProjects(projectsData?.data?.items as Project[] ?? [])
+      if (projectsData?.data?.items.length) {
         setSelectedProject(projectsData?.data?.items[0].projectCode)
       }
       setEmployeeData(EmployeeData?.items as Employee[] ?? [])
@@ -166,13 +164,22 @@ export function AddEmployee() {
     })()
   }, [])
 
+  const location = useLocation();
+
   useEffect(() => {
     (async () => {
-    const assignedEmp = await EmployeeService.getUnassignedEmployees(selectedProject,currentPage,rowsPerPage)
-    console.log(assignedEmp)
-    const filtered = EmployeeData.filter(emp => assignedEmp.some(asemp => asemp.employeeCode === emp.employeeCode) )
-    setFilteredData(filtered)
-  })()
+      const assignedEmp = await EmployeeService.getUnassignedEmployees(selectedProject, currentPage, rowsPerPage)
+      const filtered = EmployeeData.filter(emp => assignedEmp.some(asemp => asemp.employeeCode === emp.employeeCode))
+      setFilteredData(filtered)
+    })()
+  }, [location.state])
+
+  useEffect(() => {
+    (async () => {
+      const assignedEmp = await EmployeeService.getUnassignedEmployees(selectedProject, currentPage, rowsPerPage)
+      const filtered = EmployeeData.filter(emp => assignedEmp.some(asemp => asemp.employeeCode === emp.employeeCode))
+      setFilteredData(filtered)
+    })()
   }, [selectedProject])
 
   return (
@@ -187,7 +194,7 @@ export function AddEmployee() {
               className="bg-white text-black hover:bg-gray-100"
               value={p.projectCode} key={p.projectCode}
             >
-             {p.projectName}
+              {p.projectName}
             </SelectItem>))}
           </SelectContent>
         </Select>
